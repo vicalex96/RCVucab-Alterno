@@ -1,0 +1,114 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+    
+        
+
+
+        {
+            // Use IntelliSense to find out which attributes exist for C# debugging
+            // Use hover for the description of the existing attributes
+            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+            "name": ".NET Core Launch (Admiministrator)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-Administracion",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/app-administracion/administracion/bin/Debug/net6.0/administracion.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/app-administracion/administracion",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            // Use IntelliSense to find out which attributes exist for C# debugging
+            // Use hover for the description of the existing attributes
+            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+            "name": ".NET Core Launch (levantamiento)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-Levantamiento",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/app-levantamiento/levantamiento/bin/Debug/net6.0/levantamiento.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/app-levantamiento/levantamiento",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            // Use IntelliSense to find out which attributes exist for C# debugging
+            // Use hover for the description of the existing attributes
+            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+            "name": ".NET Core Launch (Taller)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-Taller",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/app-taller/taller/bin/Debug/net6.0/taller.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/app-taller/taller",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            // Use IntelliSense to find out which attributes exist for C# debugging
+            // Use hover for the description of the existing attributes
+            // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+            "name": ".NET Core Launch (Proveedor)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-Proveedor",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/app-proveedor/proveedor/bin/Debug/net6.0/proveedor.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/app-proveedor/proveedor",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach"
+        }
+    ]
+}

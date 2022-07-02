@@ -1,0 +1,24 @@
+Instalacion de RabbitMQ
+1) descargar el instalador del servidor: https://www.rabbitmq.com/install-windows.html
+
+2) instalar en el proyecto el cliente:dotnet add package RabbitMQ.Client --version 6.4.0
+
+3) agregar al Path en variables de entorno en "Path": C:\Program Files\RabbitMQ Server\rabbitmq_server-3.10.5\sbin
+
+4) abrir el terminal y ejecutar: $rabbitmq-plugins enable rabbitmq_management
+
+5) ir al navegador y abrir el link: http://{node-hostname}:15672/
+
+6) Ususario: Guest, contraseña: Guest
+
+7) ir a exchanges y gregar los siguientes: gerencia, levantamiento, reparaciones y partes, 
+	todos con type "direct" y durability "Durable" y agregar
+
+8) agregar Queues(colas): incidente, solicitud, cotizacion. tambien dirability= "durable" y Auto delete = no
+
+9) correr los proyectos y cargar las colas
+
+Nota: si bien he sido capaz de consumir la data que dejo en la cola, RabbitMQ me ha dado problemas con la sincronizacion 
+ya que lee la data a la vez que sigue ejecutando el resto del metodo y usar metodos Async Await parece no funcionar.
+La forma en la que he logrado que lo lea sin problema es usando el debuger y colocanod un Breakpoint en la parte que 
+realiza el proceso de lectura.

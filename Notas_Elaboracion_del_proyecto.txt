@@ -1,0 +1,27 @@
+He implementado la funcionalidad del Levantamiento
+
+Se han corregido problemas con el laucher de debuger,
+ahora se pueden ejecutar por separado cada aplicacion del proyecto.
+Ahora si se quiere ejecutrar una aplicacion en especifico basra con ir al apartado de debug
+y en el boton Run and Debug seleccionar en la lista la aplicacion que se quiere probar
+luego ejecutar en el boton de la flecha verde.
+
+Se organizo mejor la estructura de los archivos de RabbitMQ
+
+Para usarlo es necesario invocar el productos o el cliente en el metodo deseado
+luego en el constructor indicarle el Exchange, routingkey y queue(este ultimo en 
+el caso de cosumidor) para cada uno de estos existe un Enum que se puede encontrar 
+en las interfaces del Productor y consumidor.
+
+
+Extenciones que recomiendo:
+Peacock: permite cambiar el color de cada espacio/ventana del VS code
+	Para ejecutarlo basta con ejecutar el atajo ctrl+p escribir >peacock y seleccionar 
+	la primera opcion, va a salir una lista donde podemos elegir los colores.
+Prettier: permite observar de forma mas sencilla la identacion en el codigo, podemos ver mas 
+	facil donde comienza y cierra un corchete
+Bookmarks: nos permite dejar unos marcadores en nuestro codigo para poder regresar rapidamente
+	a cualquier punto donde consideramos que hay que hacer algo importante.
+Github Copilot: es un asistente de completado de codigo, para usarlo primero hay que registrarse en el
+	programa de estudiantes de github y solicitar el copilot, eso o pagar por el.
+	Luego solo hace falta instalar la extencion e inciar secion con la cuenta.
