@@ -37,6 +37,7 @@ namespace proveedor
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "proveedor", Version = "v1" });
             });
+            services.AddRouting(routing => routing.LowercaseUrls = true);
 
         }
 

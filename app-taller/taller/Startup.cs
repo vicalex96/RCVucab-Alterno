@@ -52,6 +52,7 @@ namespace taller
                     builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost").AllowAnyHeader().AllowAnyMethod();
                 });
             });
+            services.AddRouting(routing => routing.LowercaseUrls = true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

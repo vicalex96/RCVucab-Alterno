@@ -42,6 +42,7 @@ namespace administracion
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "administracion", Version = "v1" });
             });
+            services.AddRouting(routing => routing.LowercaseUrls = true);
 
             services.AddCors(options =>
             {

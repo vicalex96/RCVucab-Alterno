@@ -7,6 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace administracion.Controllers
 {
+    /// <summary>
+    /// Clase que representa el controlador de incidentes,permite mostrar los incidentes, registrarlos y actualizalos
+    /// </summary>
     [ApiController]
     [Route("Incidente")]
     public class IncidenteController: Controller
@@ -20,6 +23,10 @@ namespace administracion.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Obtiene una lista de incidentes registrados en el sistema
+        /// </summary>
+        /// <returns>Lista de incidentes</returns>
         [HttpGet("consultar/{incidenteID}")]
         public ApplicationResponse<IncidenteDTO> consultarIncidente([Required][FromRoute] Guid incidenteID)
         {
@@ -31,12 +38,16 @@ namespace administracion.Controllers
             catch (RCVException ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.ToString();
             };
             return response;
         }
 
+        /// <summary>
+        /// Obtiene una lista de incidentes registrados en el sistema
+        /// </summary>
+        /// <returns>Lista de incidentes</returns>
         [HttpGet("consultar_lista_activos")]
         public ApplicationResponse<List<IncidenteDTO>> ConsultarIncidentesActivos()
         {
@@ -48,12 +59,17 @@ namespace administracion.Controllers
             catch (RCVException ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.ToString();
             };
             return response;
         }
 
+        /// <summary>
+        /// Registra un incidente en el sistema
+        /// </summary>
+        /// <param name="incidenteSimpleDTO">Incidente a registrar</param>
+        /// <returns>Incidente registrado</returns>
         [HttpPost("registrar")]
         public ApplicationResponse<bool> RegistrarIncidente([FromBody] IncidenteSimpleDTO incidente)
         {
@@ -66,12 +82,18 @@ namespace administracion.Controllers
             catch (RCVException ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.ToString();
             };
             return response;
         }
 
+        /// <summary>
+        /// Actualiza el estadod el incidente
+        /// </summary>
+        /// <param name="incidenteId">Incidente a actualizar</param>
+        /// <param name="estado">el estado del incidente</param>
+        /// <returns>Incidente actualizado</returns>
         [HttpPatch("actualizar/{incidenteID}/{estado}")]
         public ApplicationResponse<bool> actualizarIncidente([Required][FromRoute] Guid incidenteID, [Required][FromRoute] EstadoIncidente estado)
         {
@@ -84,7 +106,7 @@ namespace administracion.Controllers
             catch (RCVException ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.ToString();
             };
             return response;

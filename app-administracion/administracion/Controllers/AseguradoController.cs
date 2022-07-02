@@ -9,6 +9,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace administracion.Controllers
 {
+    /// <summary>
+    /// Clase que representa el controlador de incidentes, muestra los endpoints de listado de asegurados, registro y busqueda individual
+    /// </summary>
     [ApiController]
     [Route("asegurado")]
     public class AseguradoController: Controller
@@ -23,7 +26,10 @@ namespace administracion.Controllers
         }
 
     
-
+        /// <summary>
+        /// Obtiene una lista de asegurados registrados en el sistema
+        /// </summary>
+        /// <returns>Lista de asegurados</returns>
         [HttpGet("mostrar_todos")]
         public ApplicationResponse<List<AseguradoDTO>> GetAsegurados()
         {
@@ -36,28 +42,40 @@ namespace administracion.Controllers
             catch (RCVException ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
-                response.Exception = ex.Excepcion.ToString();
-            }
-            return response;
-        }
-        [HttpGet("buscar_por/{guid}")]
-        public ApplicationResponse<AseguradoDTO> GetAsegurado([Required][FromRoute] Guid guid)
-        {
-            var response = new ApplicationResponse<AseguradoDTO>();
-            try
-            {
-                response.Data = _aseguradoDAO.GetAseguradoByGuid(guid);
-            }
-            catch (RCVException ex)
-            {
-                response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.ToString();
             }
             return response;
         }
         
+        /// <summary>
+        /// Obtiene un asegurado segun su Id
+        /// </summary>
+        /// <param name="id">Id del asegurado</param>
+        /// <returns>Asegurado</returns>
+        [HttpGet("buscar_por/{aseguradoId}")]
+        public ApplicationResponse<AseguradoDTO> GetAsegurado([Required][FromRoute] Guid aseguradoId)
+        {
+            var response = new ApplicationResponse<AseguradoDTO>();
+            try
+            {
+                response.Data = _aseguradoDAO.GetAseguradoByGuid(aseguradoId);
+            }
+            catch (RCVException ex)
+            {
+                response.Success = false;
+                response.Message = ex.Mensaje;
+                response.Exception = ex.Excepcion.ToString();
+            }
+            return response;
+        }
+        
+        /// <summary>
+        /// Obtiene un asegurado segun su nombre y apellido
+        /// </summary>
+        /// <param name="nombre">Nombre del asegurado</param>
+        /// <param name="apellido">Apellido del asegurado</param>
+        /// <returns>Asegurado</returns>
         [HttpGet("asegurados/{nombre}/{apellido}")]
         public ApplicationResponse<List<AseguradoDTO>> GetAseguradosPorNombreYApellido([Required][FromRoute] string nombre, string apellido)
         {
@@ -69,13 +87,18 @@ namespace administracion.Controllers
             catch (RCVException ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.Message.ToString();
                 response.StatusCode = System.Net.HttpStatusCode.NotFound;
             }
             return response;
         }
 
+        /// <summary>
+        /// Registra un asegurado en el sistema
+        /// </summary>
+        /// <param name="aseguradoDTO">Asegurado a registrar</param>
+        /// <returns>Asegurado registrado</returns>
         [HttpPost("agregar")]
         public ApplicationResponse<bool> AddAsegurado([FromBody] AseguradoSimpleDTO asegurado)
         {
@@ -88,7 +111,7 @@ namespace administracion.Controllers
             {
                 response.StatusCode = System.Net.HttpStatusCode.BadGateway;
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.ToString();
             }
             return response;

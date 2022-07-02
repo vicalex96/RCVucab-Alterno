@@ -18,14 +18,22 @@ namespace administracion.Persistence.DAOs
             _context = context;
         }
 
-
         public bool RegisterPoliza (PolizaSimpleDTO poliza)
         {
             try
             {
+                var numOfPolizas = _context.Polizas
+                    .Where(p => p.vehiculoId == poliza.vehiculoId
+                        && p.fechaVencimiento > DateTime.Today)
+                    .Count();
+                if(numOfPolizas > 0)
+                {
+                    throw new RCVException("El vehiculo no tiene poliza registrada");
+                }
+                
                 Poliza polizaEntity = new Poliza();
 
-                polizaEntity.polizaId = Guid.NewGuid();
+                polizaEntity.polizaId = poliza.Id;
                 polizaEntity.fechaRegistro = poliza.fechaRegistro;
                 polizaEntity.fechaVencimiento = poliza.fechaVencimiento;
                 polizaEntity.tipoPoliza = (TipoPoliza)Enum.Parse(typeof(TipoPoliza), poliza.tipoPoliza);
@@ -35,10 +43,13 @@ namespace administracion.Persistence.DAOs
                 _context.DbContext.SaveChanges();
                 return true;
             }
+            catch(RCVException ex)
+            {
+                throw ex;
+            }
             catch(Exception ex){
                 throw new RCVException("Error al crear el asegurado", ex);
             }
-            return false;
         }
 
         public PolizaDTO GetPolizaByGuid(Guid polizaId)
@@ -72,32 +83,37 @@ namespace administracion.Persistence.DAOs
             try
             {
                 var poliza = _context.Polizas
-                .Include(p => p.vehiculo)
-                .Include(p => p.vehiculo.asegurado)
-                .Where(p => p.vehiculoId == vehiculoID)
-                .Select( p=> new PolizaDTO{
-                    Id = p.polizaId,
-                    fechaRegistro = p.fechaRegistro,
-                    fechaVencimiento = p.fechaVencimiento,
-                    tipoPoliza = p.tipoPoliza.ToString(),
-                    vehiculoId = p.vehiculoId,
-                    vehiculo = new VehiculoDTO{
-                        Id = p.vehiculo.vehiculoId,
-                        anioModelo = p.vehiculo.anioModelo,
-                        color = p.vehiculo.color.ToString(),
-                        marca = p.vehiculo.marca.ToString(),
-                        asegurado =  new AseguradoDTO{
-                            Id = p.vehiculo.asegurado.aseguradoId,
-                            nombre = p.vehiculo.asegurado.nombre,
-                            apellido = p.vehiculo.asegurado.apellido
+                    .Include(p => p.vehiculo)
+                    .Include(p => p.vehiculo.asegurado)
+                    .Where(p => p.vehiculoId == vehiculoID 
+                        && p.fechaVencimiento > DateTime.Now)
+                    .Select( p=> new PolizaDTO{
+                        Id = p.polizaId,
+                        fechaRegistro = p.fechaRegistro,
+                        fechaVencimiento = p.fechaVencimiento,
+                        tipoPoliza = p.tipoPoliza.ToString(),
+                        vehiculoId = p.vehiculoId,
+                        vehiculo = new VehiculoDTO{
+                            Id = p.vehiculo.vehiculoId,
+                            anioModelo = p.vehiculo.anioModelo,
+                            color = p.vehiculo.color.ToString(),
+                            marca = p.vehiculo.marca.ToString(),
+                            asegurado =  new AseguradoDTO{
+                                Id = p.vehiculo.asegurado.aseguradoId,
+                                nombre = p.vehiculo.asegurado.nombre,
+                                apellido = p.vehiculo.asegurado.apellido
+                            }
                         }
-                    }
-                }).FirstOrDefault();
+                    }).FirstOrDefault();
                 if(poliza == null){
-                    throw new Exception("No se encontraron vehiculos con ese nombre y apellido Error 404");
+                    throw new RCVException("");
                 }
                 return poliza;
 
+            }
+            catch(RCVException ex)
+            {
+                throw new RCVException("No se encontraron polizas vigentes para el vehiculo solcitado", ex);
             }
             catch(Exception ex)
             {

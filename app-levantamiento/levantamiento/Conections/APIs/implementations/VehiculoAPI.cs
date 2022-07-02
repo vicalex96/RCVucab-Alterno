@@ -1,9 +1,5 @@
 using System.Text.Json;
-using System.Net.Http;
-using System.Text;
-using levantamiento.Persistence.Entities;
 using levantamiento.BussinesLogic.DTOs;
-using levantamiento.Persistence.DAOs;
 using levantamiento.Responses;
 using levantamiento.Exceptions;
 

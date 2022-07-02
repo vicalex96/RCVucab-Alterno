@@ -1,9 +1,5 @@
 using System.Text.Json;
-using System.Net.Http;
-using System.Text;
-using levantamiento.Persistence.Entities;
 using levantamiento.BussinesLogic.DTOs;
-using levantamiento.Persistence.DAOs;
 using levantamiento.Responses;
 using levantamiento.Exceptions;
 
@@ -19,7 +15,7 @@ namespace levantamiento.Conections.APIs
 
         public async Task<IncidenteDTO> GetIncidenteFromAdmin(Guid incidenteId)
         {
-            var localUrl = url + "Incidente/consultar/{0}";
+            var localUrl = url + "incidente/consultar/{0}";
             try
             {
                 using(var httpClient = new HttpClient())

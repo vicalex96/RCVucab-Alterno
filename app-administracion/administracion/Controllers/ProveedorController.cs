@@ -7,6 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace administracion.Controllers
 {
+    /// <summary>
+    /// Clase que contiene los endpoints el trabajo con proveedores
+    /// </summary>
     [ApiController]
     [Route("Proveedor")]
     public class ProveedorController: Controller
@@ -19,6 +22,10 @@ namespace administracion.Controllers
             _proveedorDao = proveedorDao;
             _logger = logger;
         }
+        /// <summary>
+        /// Mostrar un listado de proveedores que existen en el sistema
+        /// </summary>
+        /// <returns>Proveedores en sistema</returns>
         [HttpGet("mostrar_todos")]
         public ApplicationResponse<List<ProveedorDTO>> ConsultarProveedores()
         {
@@ -31,12 +38,17 @@ namespace administracion.Controllers
             catch (RCVException ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.ToString();
             };
             return response;
         }
 
+        /// <summary>
+        /// Busca un proveedor en el sistema según el Id del proveedor
+        /// </summary>
+        /// <param name="proveedorId">Id del proveedor</param>
+        /// <returns>Proveedor</returns>
         [HttpGet("buscar_por/{proveedorId}")]
         public ApplicationResponse<ProveedorDTO> ConsultarProveedorPorId([Required][FromRoute] Guid proveedorId)
         {
@@ -49,12 +61,17 @@ namespace administracion.Controllers
             catch (RCVException ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.ToString();
             };
             return response;
         }
 
+        /// <summary>
+        /// Registra un proveedor en el sistema
+        /// </summary>
+        /// <param name="proveedorSimpleDTO">Proveedor a registrar</param>
+        /// <returns>Proveedor registrado</returns>
         [HttpPost("registrar")]
         public ApplicationResponse<bool> RegistrarProveedor([FromBody] ProveedorSimpleDTO proveedor)
         {
@@ -67,12 +84,17 @@ namespace administracion.Controllers
             catch (RCVException ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.ToString();
             };
             return response;
         }
         
+        /// <summary>
+        /// Actualiza un proveedor indicado segun su id, se puede agregar una marca o incidar que trabaja con todas
+        /// </summary>
+        /// <param name="proveedorSimpleDTO">Proveedor a actualizar</param>
+        /// <returns>Proveedor actualizado</returns>
         [HttpPost("agregar_marca/{ProveedorId}/{marca}/{agregarTodas}")]
         public ApplicationResponse<bool> AgregarMarcaAProveedor([Required][FromRoute] Guid ProveedorId, [FromRoute] string marca = "-", [FromRoute] bool agregarTodas = false)
         {
@@ -86,7 +108,7 @@ namespace administracion.Controllers
             {
                 response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
-                response.Message = ex.Message.ToString();
+                response.Message = ex.Mensaje.ToString();
                 response.Exception = ex.Excepcion.ToString();
             }
             return response;

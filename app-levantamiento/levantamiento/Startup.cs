@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,7 +9,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using levantamiento.Persistence.DAOs;
 using levantamiento.Persistence.Database;
-using levantamiento.Conections.rabbit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace levantamiento
 {
@@ -40,9 +44,13 @@ namespace levantamiento
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "levantamiento", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { 
+                    Title = "levantamiento", 
+                    Version = "v1" 
+                });
                 
             });
+            services.AddRouting(routing => routing.LowercaseUrls = true);
 
             services.AddCors(options =>
             {
@@ -50,6 +58,7 @@ namespace levantamiento
                 {
                     builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost").AllowAnyHeader().AllowAnyMethod();
                 });
+
             });
 
             

@@ -9,6 +9,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace administracion.Controllers
 {
+    /// <summary>
+    /// Clase que contiene los endpoints de la la poliza
+    /// </summary>
     [ApiController]
     [Route("poliza")]
     public class PolizaController: Controller
@@ -22,24 +25,35 @@ namespace administracion.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Resgistra una poliza en el sistema
+        /// </summary>
+        /// <param name="polizaDTO">Poliza a registrar</param>
+        /// <returns>Poliza registrada</returns>
         [HttpPost("registrar")]
         public ApplicationResponse<bool> registrarPoliza([FromBody] PolizaSimpleDTO poliza)
         {
             var response = new ApplicationResponse<bool>();
             try
             {
-                response.Success = _polizaDao.RegisterPoliza(poliza);
+                response.Data  = _polizaDao.RegisterPoliza(poliza);
+                response.Success = true;
                 response.Message = "Poliza registrada";
             }
             catch (RCVException ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.ToString();
             };
             return response;
         }
 
+        /// <summary>
+        /// Busca la poliza vigente en el sistema según el Id del vehiculo
+        /// </summary>
+        /// <param name="vehiculoId">Id del vehiculo</param>
+        /// <returns>Poliza</returns>
         [HttpGet("consultar_por_vehiculo/{vehiculoID}")]
         public ApplicationResponse<PolizaDTO> consultarPolizaDeVehiculo([Required][FromRoute] Guid vehiculoID)
         {
@@ -52,7 +66,7 @@ namespace administracion.Controllers
             catch (RCVException ex)
             {
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.ToString();
             };
             return response;

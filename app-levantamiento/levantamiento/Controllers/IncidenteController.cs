@@ -8,6 +8,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace administracion.Controllers
 {
+    /// <summary>
+    /// Clase que representa el controlador de incidentes, nos da las herramientas para trabajar con el incidente, desde leer la cola de incidentes nuevos hasta mostrar la informacion en detalle
+    /// </summary>
     [ApiController]
     [Route("Incidente")]
     public class IncidenteController: Controller
