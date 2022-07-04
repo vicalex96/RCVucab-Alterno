@@ -10,7 +10,7 @@ namespace administracion.BussinesLogic.DTOs
     public class ProveedorDTO
     {
         public Guid Id { get; set; }
-        public string nombreLocal {get; set;}
+        public string nombreLocal {get; set;} = "";
         public ICollection<MarcaDTO>? marcas {get; set;} 
     }
 }

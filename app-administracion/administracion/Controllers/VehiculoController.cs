@@ -41,7 +41,7 @@ namespace administracion.Controllers
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             }
             return response;
         }
@@ -63,7 +63,7 @@ namespace administracion.Controllers
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }
@@ -89,7 +89,7 @@ namespace administracion.Controllers
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.StatusCode = System.Net.HttpStatusCode.BadRequest;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             }
             return response;
         }
@@ -106,13 +106,13 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<bool>();
             try
             {
-                response.Data = _vehiculoDao.AddAsegurado(vehiculoId, aseguradoId );
+                //response.Data = _vehiculoDao.AddAsegurado(vehiculoId, aseguradoId );
             }
             catch (RCVException ex)
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             }
             return response;
         }

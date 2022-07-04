@@ -8,10 +8,10 @@ namespace administracion.Responses
 {
     public class ApplicationResponse<T>
     {
-        public string Message { get; set; }
+        public string Message { get; set; } = "";
         public HttpStatusCode StatusCode { get; set; }
-        public T Data { get; set; }
+        public T? Data { get; set;}
         public bool Success { get; set; } = true;
-        public string Exception { get; set; }
+        public string Exception { get; set; } = "";
     }
 }

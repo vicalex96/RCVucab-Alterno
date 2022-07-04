@@ -8,9 +8,7 @@ using administracion.Controllers;
 using administracion.Exceptions;
 using administracion.Persistence.DAOs;
 using administracion.Responses;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using administracion.Conections.rabbit;
 using Xunit;
 
 namespace RCVUcab.Test.UnitTests.Controllers
@@ -19,13 +17,15 @@ namespace RCVUcab.Test.UnitTests.Controllers
     {
         private readonly TallerController _controller;
         private readonly Mock<ITallerDAO> _serviceMock;
+        private readonly Mock<IProductorRabbit> _serviceRabbit;
         private readonly Mock<ILogger<TallerController>> _loggerMock;
 
         public TallerControllerTest()
         {
             _loggerMock = new Mock<ILogger<TallerController>>();
             _serviceMock = new Mock<ITallerDAO>();
-            _controller = new TallerController(_loggerMock.Object, _serviceMock.Object);
+            _serviceRabbit = new Mock<IProductorRabbit>();
+            _controller = new TallerController(_loggerMock.Object, _serviceMock.Object,_serviceRabbit.Object);
 
             _controller.ControllerContext = new ControllerContext();
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
@@ -37,11 +37,14 @@ namespace RCVUcab.Test.UnitTests.Controllers
         {
             _serviceMock
                 .Setup(x => x.RegisterTaller(It.IsAny<TallerSimpleDTO>()))
+                .Returns(It.IsAny<Guid>());
+            _serviceRabbit
+                .Setup(x => x.SendMessage(It.IsAny<Routings>(),It.IsAny<string>(),It.IsAny<string>()))
                 .Returns(It.IsAny<bool>());
         
             var result = _controller.RegistrarTaller(It.IsAny<TallerSimpleDTO>());
 
-            Assert.IsType<ApplicationResponse<bool>>(result);
+            Assert.IsType<ApplicationResponse<Guid>>(result);
             return Task.CompletedTask;
         }
 

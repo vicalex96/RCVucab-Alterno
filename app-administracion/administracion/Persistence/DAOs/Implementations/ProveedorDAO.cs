@@ -19,15 +19,15 @@ namespace administracion.Persistence.DAOs
             _context = context;
         }
 
-        public bool RegisterProveedor(ProveedorSimpleDTO proveedor)
+        public Guid RegisterProveedor(ProveedorSimpleDTO proveedor)
         {
             try
             {
-                if(proveedor.nombreLocal.ToLower() == "string" || 
+                /*if(proveedor.nombreLocal.ToLower() == "string" || 
                     proveedor.nombreLocal.Count() == 0)
                 {
                     throw new Exception("Error");
-                }
+                }*/
                 Proveedor proveedorEntity = new Proveedor
                 {
                     proveedorId = proveedor.Id,
@@ -35,13 +35,9 @@ namespace administracion.Persistence.DAOs
                 };
                 _context.Proveedores.Add(proveedorEntity);
                 _context.DbContext.SaveChanges();
-                /*
-                ProductorRabbit rabbit = new ProductorRabbit();
-                rabbit.SendMessage(Routings.taller,"registrar_provedor", proveedor.Id.ToString());
-                */
-                return true;
+                return proveedor.Id;
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 throw new RCVException("Error al guardar, llave duplicada");
             }
@@ -62,10 +58,10 @@ namespace administracion.Persistence.DAOs
                 {
                     Id = t.proveedorId,
                     nombreLocal = t.nombreLocal,
-                    marcas = t.marcas
+                    marcas = t.marcas!
                     .Select(m => new MarcaDTO
                     {
-                        nombreMarca = m.manejaTodas ? "TodasLasMarcas" : m.marca.ToString()
+                        nombreMarca = m.manejaTodas ? "TodasLasMarcas" : m.marca.ToString()!
                     }
                     ).ToList(),
                 }).SingleOrDefault();
@@ -91,10 +87,10 @@ namespace administracion.Persistence.DAOs
                 {
                     Id = t.proveedorId,
                     nombreLocal = t.nombreLocal,
-                    marcas = t.marcas
+                    marcas = t.marcas!
                     .Select(m => new MarcaDTO
                     {
-                        nombreMarca = m.manejaTodas ? "TodasLasMarcas" : m.marca.ToString()
+                        nombreMarca = m.manejaTodas ? "TodasLasMarcas" : m.marca.ToString()!
                     }
                     ).ToList(),
                 }).ToList();

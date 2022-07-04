@@ -18,19 +18,57 @@ namespace administracion.Persistence.DAOs
             _context = context;
         }
 
+        private bool IsAvailableForPoliza(Guid vehiculoId)
+        {
+            try
+            {
+                var countOfActivePolizas = _context.Polizas
+                    .Include(p => p.vehiculo)
+                    .Include(p => p.vehiculo!.asegurado)
+                    .Where(p => p.vehiculoId == vehiculoId 
+                        && p.fechaVencimiento > DateTime.Today)
+                    .Count();
+
+                if(countOfActivePolizas == 0)
+                    return true;
+
+                return false;
+            }
+            catch(Exception ex)
+            {
+                throw new RCVException("ocurrio un problema al verificar la disponiblidad para la poliza", ex);
+            }
+        }
+        private bool IsNotAseguradosVehiculo(Guid vehiculoId)
+        {
+            try
+            {
+                var vehiculo = _context.Vehiculos
+                    .Where(v => v.vehiculoId == vehiculoId 
+                        && v.asegurado == null);
+
+                if(vehiculo != null)
+                    return true;
+
+                return false;
+            }
+            catch(Exception ex)
+            {
+                throw new RCVException("ocurrio un problema al verificar la disponiblidad para la poliza", ex);
+            }
+        }
+
         public bool RegisterPoliza (PolizaSimpleDTO poliza)
         {
             try
             {
-                var numOfPolizas = _context.Polizas
-                    .Where(p => p.vehiculoId == poliza.vehiculoId
-                        && p.fechaVencimiento > DateTime.Today)
-                    .Count();
-                if(numOfPolizas > 0)
-                {
-                    throw new RCVException("El vehiculo no tiene poliza registrada");
-                }
-                
+                /*
+                if(IsAvailableForPoliza(poliza.vehiculoId))
+                    throw new RCVException("El vehiculo ya cuenta con una poliza activa");
+
+                if(IsNotAseguradosVehiculo(poliza.vehiculoId))
+                    throw new RCVException("El vehiculo no pertener a un asegurado");
+                */
                 Poliza polizaEntity = new Poliza();
 
                 polizaEntity.polizaId = poliza.Id;
@@ -86,7 +124,8 @@ namespace administracion.Persistence.DAOs
                     .Include(p => p.vehiculo)
                     .Include(p => p.vehiculo.asegurado)
                     .Where(p => p.vehiculoId == vehiculoID 
-                        && p.fechaVencimiento > DateTime.Now)
+                        && p.fechaVencimiento > DateTime.Now
+                        )
                     .Select( p=> new PolizaDTO{
                         Id = p.polizaId,
                         fechaRegistro = p.fechaRegistro,
@@ -94,14 +133,14 @@ namespace administracion.Persistence.DAOs
                         tipoPoliza = p.tipoPoliza.ToString(),
                         vehiculoId = p.vehiculoId,
                         vehiculo = new VehiculoDTO{
-                            Id = p.vehiculo.vehiculoId,
+                            Id = p.vehiculo!.vehiculoId,
                             anioModelo = p.vehiculo.anioModelo,
                             color = p.vehiculo.color.ToString(),
                             marca = p.vehiculo.marca.ToString(),
                             asegurado =  new AseguradoDTO{
-                                Id = p.vehiculo.asegurado.aseguradoId,
-                                nombre = p.vehiculo.asegurado.nombre,
-                                apellido = p.vehiculo.asegurado.apellido
+                                Id = p.vehiculo.asegurado!.aseguradoId,
+                                nombre = p.vehiculo.asegurado!.nombre,
+                                apellido = p.vehiculo.asegurado!.apellido
                             }
                         }
                     }).FirstOrDefault();

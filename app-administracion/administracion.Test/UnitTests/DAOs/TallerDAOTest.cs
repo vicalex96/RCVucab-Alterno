@@ -1,4 +1,4 @@
-//using Bogus;
+
 using Microsoft.Extensions.Logging;
 using Moq;
 using administracion.Persistence.DAOs;
@@ -6,10 +6,8 @@ using administracion.Persistence.Database;
 using administracion.BussinesLogic.DTOs;
 using administracion.Test.DataSeed;
 using administracion.Exceptions;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
-using System.Collections;
+
 
 namespace administracion.Test.UnitTests.DAOs
 {
@@ -30,17 +28,18 @@ namespace administracion.Test.UnitTests.DAOs
             _contextMock.SetupDbContextDataEmpresas();
         }
 
+
         [Fact(DisplayName = "DAO: Registrar un Taller deberia retornar true")]
         public Task ShouldRegisterTaller()
         {
-            TallerSimpleDTO taller = new TallerSimpleDTO()
+            var taller = new TallerSimpleDTO
             {
-                Id = Guid.Parse("111101c9-1212-46bf-82a3-05ff65bb2100"),
-                nombreLocal = "Taller 1"
+                Id = Guid.Parse("00f401c9-12aa-46bf-82a3-05ff65bb2c00"),
+                nombreLocal = "taller 1"
             };
-            bool respuesta = _dao.RegisterTaller(taller);
+            Guid response = _dao.RegisterTaller(taller);
 
-            Assert.True(respuesta);
+            Assert.NotEqual(Guid.Empty,response);
             return Task.CompletedTask;
         }
 

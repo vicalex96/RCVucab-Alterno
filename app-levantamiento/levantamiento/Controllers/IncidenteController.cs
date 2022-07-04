@@ -43,7 +43,7 @@ namespace administracion.Controllers
             {
                 response.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 response.Success = false;
-                response.Message = ex.Message;
+                response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion.ToString();
             };
             return response;

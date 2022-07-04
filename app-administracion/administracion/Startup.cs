@@ -37,6 +37,7 @@ namespace administracion
             services.AddTransient<IIncidenteDAO, IncidenteDAO>();
             services.AddTransient<ITallerDAO, TallerDAO>();
             services.AddTransient<IProveedorDAO, ProveedorDAO>();
+            services.AddTransient<IProductorRabbit, ProductorRabbit>();
 
             services.AddSwaggerGen(c =>
             {

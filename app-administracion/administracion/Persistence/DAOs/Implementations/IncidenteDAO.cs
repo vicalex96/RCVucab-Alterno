@@ -3,10 +3,7 @@ using administracion.Persistence.Database;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
 using administracion.BussinesLogic.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Collections;
+
 
 namespace administracion.Persistence.DAOs
 {
@@ -34,11 +31,12 @@ namespace administracion.Persistence.DAOs
                 };   
                 _context.Incidentes.Add(incidenteEntity);
                 _context.DbContext.SaveChanges();
+
                 return true;
             }
             catch(DbUpdateException ex)
             {
-                throw new RCVException("No se pudo registrar, errar con al identificar la relacion con las claves",ex.InnerException);
+                throw new RCVException("No se pudo registrar, errar con al identificar la relacion con las claves",ex);
             }
             catch (Exception ex)
             {
@@ -57,16 +55,15 @@ namespace administracion.Persistence.DAOs
                     polizaId = i.polizaId,
                     estadoIncidente = i.estadoIncidente.ToString(),
                     poliza = new PolizaDTO{
-                        Id = i.poliza.polizaId,
+                        Id = i.poliza!.polizaId,
                         fechaRegistro = i.poliza.fechaRegistro,
                         fechaVencimiento = i.poliza.fechaVencimiento,
                         tipoPoliza = i.poliza.tipoPoliza.ToString(),
                         vehiculoId = i.poliza.vehiculoId,   
-                    }
+                    }!
                 }).FirstOrDefault();
 
-                return incidente;   
-
+                return incidente!;   
             }
             catch(Exception ex)
             {
@@ -85,12 +82,12 @@ namespace administracion.Persistence.DAOs
                     polizaId = i.polizaId,
                     estadoIncidente = i.estadoIncidente.ToString(),
                     poliza = new PolizaDTO{
-                        Id = i.poliza.polizaId,
+                        Id = i.poliza!.polizaId,
                         fechaRegistro = i.poliza.fechaRegistro,
                         fechaVencimiento = i.poliza.fechaVencimiento,
                         tipoPoliza = i.poliza.tipoPoliza.ToString(),
                         vehiculoId = i.poliza.vehiculoId,   
-                    }
+                    }!
                 }).ToList();
 
                 return incidentes;   
@@ -108,17 +105,25 @@ namespace administracion.Persistence.DAOs
                 var incidente = _context.Incidentes
                     .Where(i => i.incidenteId == incidenteId)
                     .FirstOrDefault();
-                incidente.estadoIncidente = estado;
-                _context.DbContext.SaveChanges();
-                return true;
+                if(incidente != null)
+                {
+                    incidente.estadoIncidente = estado;
+                    _context.DbContext.SaveChanges();
+                    return true;
+                }
+                throw new RCVException("");
             }
-            catch (Exception e)
+            catch (RCVException ex)
             {
-                throw new Exception(e.Message);
+                throw new RCVException("No se encontro ningun incidente con dicho identificador", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new RCVException("No se pudo actualizar el incidente", ex);
             }
         }
 
     }
 
-   
+
 }

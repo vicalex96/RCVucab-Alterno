@@ -10,7 +10,7 @@ namespace administracion.BussinesLogic.DTOs
     public class AseguradoSimpleDTO
     {
         public Guid Id { get; set; }
-        public string nombre { get; set; }
-        public string apellido {get; set;}
+        public string nombre { get; set; } = "";
+        public string apellido {get; set;} = "";
     }
 }

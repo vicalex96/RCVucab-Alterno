@@ -1,50 +1,23 @@
 
-using System;
 using System.Text;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using administracion.Persistence.Database;
+
 
 namespace administracion.Conections.rabbit
 {
-    public enum Routings //Es quien va a recibir el mensaje
+    public class ProductorRabbit: IProductorRabbit
     {
-        taller,
-        proveedor,
-        perito,
-        administrador
-    }
 
-    public enum Exchanges
-    {
-        gerencia,
-        levantamiento,
-        repacaciones,
-        partes
-    }
-    
-    public class ProductorRabbit
-    {
         private Routings _routing;
-        private Exchanges _exchange;
+        private Exchanges _exchange = Exchanges.gerencia;
         private ConnectionFactory factory = new ConnectionFactory() 
         {
             HostName =  "localhost" 
         };
-
-        public ProductorRabbit (Exchanges exchange, Routings routing)
+        
+        public bool SendMessage(Routings routing, string instruccion, string contenido)
         {
-            _exchange = exchange;
             _routing = routing;
-        }
-        private string GenerateMessage(string keyword, string content)
-        {
-            return keyword + ":" + content;
-        }
-
-
-        public bool SendMessage(Routings routing,string instruccion, string contenido)
-        {
             try
             {
                 var comando = GenerateMessage(instruccion,contenido);
@@ -53,18 +26,26 @@ namespace administracion.Conections.rabbit
                     using (var channel = connection.CreateModel())
                     {
                         channel.ExchangeDeclare(
-                            exchange:_exchange.ToString(),
-                            type:ExchangeType.Direct, 
+                            exchange: _exchange.ToString(),
+                            type: ExchangeType.Direct.ToString(), 
                             durable: true
                             );
 
-                        BasicPublish(channel,comando, routing);
+                        var body = Encoding.UTF8.GetBytes(comando);
 
-                        Console.WriteLine($"[x] Enviando {comando}");
+                        IBasicProperties props = channel.CreateBasicProperties();
+                        props.ContentType = "text/plain";
+                        props.DeliveryMode = 2;
+
+                        channel.BasicPublish(
+                            exchange: _exchange.ToString(), 
+                            routingKey: _routing.ToString(), 
+                            basicProperties: props, 
+                            body:body
+                            );
                     }
-                    Console.WriteLine("mansaje enviado");
                 }
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 Console.WriteLine("ocurrio un error al enviar el mensaje por RabbitMQ");
             }
@@ -72,19 +53,12 @@ namespace administracion.Conections.rabbit
             
         }
 
-        //metodo para crear el modelo
-        private IModel BasicPublish(IModel channel, string message, Routings routingkey)
+        private string GenerateMessage(string keyword, string content)
         {
-            var body = Encoding.UTF8.GetBytes(message);
-
-            channel.BasicPublish(
-                exchange:"gerencia", 
-                routingKey: routingkey.ToString(), 
-                basicProperties: null, 
-                body:body);
-            return channel;
+            return keyword + ":" + content;
         }
-
         
     }
+
+
 }

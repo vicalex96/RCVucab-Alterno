@@ -29,18 +29,18 @@ namespace administracion.Persistence.DAOs
                     Id = v.vehiculoId,
                     anioModelo = v.anioModelo,
                     fechaCompra = v.fechaCompra,
-                    placa = v.placa,
+                    placa = v.placa!,
                     color = v.color.ToString(),
                     marca = v.marca.ToString(),
                     asegurado =  _context.Asegurados
                     .Where(a => a.aseguradoId == v.aseguradoId)
                     .Select(a =>
                     new AseguradoDTO{
-                        Id = v.asegurado.aseguradoId,
+                        Id = v.asegurado!.aseguradoId,
                         nombre = v.asegurado.nombre,
                         apellido = v.asegurado.apellido
                     }).FirstOrDefault(),
-                    polizas = v.polizas.Select( p => new PolizaDTO{
+                    polizas = v.polizas!.Select( p => new PolizaDTO{
                             Id = p.polizaId,
                             fechaRegistro = p.fechaRegistro,
                             fechaVencimiento = p.fechaVencimiento,
@@ -48,7 +48,8 @@ namespace administracion.Persistence.DAOs
                             vehiculoId = v.vehiculoId,
                     }).ToList()
                 }).ToList();
-                if(vehiculos.ToList().Count == 0){
+                Console.WriteLine(vehiculos);
+                if(vehiculos.Count == 0){
                     throw new Exception("No se encontraron vehiculos con ese nombre y apellido Error 404");
                 }
                 return vehiculos.ToList();
@@ -72,15 +73,15 @@ namespace administracion.Persistence.DAOs
                         Id = v.vehiculoId,
                         anioModelo = v.anioModelo,
                         fechaCompra = v.fechaCompra,
-                        placa = v.placa,
+                        placa = v.placa!,
                         color = v.color.ToString(),
                         marca = v.marca.ToString(),
                         asegurado = new AseguradoDTO{
-                            Id = v.asegurado.aseguradoId,
-                            nombre = v.asegurado.nombre,
-                            apellido = v.asegurado.apellido
+                            Id = v.asegurado!.aseguradoId,
+                            nombre = v.asegurado!.nombre,
+                            apellido = v.asegurado!.apellido
                         },
-                        polizas = v.polizas.Select( p => new PolizaDTO{
+                        polizas = v.polizas!.Select( p => new PolizaDTO{
                             Id = p.polizaId,
                             fechaRegistro = p.fechaRegistro,
                             fechaVencimiento = p.fechaVencimiento,
@@ -88,15 +89,23 @@ namespace administracion.Persistence.DAOs
                             vehiculoId = v.vehiculoId,
                     }).ToList()
 
-                    }).ToList()[0]; 
+                }).FirstOrDefault()!; 
+                if(data == null)
+                    throw new RCVException("No se encontró algún  vehículo con el id especificado");
+                
                 return data;
             }
-            catch (Exception ex) {
-                Console.WriteLine("ocurrio un error al intentar leer la data: " ,ex.Message.ToString());
-                throw new RCVException("Ha ocurrido un error al intentar obtener el vehiculo:", ex.Message, ex);
+            catch (RCVException ex) {
+                throw new RCVException(ex.Mensaje,ex);
+            }
+            catch(Exception ex)
+            {
+                throw new RCVException("Error al obtener el vehículo", ex);
             }
 
+
         }
+        
         public List<VehiculoDTO> GetVehiculosByAsegurado(Guid aseguradoId)
         {
             try
@@ -110,17 +119,17 @@ namespace administracion.Persistence.DAOs
                         Id = v.vehiculoId,
                         anioModelo = v.anioModelo,
                         fechaCompra = v.fechaCompra,
-                        placa = v.placa,
+                        placa = v.placa!,
                         color = v.color.ToString(),
                         marca = v.marca.ToString(),
                         asegurado =  _context.Asegurados
                         .Where(a => a.aseguradoId == v.aseguradoId)
                         .Select(a => new AseguradoDTO{
-                            Id = v.asegurado.aseguradoId,
-                            nombre = v.asegurado.nombre,
-                            apellido = v.asegurado.apellido
+                            Id = v.asegurado!.aseguradoId,
+                            nombre = v.asegurado!.nombre,
+                            apellido = v.asegurado!.apellido
                         }).FirstOrDefault(),
-                        polizas = v.polizas.Select( p => new PolizaDTO{
+                        polizas = v.polizas!.Select( p => new PolizaDTO{
                             Id = p.polizaId,
                             fechaRegistro = p.fechaRegistro,
                             fechaVencimiento = p.fechaVencimiento,
@@ -142,14 +151,19 @@ namespace administracion.Persistence.DAOs
         
         public bool RegisterVehiculo(VehiculoSimpleDTO auto)
         {
-            
-            
             try{
                 Color _color = (Color)Enum.Parse(typeof(Color), auto.color);
                 Marca _marca = (Marca)Enum.Parse(typeof(Marca), auto.marca);
-                var vehiculo = new Vehiculo(auto.Id,auto.anioModelo, auto.fechaCompra, _color, auto.placa,_marca);
+                var vehiculo = new Vehiculo();
+                vehiculo.vehiculoId = auto.Id;
+                vehiculo.anioModelo = auto.anioModelo;
+                vehiculo.fechaCompra = auto.fechaCompra;
+                vehiculo.color = _color;
+                vehiculo.placa = auto.placa;
+                vehiculo.marca = _marca;
                 _context.Vehiculos.Add(vehiculo);
                 _context.DbContext.SaveChanges();
+
                 return true;
             }
             catch(ArgumentException ex)
@@ -165,21 +179,25 @@ namespace administracion.Persistence.DAOs
         {
             try
             {
-                var vehiculo = _context.Vehiculos.Where(v => v.vehiculoId == vehiculoId).FirstOrDefault();
-                var asegurado = _context.Asegurados.Where(a => a.aseguradoId == aseguradoId).FirstOrDefault();
-                if(asegurado != null && vehiculo != null 
-                    && vehiculo.aseguradoId == null){
-                    vehiculo.aseguradoId = asegurado.aseguradoId;
-                    Vehiculo veh = (Vehiculo) vehiculo;
-                    _context.Vehiculos.Update(veh);
-                    _context.DbContext.SaveChanges();
-                    return true;
-                }
-                return false;
+                Vehiculo vehiculo = _context.Vehiculos
+                    .Where(v => v.vehiculoId == vehiculoId)
+                    .First()!;
+                
+                Asegurado asegurado = _context.Asegurados
+                    .Where(v => v.aseguradoId == aseguradoId)
+                    .First();
+                vehiculo.aseguradoId = aseguradoId;
+                _context.Vehiculos.Update(vehiculo);
+                _context.DbContext.SaveChanges();
+                return true;
+            }
+            catch(DbUpdateException ex)
+            {
+                throw new RCVException("Error: El vehiculo o el asegurado no existe", ex);
             }
             catch (Exception ex)
             {
-                throw new RCVException("Error al agregar el asegurado", ex);
+                throw new RCVException("Ocurrio un error desconocido al intentar agregar el asegurado", ex);
             }
         }
     }

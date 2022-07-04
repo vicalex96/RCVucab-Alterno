@@ -1,12 +1,9 @@
-//using Bogus;
 using Microsoft.Extensions.Logging;
 using Moq;
 using administracion.Persistence.DAOs;
 using administracion.Persistence.Database;
 using administracion.BussinesLogic.DTOs;
 using administracion.Test.DataSeed;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 using System.Collections;
 
@@ -21,14 +18,12 @@ namespace administracion.Test.UnitTests.DAOs
 
         public IncidenteDAOShould()
         {
-            //var faker = new Faker();
             _contextMock = new Mock<IAdminDBContext>();
-            // el Mock no emplea un DBcontext real en IAdminDBContext =>  obligamos una respuesta por defecto para el SaveChanges y de esta forma evitar un error al no tener un DBcontext real
             _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
             _mockLogger = new Mock<ILogger<IncidenteDAO>>();
 
             _dao = new IncidenteDAO(_contextMock.Object);
-            _contextMock.SetupDbContextDataVehiculo();
+            _contextMock.SetupDbContextDataIncidenteProcess();
         }
 
         public class IncidenteClassData : IEnumerable<object[]>
@@ -59,7 +54,7 @@ namespace administracion.Test.UnitTests.DAOs
         }
 
         [Theory(DisplayName = "DAO: Consultar Incidente según su Guid regresar un incidente")]
-        [InlineData("38f401c9-12aa-46bf-82a2-05ff65bb2100")]
+        [InlineData("000001c9-12aa-46bf-82a2-05ff65bb0000")]
         public Task ShouldGetIncidenteByGuid(Guid id)
         {
             IncidenteDTO incidente = _dao.consultarIncidente(id);

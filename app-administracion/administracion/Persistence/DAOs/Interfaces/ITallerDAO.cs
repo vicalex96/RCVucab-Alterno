@@ -11,7 +11,7 @@ namespace administracion.Persistence.DAOs
         public TallerDTO GetTallerByGuid (Guid tallerId);
         public List<TallerDTO> GetTalleres();
 
-        public bool RegisterTaller (TallerSimpleDTO taller);
+        public Guid RegisterTaller (TallerSimpleDTO taller);
         public bool AddMarca(Guid tallerId, string marcaStr, bool todasLasMarcas = false);
         
     }

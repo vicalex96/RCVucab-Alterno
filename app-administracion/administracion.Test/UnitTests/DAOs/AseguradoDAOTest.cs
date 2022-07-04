@@ -21,14 +21,12 @@ namespace administracion.Test.UnitTests.DAOs
 
         public AseguradoDAOShould()
         {
-            //var faker = new Faker();
             _contextMock = new Mock<IAdminDBContext>();
-            // el Mock no emplea un DBcontext real en IAdminDBContext =>  obligamos una respuesta por defecto para el SaveChanges y de esta forma evitar un error al no tener un DBcontext real
             _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
             _mockLogger = new Mock<ILogger<AseguradoDAO>>();
 
             _dao = new AseguradoDAO(_contextMock.Object);
-            _contextMock.SetupDbContextDataAsegurado();
+            _contextMock.SetupDbContextDataIncidenteProcess();
         }
 
         public class AseguradoClassData : IEnumerable<object[]>
@@ -50,23 +48,18 @@ namespace administracion.Test.UnitTests.DAOs
         [Fact(DisplayName = "DAO: Consulta Asegurados Retorna verdadero")]
         public Task GetAseguradosReturnTrue()
         {
-            //Arrage
             var result = _dao.GetAsegurados();
-            //Act
             var isNoEmpty = result.Any();
-            //Assert
             Assert.True(isNoEmpty);
             return Task.CompletedTask;
         }
 
         [Theory(DisplayName = "DAO: Consultar asegurados por Guid y retornar asegurado")]
-        [InlineData("38f401c9-12aa-46bf-82a2-05ff65bb2c86")]
-        public Task GetAsegurado_PorID_ReturnTrue(Guid ID)
+        [InlineData("00000001-12aa-46bf-82a2-05ff65bb2c86")]
+        public Task GetAsegurado_PorID_ReturnTrue(Guid aseguradoId)
         {
-            //Arrage
-            var aseguradoDTO = _dao.GetAseguradoByGuid(ID);
-            //Assert
-            Assert.Equal(aseguradoDTO.Id, ID);
+            var aseguradoDTO = _dao.GetAseguradoByGuid(aseguradoId);
+            Assert.Equal(aseguradoId.ToString(), aseguradoDTO.Id.ToString());
             return Task.CompletedTask;
         }
 
@@ -74,11 +67,9 @@ namespace administracion.Test.UnitTests.DAOs
         [InlineData("Juan", "Willson")]
         public Task GetAsegurado_PorNombreYApellido_ReturnTrue(string nombre, string apellido)
         {
-            //Arrage
+
             var aseguradoDTO = _dao.GetAseguradosPorNombreCompleto(nombre, apellido);
-            //Act
             var isNoEmpty = aseguradoDTO.Any();
-            //Assert
             Assert.True(isNoEmpty);
             return Task.CompletedTask;
         }
@@ -103,7 +94,7 @@ namespace administracion.Test.UnitTests.DAOs
         {
             AseguradoSimpleDTO asegurado = new AseguradoSimpleDTO()
             {
-                Id = new Guid (" 38f401c9-12aa-46bf-82a2-05ff65bb2500"),
+                Id = new Guid ("00000000-0001-46bf-82a2-05ff65bb2c86"),
                 nombre = "",
                 apellido = "",
             };

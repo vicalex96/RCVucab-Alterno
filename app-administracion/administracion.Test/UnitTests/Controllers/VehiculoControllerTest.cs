@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
+using administracion.Persistence.Entities;
 
 namespace RCVUcab.Test.UnitTests.Controllers
 {

@@ -6,11 +6,11 @@ namespace administracion.Exceptions
     {
         public string Mensaje { get; set; }
 
-        public Exception Excepcion { get; set; }
+        public Exception? Excepcion { get; set; }
 
-        public string CodigoError { get; set; }
+        public string? CodigoError { get; set; }
 
-        public string MensajeSoporte { get; set; }
+        public string? MensajeSoporte { get; set; }
 
         
         public RCVException(string _mensaje, Exception _excepcion, string _mensajesoporte, string _codigoError)

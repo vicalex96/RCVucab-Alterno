@@ -8,6 +8,7 @@ using administracion.Controllers;
 using administracion.Exceptions;
 using administracion.Persistence.DAOs;
 using administracion.Responses;
+using administracion.Conections.rabbit;
 using Xunit;
 
 namespace RCVUcab.Test.UnitTests.Controllers
@@ -16,13 +17,15 @@ namespace RCVUcab.Test.UnitTests.Controllers
     {
         private readonly ProveedorController _controller;
         private readonly Mock<IProveedorDAO> _serviceMock;
+        private readonly Mock<IProductorRabbit> _serviceRabbit;
         private readonly Mock<ILogger<ProveedorController>> _loggerMock;
 
         public ProveedorControllerTest()
         {
             _loggerMock = new Mock<ILogger<ProveedorController>>();
             _serviceMock = new Mock<IProveedorDAO>();
-            _controller = new ProveedorController(_loggerMock.Object, _serviceMock.Object);
+            _serviceRabbit = new Mock<IProductorRabbit>();
+            _controller = new ProveedorController(_loggerMock.Object, _serviceMock.Object,_serviceRabbit.Object);
             _controller.ControllerContext = new ControllerContext();
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
             _controller.ControllerContext.ActionDescriptor = new ControllerActionDescriptor();
@@ -33,11 +36,15 @@ namespace RCVUcab.Test.UnitTests.Controllers
         {
             _serviceMock
                 .Setup(x => x.RegisterProveedor(It.IsAny<ProveedorSimpleDTO>()))
+                .Returns(It.IsAny<Guid>());
+            
+            _serviceRabbit
+                .Setup(x => x.SendMessage(It.IsAny<Routings>(),It.IsAny<string>(),It.IsAny<string>()))
                 .Returns(It.IsAny<bool>());
 
             var result = _controller.RegistrarProveedor(It.IsAny<ProveedorSimpleDTO>());
 
-            Assert.IsType<ApplicationResponse<bool>>(result);
+            Assert.IsType<ApplicationResponse<Guid>>(result);
             return Task.CompletedTask;
         }
 

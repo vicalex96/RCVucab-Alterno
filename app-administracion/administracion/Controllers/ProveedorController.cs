@@ -4,6 +4,7 @@ using administracion.Persistence.DAOs;
 using administracion.Exceptions;
 using administracion.Responses;
 using System.ComponentModel.DataAnnotations;
+using administracion.Conections.rabbit;
 
 namespace administracion.Controllers
 {
@@ -15,12 +16,14 @@ namespace administracion.Controllers
     public class ProveedorController: Controller
     {
         private readonly IProveedorDAO _proveedorDao;
+        private readonly IProductorRabbit _ProductorRabbit;
         private readonly ILogger<ProveedorController> _logger;
 
-        public ProveedorController(ILogger<ProveedorController> logger, IProveedorDAO proveedorDao)
+        public ProveedorController(ILogger<ProveedorController> logger, IProveedorDAO proveedorDao, IProductorRabbit productorRabbit)
         {
             _proveedorDao = proveedorDao;
             _logger = logger;
+            _ProductorRabbit = productorRabbit;
         }
         /// <summary>
         /// Mostrar un listado de proveedores que existen en el sistema
@@ -39,7 +42,7 @@ namespace administracion.Controllers
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }
@@ -62,7 +65,7 @@ namespace administracion.Controllers
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }
@@ -73,19 +76,25 @@ namespace administracion.Controllers
         /// <param name="proveedorSimpleDTO">Proveedor a registrar</param>
         /// <returns>Proveedor registrado</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> RegistrarProveedor([FromBody] ProveedorSimpleDTO proveedor)
+        public ApplicationResponse<Guid> RegistrarProveedor([FromBody] ProveedorSimpleDTO proveedor)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<Guid>();
             try
             {
-                response.Success = _proveedorDao.RegisterProveedor(proveedor);
+                response.Data = _proveedorDao.RegisterProveedor(proveedor);
+                _ProductorRabbit.SendMessage(
+                    Routings.proveedor,
+                    "registrar_proveedor",
+                    response.Data.ToString()
+                );
+                response.Success = true;
                 response.Message = "Proveedor Registrado";
             }
             catch (RCVException ex)
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }
@@ -109,7 +118,7 @@ namespace administracion.Controllers
                 response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje.ToString();
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             }
             return response;
         }

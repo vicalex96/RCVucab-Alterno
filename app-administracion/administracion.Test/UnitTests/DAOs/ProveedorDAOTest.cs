@@ -1,4 +1,3 @@
-//using Bogus;
 using Microsoft.Extensions.Logging;
 using Moq;
 using administracion.Persistence.DAOs;
@@ -6,10 +5,9 @@ using administracion.Persistence.Database;
 using administracion.BussinesLogic.DTOs;
 using administracion.Exceptions;
 using administracion.Test.DataSeed;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 using System.Collections;
+
 
 namespace administracion.Test.UnitTests.DAOs
 {
@@ -30,17 +28,32 @@ namespace administracion.Test.UnitTests.DAOs
             _contextMock.SetupDbContextDataEmpresas();
         }
 
+        public class ProveedorClassData : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                yield return new object[] {
+                    new ProveedorSimpleDTO
+                    {
+                        Id = Guid.Parse("00f401c9-12aa-46bf-82a3-05ff65bb2c00"),
+                        nombreLocal = "Proveedor 1"
+                    }
+                };
+            }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
         [Fact(DisplayName = "DAO: Registrar un Proveedor deberia retornar true")]
         public Task ShouldRegisterProveedor()
-        {
-            ProveedorSimpleDTO proveedor = new ProveedorSimpleDTO()
+        {     
+            var proveedor = new ProveedorSimpleDTO
             {
-                Id = Guid.Parse("111101c9-1212-46bf-82a3-05ff65bb2100"),
+                Id = Guid.Parse("00f401c9-12aa-46bf-82a3-05ff65bb2c00"),
                 nombreLocal = "Proveedor 1"
             };
-            bool respuesta = _dao.RegisterProveedor(proveedor);
+            Guid response = _dao.RegisterProveedor(proveedor);
 
-            Assert.True(respuesta);
+            Assert.NotEqual(Guid.Empty,response);
             return Task.CompletedTask;
         }
 

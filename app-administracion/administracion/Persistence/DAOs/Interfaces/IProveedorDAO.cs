@@ -7,7 +7,7 @@ namespace administracion.Persistence.DAOs
 {
     public interface IProveedorDAO
     {
-        public bool RegisterProveedor (ProveedorSimpleDTO proveedor);
+        public Guid RegisterProveedor (ProveedorSimpleDTO proveedor);
         public ProveedorDTO GetProveedorByGuid (Guid proveedorId);
         public List<ProveedorDTO> GetProveedores();
         public bool AddMarca(Guid proveedorId,string marca, bool todasLasMarcas);

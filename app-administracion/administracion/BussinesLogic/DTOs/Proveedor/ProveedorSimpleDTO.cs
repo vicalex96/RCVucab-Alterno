@@ -9,6 +9,6 @@ namespace administracion.BussinesLogic.DTOs
     public class ProveedorSimpleDTO
     {
         public Guid Id { get; set; }
-        public string nombreLocal {get; set;} 
+        public string nombreLocal {get; set;} ="";
     }
 }

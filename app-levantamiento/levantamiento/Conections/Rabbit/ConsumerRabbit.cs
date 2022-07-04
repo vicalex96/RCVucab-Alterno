@@ -44,27 +44,30 @@ namespace levantamiento.Conections.rabbit
                     Console.WriteLine(" [*] Waiting for messages.");
 
                     var consumer=new EventingBasicConsumer(channel);
-                    messages = await Consumir(consumer);
-
+                    messages = await Consumir(consumer, messages);
+                    
+                    //await Task.Delay(1000);
                     channel.BasicConsume(
                         queue:_queueName.ToString(), 
                         autoAck: true, 
                         consumer: consumer
                         );
-                    
+
                 }
             }
+
             return messages;
         }
 
-        public async Task<List<string>> Consumir(EventingBasicConsumer consumer) 
+        public async Task<List<string>> Consumir(EventingBasicConsumer consumer, List<string> messages) 
         {
-            List<string> messages = new List<string>();
+            
             consumer.Received +=  (model, ea)=>
             {
                     var body = ea.Body.ToArray();
                     messages.Add(Encoding.UTF8.GetString(body));
             };
+            
             return messages;
         }                   
 

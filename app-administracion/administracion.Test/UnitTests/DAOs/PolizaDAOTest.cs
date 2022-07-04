@@ -4,8 +4,6 @@ using administracion.Persistence.DAOs;
 using administracion.Persistence.Database;
 using administracion.BussinesLogic.DTOs;
 using administracion.Test.DataSeed;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 using System.Collections;
 
@@ -19,14 +17,12 @@ namespace administracion.Test.UnitTests.DAOs
 
         public PolizaDAOShould()
         {
-            //var faker = new Faker();
             _contextMock = new Mock<IAdminDBContext>();
-            // el Mock no emplea un DBcontext real en IAdminDBContext =>  obligamos una respuesta por defecto para el SaveChanges y de esta forma evitar un error al no tener un DBcontext real
             _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
             _mockLogger = new Mock<ILogger<PolizaDAO>>();
 
             _dao = new PolizaDAO(_contextMock.Object);
-            _contextMock.SetupDbContextDataVehiculo();
+            _contextMock.SetupDbContextDataIncidenteProcess();
         }
 
         public class PolizaClassData : IEnumerable<object[]>
@@ -57,11 +53,11 @@ namespace administracion.Test.UnitTests.DAOs
         }
 
         [Theory(DisplayName = "DAO: Consultar Polizas por Guid de vehiculo y retornar poliza actual")]
-        [InlineData("26f401c9-12aa-46bf-82a3-05bb34bb3aa5")]
-        public Task GetPoliza_PorID_ReturnTrue(Guid ID)
+        [InlineData("00f401c9-12aa-46bf-82a3-05ff65bb2c00")]
+        public Task GetPoliza_PorID_ReturnTrue(Guid polizaId)
         {
 
-            PolizaDTO PolizaDTO = _dao.GetPolizaByVehiculoGuid(ID);
+            PolizaDTO PolizaDTO = _dao.GetPolizaByVehiculoGuid(polizaId);
             Assert.NotNull(PolizaDTO);
             return Task.CompletedTask;
         }

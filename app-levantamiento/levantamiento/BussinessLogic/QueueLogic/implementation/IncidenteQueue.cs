@@ -40,11 +40,19 @@ namespace levantamiento.BussinesLogic.QueueLogic
                     Console.WriteLine($"-> Mensaje: {message}");
                     Guid incidenteId = Guid.Parse(message.Split(':')[1]);
                     Console.WriteLine($"Mensaje: {message} {incidenteId}");
-                    IncidenteList.Add(
+                    try
+                    {
+                        IncidenteList.Add(
                         GetIncidenteQueueDTO(incidenteId)
                         );
+                    }
+                    catch(Exception ex)
+                    {
+                        messages.Remove(message);
+                    }
+
                 }
-                Console.WriteLine("Respuesta");
+
                 return IncidenteList;
             }
             catch(Exception ex){

@@ -36,7 +36,7 @@ namespace administracion.Persistence.DAOs
                 _context.DbContext.SaveChanges();
                 return true;
             }
-            catch(DbUpdateException ex)
+            catch(DbUpdateException)
             {
                 throw new RCVException("Error identificador duplicado");
             }
@@ -56,11 +56,11 @@ namespace administracion.Persistence.DAOs
                     Id = a.aseguradoId,
                     nombre = a.nombre,
                     apellido = a.apellido,
-                    vehiculos = a.vehiculos.Select( v => new VehiculoDTO{
+                    vehiculos = a.vehiculos!.Select( v => new VehiculoDTO{
                         Id = v.vehiculoId,
                         anioModelo = v.anioModelo,
                         fechaCompra = v.fechaCompra,
-                        placa = v.placa,
+                        placa = v.placa!,
                         color = v.color.ToString(),
                         marca = v.marca.ToString()
                     }).ToList()
@@ -80,20 +80,23 @@ namespace administracion.Persistence.DAOs
         {
             try
             {
-                var data = _context.Asegurados
+                AseguradoDTO data = _context.Asegurados
                 .Where(p => p.aseguradoId == Id)
                 .Select( b=> new AseguradoDTO{
                     Id = b.aseguradoId,
                     nombre = b.nombre,
                     apellido = b.apellido
-                }).SingleOrDefault();
-                if(data == null){
-                    throw new Exception("No se encontro asegurados con ese nombre y apellido Error 404");
-                }
+                }).FirstOrDefault()!;
+                if(data == null)
+                    throw new RCVException("No se encontró algún asegurado con el indentificador especificado");
+
                 return data;
             }
+            catch (RCVException ex) {
+                throw new RCVException(ex.Mensaje,ex);
+            }
             catch (Exception ex) {
-                throw new RCVException("Ha ocurrido un error al intentar obtener el asegurado:", ex.Message, ex);
+                throw new RCVException("Error al intentar obtener al asegurado", ex);
             }
         }
         public List<AseguradoDTO> GetAseguradosPorNombreCompleto(string nombre, string apellido)

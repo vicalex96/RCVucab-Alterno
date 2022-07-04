@@ -44,7 +44,7 @@ namespace administracion.Controllers
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }
@@ -67,7 +67,7 @@ namespace administracion.Controllers
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }

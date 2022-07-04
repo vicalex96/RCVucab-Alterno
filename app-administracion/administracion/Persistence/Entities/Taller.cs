@@ -8,8 +8,9 @@ namespace administracion.Persistence.Entities
     {
         [Key]
         public Guid tallerId { get; set; }
-        public string nombreLocal {get; set;}
-        public ICollection<MarcaTaller> marcas {get; set;}
+        [Required]
+        public string nombreLocal {get; set;} ="";
+        public ICollection<MarcaTaller>? marcas {get; set;}
 
     }
 }

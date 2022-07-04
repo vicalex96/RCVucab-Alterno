@@ -4,6 +4,7 @@ using administracion.Persistence.DAOs;
 using administracion.Exceptions;
 using administracion.Responses;
 using System.ComponentModel.DataAnnotations;
+using administracion.Conections.rabbit;
 
 namespace administracion.Controllers
 {
@@ -15,13 +16,15 @@ namespace administracion.Controllers
     public class TallerController: Controller
     {
         private readonly ITallerDAO _TallerDao;
+        private readonly IProductorRabbit _ProductorRabbit;
 
         private readonly ILogger<TallerController> _logger;
 
-        public TallerController(ILogger<TallerController> logger, ITallerDAO TallerDao)
+        public TallerController(ILogger<TallerController> logger, ITallerDAO TallerDao, IProductorRabbit productorRabbit)
         {
             _TallerDao = TallerDao;
             _logger = logger;
+            _ProductorRabbit = productorRabbit;
         }
 
         /// <summary>
@@ -41,7 +44,7 @@ namespace administracion.Controllers
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }
@@ -64,7 +67,7 @@ namespace administracion.Controllers
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }
@@ -75,19 +78,25 @@ namespace administracion.Controllers
         /// <param name="tallerSimpleDTO">Taller a registrar</param>
         /// <returns>Taller registrado</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> RegistrarTaller([FromBody] TallerSimpleDTO taller)
+        public ApplicationResponse<Guid> RegistrarTaller([FromBody] TallerSimpleDTO taller)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<Guid>();
             try
             {
-                response.Success = _TallerDao.RegisterTaller(taller);
+                response.Data = _TallerDao.RegisterTaller(taller);
+                _ProductorRabbit.SendMessage(
+                    Routings.taller,
+                    "registrar_taller",
+                    response.Data.ToString()
+                );
+                response.Success = true;
                 response.Message = "Taller registrado";
             }
             catch (RCVException ex)
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }
@@ -111,7 +120,7 @@ namespace administracion.Controllers
                 response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje.ToString();
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             }
             return response;
         }

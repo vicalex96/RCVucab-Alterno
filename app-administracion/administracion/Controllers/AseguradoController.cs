@@ -43,7 +43,7 @@ namespace administracion.Controllers
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             }
             return response;
         }
@@ -65,7 +65,7 @@ namespace administracion.Controllers
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             }
             return response;
         }
@@ -88,7 +88,7 @@ namespace administracion.Controllers
             {
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.Message.ToString();
+                response.Exception = ex.Excepcion!.Message.ToString();
                 response.StatusCode = System.Net.HttpStatusCode.NotFound;
             }
             return response;
@@ -112,7 +112,7 @@ namespace administracion.Controllers
                 response.StatusCode = System.Net.HttpStatusCode.BadGateway;
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             }
             return response;
         }

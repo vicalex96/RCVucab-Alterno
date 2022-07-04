@@ -9,11 +9,12 @@ namespace administracion.Persistence.Entities
 {
     public class Asegurado
     {
+        [Key]
         public Guid aseguradoId {get; set;}
         [Required][MaxLength(100)]
-        public string nombre {get; set;}
+        public string nombre {get; set;} ="";
         [Required][MaxLength(100)]
-        public string apellido {get; set;}
+        public string apellido {get; set;} ="";
         public virtual ICollection<Vehiculo>? vehiculos {get; set;}
     }
 }

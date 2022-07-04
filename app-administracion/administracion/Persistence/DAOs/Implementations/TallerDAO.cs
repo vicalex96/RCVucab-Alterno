@@ -30,10 +30,10 @@ namespace administracion.Persistence.DAOs
                 {
                     Id = t.tallerId,
                     nombreLocal = t.nombreLocal,
-                    marcas = t.marcas
+                    marcas = t.marcas!
                     .Select(m => new MarcaDTO
                     {
-                        nombreMarca = m.manejaTodas ? "TodasLasMarcas" : m.marca.ToString()
+                        nombreMarca = m.manejaTodas ? "TodasLasMarcas" : m.marca.ToString()!
                     }
                     ).ToList(),
                 }).SingleOrDefault();
@@ -60,10 +60,10 @@ namespace administracion.Persistence.DAOs
                 {
                     Id = t.tallerId,
                     nombreLocal = t.nombreLocal,
-                    marcas = t.marcas
+                    marcas = t.marcas!
                     .Select(m => new MarcaDTO
                     {
-                        nombreMarca = m.manejaTodas ? "TodasLasMarcas" : m.marca.ToString()
+                        nombreMarca = m.manejaTodas ? "TodasLasMarcas" : m.marca.ToString()!
                     }
                     ).ToList(),
                 }).ToList();
@@ -79,7 +79,7 @@ namespace administracion.Persistence.DAOs
             }
         }
         
-        public bool RegisterTaller(TallerSimpleDTO taller)
+        public Guid RegisterTaller(TallerSimpleDTO taller)
         {
             try
             {
@@ -95,19 +95,9 @@ namespace administracion.Persistence.DAOs
                 };
                 _context.Talleres.Add(tallerEntity);
                 _context.DbContext.SaveChanges();
-
-                /*
-                ProductorRabbit rabbit = new ProductorRabbit();
-                rabbit.SendMessage(
-                    Routings.taller,
-                    "registrar_taller", 
-                    taller.Id.ToString()
-                );
-                */
-                
-                return true;
+                return taller.Id;
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 throw new RCVException("Error al guardar, llave duplicada");
             }

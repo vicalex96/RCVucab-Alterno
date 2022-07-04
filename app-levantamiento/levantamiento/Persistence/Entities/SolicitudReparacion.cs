@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace levantamiento.Persistence.Entities
 {
@@ -15,7 +16,8 @@ namespace levantamiento.Persistence.Entities
         public Guid tallerId {get; set;}
         public DateTime fechaSolicitud {get; set;}
 
-        public virtual Incidente incidente {get; set;}
+        [ForeignKey("incidenteId")]
+        public virtual Incidente? incidente {get; set;}
         public virtual ICollection<Requerimiento>? requerimientos {get; set;}
     }
 }
