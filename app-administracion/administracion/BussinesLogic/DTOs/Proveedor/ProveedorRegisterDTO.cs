@@ -6,7 +6,10 @@ using administracion.Persistence.Entities;
 
 namespace administracion.BussinesLogic.DTOs
 {
-    public class ProveedorSimpleDTO
+    /// <summary>
+    /// DTO para registrar proveedor
+    /// </summary>
+    public class ProveedorRegisterDTO
     {
         public Guid Id { get; set; }
         public string nombreLocal {get; set;} ="";

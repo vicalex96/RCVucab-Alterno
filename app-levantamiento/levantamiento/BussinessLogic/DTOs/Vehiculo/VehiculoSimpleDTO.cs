@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace levantamiento.BussinesLogic.DTOs
 {
-    public class VehiculoSimpleDTO
+    public class VehiculoRegisterDTO
     {
         public Guid Id { get; set; }
         public int anioModelo { get; set; }

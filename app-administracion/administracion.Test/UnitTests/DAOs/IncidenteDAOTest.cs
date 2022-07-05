@@ -31,7 +31,7 @@ namespace administracion.Test.UnitTests.DAOs
             public IEnumerator<object[]> GetEnumerator()
             {
                 yield return new object[] {
-                    new IncidenteSimpleDTO
+                    new IncidenteRegisterDTO
                     {
                         incidenteId = new Guid("38f401c9-12aa-46bf-82a2-05ff65bb2100"),
                         polizaId = new Guid("38f401c9-12aa-46bf-82a2-05ff65bb2100")
@@ -45,7 +45,7 @@ namespace administracion.Test.UnitTests.DAOs
 
         [Theory(DisplayName = "DAO: Registrar un incidente deberia retornar un mensaje")]
         [ClassData(typeof(IncidenteClassData))]
-        public Task ShouldRegisterInciente(IncidenteSimpleDTO incidente)
+        public Task ShouldRegisterInciente(IncidenteRegisterDTO incidente)
         {
             var respuesta = _dao.RegisterIncidente(incidente);
 

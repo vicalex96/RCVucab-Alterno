@@ -8,13 +8,12 @@ using System.Text.Json.Serialization;
 namespace administracion.BussinesLogic.DTOs
 {
     /// <summary>
-    /// DTO para mostrar la informacion del asegurado
+    /// DTO para el registro de asegurados
     /// </summary>
-    public class AseguradoDTO
+    public class AseguradoRegisterDTO
     {
         public Guid Id { get; set; }
         public string nombre { get; set; } = "";
         public string apellido {get; set;} = "";
-        public ICollection<VehiculoDTO>? vehiculos {get; set;}
     }
 }

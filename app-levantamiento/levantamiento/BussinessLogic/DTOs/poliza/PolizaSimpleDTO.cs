@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace levantamiento.BussinesLogic.DTOs
 {
-    public class PolizaSimpleDTO
+    public class PolizaRegisterDTO
     {
         public Guid Id {get; set;}
         public DateTime fechaRegistro {get; set;}

@@ -104,9 +104,9 @@ namespace RCVUcab.Test.UnitTests.Controllers
         [Fact(DisplayName = "Controller: Agregar asegurado")]
         public Task CreateAsegurado()
         {
-            _serviceMock.Setup( x => x.RegisterAsegurado(It.IsAny<AseguradoSimpleDTO>()))
+            _serviceMock.Setup( x => x.RegisterAsegurado(It.IsAny<AseguradoRegisterDTO>()))
             .Returns(It.IsAny<bool>());
-            var result = _controller.AddAsegurado(It.IsAny<AseguradoSimpleDTO>());
+            var result = _controller.AddAsegurado(It.IsAny<AseguradoRegisterDTO>());
             
             Assert.IsType<ApplicationResponse<bool>>(result);
             return Task.CompletedTask;
@@ -116,10 +116,10 @@ namespace RCVUcab.Test.UnitTests.Controllers
         public Task CreateAseguradoException()
         {
             _serviceMock
-                .Setup(x => x.RegisterAsegurado(It.IsAny<AseguradoSimpleDTO>()))
+                .Setup(x => x.RegisterAsegurado(It.IsAny<AseguradoRegisterDTO>()))
                 .Throws(new RCVException("",new Exception()));
 
-            var ex = _controller.AddAsegurado(It.IsAny<AseguradoSimpleDTO>());
+            var ex = _controller.AddAsegurado(It.IsAny<AseguradoRegisterDTO>());
 
             Assert.False(ex.Success);
 

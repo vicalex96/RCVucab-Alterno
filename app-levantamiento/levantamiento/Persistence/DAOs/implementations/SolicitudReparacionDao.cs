@@ -149,7 +149,7 @@ namespace levantamiento.Persistence.DAOs
 
 
         /// Registra una solicitud con los datos basicos, aun no incluye taller ni los requerimientos
-        public bool RegisterSolicitud(SolicitudesRespacionSimpleDTO solicitudDTO)
+        public bool RegisterSolicitud(SolicitudesRespacionRegisterDTO solicitudDTO)
         {
             try
             {

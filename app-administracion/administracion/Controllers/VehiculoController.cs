@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using administracion.BussinesLogic.DTOs;
 using administracion.Persistence.DAOs;
 using administracion.Exceptions;
 using administracion.Responses;
-using System.Collections.Generic;
+using administracion.BussinesLogic.LogicClasses;
 using System.ComponentModel.DataAnnotations;
 
 namespace administracion.Controllers
@@ -17,11 +16,13 @@ namespace administracion.Controllers
     public class VehiculoController: Controller
     {
         private readonly IVehiculoDAO _vehiculoDao;
+        private readonly IVehiculoLogic _vehiculoLogic;
         private readonly ILogger<VehiculoController> _logger;
 
-        public VehiculoController(ILogger<VehiculoController> logger, IVehiculoDAO vehiculoDao)
+        public VehiculoController(ILogger<VehiculoController> logger, IVehiculoDAO vehiculoDao, IVehiculoLogic vehiculoLogic)
         {
             _vehiculoDao = vehiculoDao;
+            _vehiculoLogic = vehiculoLogic;
             _logger = logger;
         }
 
@@ -58,6 +59,9 @@ namespace administracion.Controllers
             try
             {
                 response.Data = _vehiculoDao.GetVehiculoByGuid(vehiculoId);
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Vehiculo registrado";
             }
             catch (RCVException ex)
             {
@@ -73,13 +77,13 @@ namespace administracion.Controllers
         /// </summary>
         /// <param name="vehiculo">Vehiculo a crear</param>
         /// <returns>Vehiculo registrado</returns>
-        [HttpPost("crear")]
-        public ApplicationResponse<bool> createVehiculo([FromBody] VehiculoSimpleDTO Vehiculo)
+        [HttpPost("registrar")]
+        public ApplicationResponse<bool> createVehiculo([FromBody] VehiculoRegisterDTO Vehiculo)
         {
             var response = new ApplicationResponse<bool>();
             try
             {
-                response.Data = _vehiculoDao.RegisterVehiculo(Vehiculo);
+                response.Data = _vehiculoLogic.RegisterVehiculo(Vehiculo);
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Message = "Vehiculo registrado correctamente";
                 response.Success = true;
@@ -106,10 +110,13 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<bool>();
             try
             {
-                //response.Data = _vehiculoDao.AddAsegurado(vehiculoId, aseguradoId );
+                response.Data = _vehiculoLogic.AddAseguradoToVehiculo(vehiculoId, aseguradoId );
+                response.Success = true;
+                response.Message = "vehiculo asociado a asegurado correctamente";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();

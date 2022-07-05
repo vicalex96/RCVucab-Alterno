@@ -6,7 +6,10 @@ using administracion.Persistence.Entities;
 
 namespace administracion.BussinesLogic.DTOs
 {
-    public class TallerSimpleDTO
+    /// <summary>
+    /// DTO crar un nuevo registro de taller en el sistema
+    /// </summary>
+    public class TallerRegisterDTO
     {
         public Guid Id { get; set; }
         public string nombreLocal {get; set;} ="";

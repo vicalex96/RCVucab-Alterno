@@ -33,7 +33,7 @@ namespace administracion.Test.UnitTests.DAOs
             public IEnumerator<object[]> GetEnumerator()
             {
                 yield return new object[] {
-                    new ProveedorSimpleDTO
+                    new ProveedorRegisterDTO
                     {
                         Id = Guid.Parse("00f401c9-12aa-46bf-82a3-05ff65bb2c00"),
                         nombreLocal = "Proveedor 1"
@@ -46,7 +46,7 @@ namespace administracion.Test.UnitTests.DAOs
         [Fact(DisplayName = "DAO: Registrar un Proveedor deberia retornar true")]
         public Task ShouldRegisterProveedor()
         {     
-            var proveedor = new ProveedorSimpleDTO
+            var proveedor = new ProveedorRegisterDTO
             {
                 Id = Guid.Parse("00f401c9-12aa-46bf-82a3-05ff65bb2c00"),
                 nombreLocal = "Proveedor 1"
@@ -60,7 +60,7 @@ namespace administracion.Test.UnitTests.DAOs
         [Fact(DisplayName = "DAO: Evita registra un Proveedor sin nombre")]
         public Task ShouldAvoidRegisterWithoutName()
         {
-            ProveedorSimpleDTO proveedor = new ProveedorSimpleDTO()
+            ProveedorRegisterDTO proveedor = new ProveedorRegisterDTO()
             {
                 Id = Guid.Parse("111101c9-1212-46bf-82a3-05ff65bb2100"),
                 nombreLocal = ""
@@ -71,7 +71,7 @@ namespace administracion.Test.UnitTests.DAOs
         [Fact(DisplayName = "DAO: Evita registra un Proveedor sin nombre")]
         public Task ShouldAvoidRegisterWithDefault()
         {
-            ProveedorSimpleDTO proveedor = new ProveedorSimpleDTO()
+            ProveedorRegisterDTO proveedor = new ProveedorRegisterDTO()
             {
                 Id = Guid.Parse("111101c9-1212-46bf-82a3-05ff65bb2100"),
                 nombreLocal = "string"

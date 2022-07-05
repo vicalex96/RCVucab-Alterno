@@ -1,17 +1,19 @@
 
 using administracion.Persistence.Entities;
 using administracion.BussinesLogic.DTOs;
-using System.Collections.Generic;
 
 namespace administracion.Persistence.DAOs
 {
+    /// <summary>
+    /// Interface para el listado de metodos de DAO de Poliza
+    /// </summary>
     public interface IVehiculoDAO
     {
         public List<VehiculoDTO> GetAllVehiculos();
         public VehiculoDTO GetVehiculoByGuid(Guid Id);
         public List<VehiculoDTO> GetVehiculosByAsegurado(Guid aseguradoId);
-        public bool RegisterVehiculo(VehiculoSimpleDTO auto);
-        public bool AddAsegurado(Guid vehiculoId, Guid aseguradoId);
+        public bool RegisterVehiculo(Vehiculo auto);
+        public bool AddAsegurado(Vehiculo vehiculo, Guid aseguradoId);
         
     }
 }

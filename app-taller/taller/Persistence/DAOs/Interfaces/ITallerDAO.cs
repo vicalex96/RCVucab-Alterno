@@ -8,7 +8,7 @@ namespace taller.Persistence.DAOs
     {
         public TallerDTO GetTallerByGuid (Guid tallerId);
         public List<TallerDTO> GetTalleres(); 
-        public string RegisterTallerPorAPI(TallerSimpleDTO taller);
+        public string RegisterTallerPorAPI(TallerRegisterDTO taller);
         public string RegisterMarcasPorAPI(Guid tallerId, List<MarcaDTO> marcas);
     }
 }

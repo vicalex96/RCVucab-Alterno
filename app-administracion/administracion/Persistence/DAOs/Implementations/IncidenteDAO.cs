@@ -16,20 +16,17 @@ namespace administracion.Persistence.DAOs
             _context = context;
         }
 
-
-        
-        public bool RegisterIncidente (IncidenteSimpleDTO incidente)
+        /// <summary>
+        /// Registra un incidente nuevo
+        /// </summary>
+        /// <param name="incidente">DTO de registro con la informacion del incidente</param>
+        /// <returns>booleano true</returns>
+        public bool RegisterIncidente (Incidente incidente)
         {
             try
             {
                 
-                Incidente incidenteEntity = new Incidente{
-                    incidenteId = incidente.incidenteId,
-                    polizaId = incidente.polizaId,
-                    estadoIncidente = EstadoIncidente.Pendiente,
-                    fechaRegistrado = DateTime.Today,
-                };   
-                _context.Incidentes.Add(incidenteEntity);
+                _context.Incidentes.Add(incidente);
                 _context.DbContext.SaveChanges();
 
                 return true;
@@ -43,6 +40,12 @@ namespace administracion.Persistence.DAOs
                 throw new RCVException("ocurrio un errror", ex);
             }    
         }
+        
+        /// <summary>
+        /// Obtiene un incidente según el Id del incidente
+        /// </summary>
+        /// <param name="incidenteId">Id del incidente</param>
+        /// <returns>DTO con la informacion del incidente</returns>
         public IncidenteDTO consultarIncidente(Guid incidenteID)
         {
             try
@@ -70,6 +73,11 @@ namespace administracion.Persistence.DAOs
                 throw new RCVException("Error al obtener los vehiculos", ex);
             }
         }
+        
+        /// <summary>
+        /// Obtiene una lista de incidentes que estan actualimente activos
+        /// </summary>
+        /// <returns>Lista de incidentes</returns>
         public List<IncidenteDTO> ConsultarIncidentesActivos()
         {
             try
@@ -98,6 +106,13 @@ namespace administracion.Persistence.DAOs
                 throw new RCVException("Error al obtener los vehiculos", ex);
             }
         }     
+        
+        /// <summary>
+        /// Actualiza el estado del incidente
+        /// </summary>
+        /// <param name="incidenteId">Id del incidente</param>
+        /// <param name="EstadoIncidente">Estado del incidente</param>
+        /// <returns>booleano true</returns>
         public bool actualizarIncidente(Guid incidenteId, EstadoIncidente estado)
         {
             try

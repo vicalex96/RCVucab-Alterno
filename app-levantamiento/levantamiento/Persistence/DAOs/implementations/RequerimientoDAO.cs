@@ -52,7 +52,7 @@ namespace levantamiento.Persistence.DAOs
         }
 
         ///Registra un nuevo requerimiento en el sistema, asegurandose que cumpla con las restricciones necesarias
-        public bool RegisterRequerimiento(RequerimientoSimpleDTO requerimiento)
+        public bool RegisterRequerimiento(RequerimientoRegisterDTO requerimiento)
         {
             try
             {

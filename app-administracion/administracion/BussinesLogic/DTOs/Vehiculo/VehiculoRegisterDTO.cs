@@ -7,7 +7,10 @@ using administracion.Persistence.Entities;
 
 namespace administracion.BussinesLogic.DTOs
 {
-    public class VehiculoSimpleDTO
+    /// <summary>
+    /// DTO crear un nuevo registro de vehiculo en el sistema
+    /// </summary>
+    public class VehiculoRegisterDTO
     {
         public Guid Id { get; set; }
         public int anioModelo { get; set; }

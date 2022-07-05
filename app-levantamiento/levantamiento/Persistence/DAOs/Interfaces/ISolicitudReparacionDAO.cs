@@ -12,7 +12,7 @@ namespace levantamiento.Persistence.DAOs
         public SolicitudesResparacionDTO GetSolicitudById(Guid solicitudId);
         public List<SolicitudesResparacionDTO> GetSolicitudByIncidenteId(Guid incidenteId);
         
-        public bool RegisterSolicitud(SolicitudesRespacionSimpleDTO solicitudDTO);
+        public bool RegisterSolicitud(SolicitudesRespacionRegisterDTO solicitudDTO);
 
         public bool SendNotificationsToQueue();
     }

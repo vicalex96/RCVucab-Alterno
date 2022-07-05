@@ -6,6 +6,7 @@ using administracion.Exceptions;
 using administracion.Responses;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using administracion.BussinesLogic.LogicClasses;
 
 namespace administracion.Controllers
 {
@@ -17,11 +18,13 @@ namespace administracion.Controllers
     public class PolizaController: Controller
     {
         private readonly IPolizaDAO _polizaDao;
+        private readonly IPolizaLogic _polizaLogic;
         private readonly ILogger<PolizaController> _logger;
 
-        public PolizaController(ILogger<PolizaController> logger, IPolizaDAO polizaDao)
+        public PolizaController(ILogger<PolizaController> logger, IPolizaDAO polizaDao, IPolizaLogic polizaLogic)
         {
             _polizaDao = polizaDao;
+            _polizaLogic = polizaLogic;
             _logger = logger;
         }
 
@@ -31,12 +34,12 @@ namespace administracion.Controllers
         /// <param name="polizaDTO">Poliza a registrar</param>
         /// <returns>Poliza registrada</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> registrarPoliza([FromBody] PolizaSimpleDTO poliza)
+        public ApplicationResponse<bool> registrarPoliza([FromBody] PolizaRegisterDTO poliza)
         {
             var response = new ApplicationResponse<bool>();
             try
             {
-                response.Data  = _polizaDao.RegisterPoliza(poliza);
+                response.Data  = _polizaLogic.RegisterPoliza(poliza);
                 response.Success = true;
                 response.Message = "Poliza registrada";
             }

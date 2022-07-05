@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
+using administracion.BussinesLogic.LogicClasses;
 
 namespace RCVUcab.Test.UnitTests.Controllers
 {
@@ -19,13 +20,16 @@ namespace RCVUcab.Test.UnitTests.Controllers
     {
         private readonly PolizaController _controller;
         private readonly Mock<IPolizaDAO> _serviceMock;
+        private readonly Mock<IPolizaLogic> _serviceMockPolizaLogic;
         private readonly Mock<ILogger<PolizaController>> _loggerMock;
 
         public PolizaControllerTest()
         {
             _loggerMock = new Mock<ILogger<PolizaController>>();
             _serviceMock = new Mock<IPolizaDAO>();
-            _controller = new PolizaController(_loggerMock.Object, _serviceMock.Object);
+            _serviceMockPolizaLogic = new Mock<IPolizaLogic>();
+            _controller = new PolizaController(_loggerMock.Object, _serviceMock.Object, _serviceMockPolizaLogic.Object);
+            
             _controller.ControllerContext = new ControllerContext();
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
             _controller.ControllerContext.ActionDescriptor = new ControllerActionDescriptor();
@@ -34,11 +38,11 @@ namespace RCVUcab.Test.UnitTests.Controllers
         [Fact(DisplayName = "Controller: Registrar polizas")]
         public Task RegistrerPoliza()
         {
-            _serviceMock
-                .Setup(x => x.RegisterPoliza(It.IsAny<PolizaSimpleDTO>()))
+            _serviceMockPolizaLogic
+                .Setup(x => x.RegisterPoliza(It.IsAny<PolizaRegisterDTO>()))
                 .Returns(It.IsAny<bool>);
 
-            var result = _controller.registrarPoliza(It.IsAny<PolizaSimpleDTO>());
+            var result = _controller.registrarPoliza(It.IsAny<PolizaRegisterDTO>());
 
             Assert.IsType<ApplicationResponse<bool>>(result);
             return Task.CompletedTask;
@@ -46,11 +50,11 @@ namespace RCVUcab.Test.UnitTests.Controllers
         [Fact(DisplayName = "Controller: Obtener Excepticion al Registrar polizas")]
         public Task RegistrerPolizaException()
         {
-            _serviceMock
-                .Setup(x => x.RegisterPoliza(It.IsAny<PolizaSimpleDTO>()))
+            _serviceMockPolizaLogic
+                .Setup(x => x.RegisterPoliza(It.IsAny<PolizaRegisterDTO>()))
                 .Throws(new RCVException("", new Exception()));
 
-            var ex = _controller.registrarPoliza(It.IsAny<PolizaSimpleDTO>());
+            var ex = _controller.registrarPoliza(It.IsAny<PolizaRegisterDTO>());
 
             Assert.False(ex.Success);
 

@@ -62,7 +62,7 @@ namespace taller.Controllers
         }
 
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> RegistrarCotizacion([Required][FromBody] CotizacionRepSimpleDTO cotizacion)
+        public ApplicationResponse<bool> RegistrarCotizacion([Required][FromBody] CotizacionRepRegisterDTO cotizacion)
         {
             var response = new ApplicationResponse<bool>();
             try

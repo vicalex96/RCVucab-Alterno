@@ -1,18 +1,22 @@
 
 using administracion.Persistence.Entities;
 using administracion.BussinesLogic.DTOs;
-using System.Collections.Generic;
 
 namespace administracion.Persistence.DAOs
 {
+    /// <summary>
+    /// Interface para el listado de metodos de DAO de Taller
+    /// </summary>
     public interface ITallerDAO
     {
         
         public TallerDTO GetTallerByGuid (Guid tallerId);
         public List<TallerDTO> GetTalleres();
 
-        public Guid RegisterTaller (TallerSimpleDTO taller);
-        public bool AddMarca(Guid tallerId, string marcaStr, bool todasLasMarcas = false);
+        public Guid RegisterTaller (Taller taller);
+        public bool AddMarca(MarcaTaller Marca);
+        public bool DeleteMarcasFromTaller(Guid tallerId);
         
+        public bool IsMarcaExistsOnTaller(Guid tallerId, Marca marca);
     }
 }

@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +6,13 @@ using System.Text.Json.Serialization;
 
 namespace administracion.BussinesLogic.DTOs
 {
-    public class AseguradoSimpleDTO
+    /// <summary>
+    /// DTO para registrar incidente
+    /// </summary>
+    public class IncidenteRegisterDTO
     {
-        public Guid Id { get; set; }
-        public string nombre { get; set; } = "";
-        public string apellido {get; set;} = "";
+        public Guid Id {get; set;} 
+        public Guid polizaId {get; set;}
     }
+
 }

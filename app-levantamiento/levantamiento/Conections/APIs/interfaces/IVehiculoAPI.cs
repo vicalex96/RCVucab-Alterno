@@ -6,7 +6,7 @@ namespace levantamiento.Conections.APIs
 {
     public interface IVehiculoAPI
     {
-        public Task<bool> RegisterVehiculo(VehiculoSimpleDTO vehiculo);
+        public Task<bool> RegisterVehiculo(VehiculoRegisterDTO vehiculo);
         public Task<VehiculoDTO> GetVehiculoFromAdmin(Guid vehiculoId);
     }
 }

@@ -3,9 +3,6 @@ using administracion.Persistence.Database;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
 using administracion.BussinesLogic.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace administracion.Persistence.DAOs
 {
@@ -18,27 +15,16 @@ namespace administracion.Persistence.DAOs
             _context = context;
         }
 
-        public bool RegisterAsegurado(AseguradoSimpleDTO asegurado){
+        /// <summary>
+        /// Registra un asegurado nuevo
+        /// </summary>
+        /// <param name="asegurado">DTO con la informacion del asegurado</param>
+        /// <returns>booleano true</returns>
+        public bool RegisterAsegurado(Asegurado asegurado){
             try{
-                if(asegurado.nombre.ToLower() == "string" || 
-                    asegurado.nombre.Count() == 0 && 
-                    asegurado.apellido.ToLower() == "string" || 
-                    asegurado.apellido.Count() == 0 )
-                {
-                    throw new Exception("Error campos no validos");
-                }
-                Asegurado aseguradoEntity = new Asegurado{
-                    aseguradoId = asegurado.Id, 
-                    nombre = asegurado.nombre, 
-                    apellido = asegurado.apellido
-                };
-                _context.Asegurados.Add(aseguradoEntity);
+                _context.Asegurados.Add(asegurado);
                 _context.DbContext.SaveChanges();
                 return true;
-            }
-            catch(DbUpdateException)
-            {
-                throw new RCVException("Error identificador duplicado");
             }
             catch(Exception ex){
                 throw new RCVException("Error al crear el asegurado", ex);
@@ -46,6 +32,10 @@ namespace administracion.Persistence.DAOs
             }
         }
 
+        /// <summary>
+        /// Obtiene una lista de asegurados
+        /// </summary>
+        /// <returns>Lista de asegurados</returns>
         public List<AseguradoDTO> GetAsegurados()
         {
             try
@@ -76,19 +66,23 @@ namespace administracion.Persistence.DAOs
                 throw new RCVException("Ha ocurrido un error al intentar consultar la lista de asegurados", ex.Message, ex);
             }
         }
-        public AseguradoDTO GetAseguradoByGuid(Guid Id)
+        
+        /// <summary>
+        /// Obtiene la informacion de un asegurado
+        /// </summary>
+        /// <param name="id">Identificador del asegurado</param>
+        /// <returns>DTO con la informacion del asegurado</returns>
+        public AseguradoDTO GetAseguradoByGuid(Guid aseguradoId)
         {
             try
             {
                 AseguradoDTO data = _context.Asegurados
-                .Where(p => p.aseguradoId == Id)
+                .Where(p => p.aseguradoId == aseguradoId)
                 .Select( b=> new AseguradoDTO{
                     Id = b.aseguradoId,
                     nombre = b.nombre,
                     apellido = b.apellido
-                }).FirstOrDefault()!;
-                if(data == null)
-                    throw new RCVException("No se encontró algún asegurado con el indentificador especificado");
+                }).First();
 
                 return data;
             }
@@ -99,6 +93,12 @@ namespace administracion.Persistence.DAOs
                 throw new RCVException("Error al intentar obtener al asegurado", ex);
             }
         }
+        
+        /// <summary>
+        /// Busca asegurados según su nombre
+        /// </summary>
+        /// <param name="nombre">Nombre del asegurado</param>
+        /// <returns>Lista de asegurados</returns>
         public List<AseguradoDTO> GetAseguradosPorNombreCompleto(string nombre, string apellido)
         {
             try

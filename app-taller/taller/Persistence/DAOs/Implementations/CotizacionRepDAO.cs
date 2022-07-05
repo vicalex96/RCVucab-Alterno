@@ -68,7 +68,7 @@ namespace taller.Persistence.DAOs
                 throw new RCVException("Error al obtener la cotizacion de reparacion", ex);
             }
         }
-        public bool RegisterCotizacionReparacion(CotizacionRepSimpleDTO cotizacionRep)
+        public bool RegisterCotizacionReparacion(CotizacionRepRegisterDTO cotizacionRep)
         {
             try
             {

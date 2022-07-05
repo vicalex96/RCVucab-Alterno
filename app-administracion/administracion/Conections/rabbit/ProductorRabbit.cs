@@ -5,6 +5,10 @@ using RabbitMQ.Client;
 
 namespace administracion.Conections.rabbit
 {
+    /// <summary>
+    /// Clase para la conexion con el RabbitMQ, se encarga de crear el productor
+    /// asi como de colocar los mensajes en el exchange en la cola especificada
+    /// </summary>
     public class ProductorRabbit: IProductorRabbit
     {
 

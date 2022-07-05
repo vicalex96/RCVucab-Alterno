@@ -6,6 +6,7 @@ using administracion.Exceptions;
 using administracion.Responses;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using administracion.BussinesLogic.LogicClasses;
 
 namespace administracion.Controllers
 {
@@ -17,11 +18,13 @@ namespace administracion.Controllers
     public class AseguradoController: Controller
     {
         private readonly IAseguradoDAO _aseguradoDAO;
+        private readonly IAseguradoLogic _aseguradoLogic;
         private readonly ILogger<AseguradoController> _logger;
 
-        public AseguradoController(ILogger<AseguradoController> logger, IAseguradoDAO aseguradoDAO)
+        public AseguradoController(ILogger<AseguradoController> logger, IAseguradoDAO aseguradoDAO, IAseguradoLogic aseguradoLogic)
         {
             _aseguradoDAO = aseguradoDAO;
+            _aseguradoLogic = aseguradoLogic;
             _logger = logger;
         }
 
@@ -99,13 +102,16 @@ namespace administracion.Controllers
         /// </summary>
         /// <param name="aseguradoDTO">Asegurado a registrar</param>
         /// <returns>Asegurado registrado</returns>
-        [HttpPost("agregar")]
-        public ApplicationResponse<bool> AddAsegurado([FromBody] AseguradoSimpleDTO asegurado)
+        [HttpPost("registrar")]
+        public ApplicationResponse<bool> AddAsegurado([FromBody] AseguradoRegisterDTO asegurado)
         {
             var response = new ApplicationResponse<bool>();
             try
             {
-                response.Data = _aseguradoDAO.RegisterAsegurado(asegurado);
+                response.Data = _aseguradoLogic.RegisterAsegurado(asegurado);
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Asegurado registrado";
             }
             catch (RCVException ex)
             {

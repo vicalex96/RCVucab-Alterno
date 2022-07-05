@@ -3,9 +3,6 @@ using administracion.Persistence.Database;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
 using administracion.BussinesLogic.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace administracion.Persistence.DAOs
 {
@@ -18,6 +15,11 @@ namespace administracion.Persistence.DAOs
             _context = context;
         }
 
+        /// <summary>
+        /// indica si un vehiculo esta disponible para recibir una póliza
+        /// </summary>
+        /// <param name="vehiculoId">id del vehiculo</param>
+        /// <returns>true si esta disponible</returns>
         private bool IsAvailableForPoliza(Guid vehiculoId)
         {
             try
@@ -39,6 +41,12 @@ namespace administracion.Persistence.DAOs
                 throw new RCVException("ocurrio un problema al verificar la disponiblidad para la poliza", ex);
             }
         }
+
+        /// <summary>
+        /// reviza que el vehiculo no tiene ningun asegurado asignado
+        /// </summary>
+        /// <param name="vehiculoId">id del vehiculo</param>
+        /// <returns>true si no tiene asegurado asignado</returns>
         private bool IsNotAseguradosVehiculo(Guid vehiculoId)
         {
             try
@@ -58,26 +66,16 @@ namespace administracion.Persistence.DAOs
             }
         }
 
-        public bool RegisterPoliza (PolizaSimpleDTO poliza)
+        /// <summary>
+        /// registra una poliza nueva, si cumple con las condiciones
+        /// </summary>
+        /// <param name="poliza">DTO con la informacion de la poliza</param>
+        /// <returns>true si se registro correctamente</returns>
+        public bool RegisterPoliza (Poliza poliza)
         {
             try
             {
-                /*
-                if(IsAvailableForPoliza(poliza.vehiculoId))
-                    throw new RCVException("El vehiculo ya cuenta con una poliza activa");
-
-                if(IsNotAseguradosVehiculo(poliza.vehiculoId))
-                    throw new RCVException("El vehiculo no pertener a un asegurado");
-                */
-                Poliza polizaEntity = new Poliza();
-
-                polizaEntity.polizaId = poliza.Id;
-                polizaEntity.fechaRegistro = poliza.fechaRegistro;
-                polizaEntity.fechaVencimiento = poliza.fechaVencimiento;
-                polizaEntity.tipoPoliza = (TipoPoliza)Enum.Parse(typeof(TipoPoliza), poliza.tipoPoliza);
-                polizaEntity.vehiculoId = poliza.vehiculoId;
-
-                _context.Polizas.Add(polizaEntity);
+                _context.Polizas.Add(poliza);
                 _context.DbContext.SaveChanges();
                 return true;
             }
@@ -90,6 +88,11 @@ namespace administracion.Persistence.DAOs
             }
         }
 
+        /// <summary>
+        /// obtiene una poliza por su id
+        /// </summary>
+        /// <param name="polizaId">id de la poliza</param>
+        /// <returns>DTO con la informacion de la poliza</returns>
         public PolizaDTO GetPolizaByGuid(Guid polizaId)
         {
             try
@@ -103,12 +106,13 @@ namespace administracion.Persistence.DAOs
                     tipoPoliza = p.tipoPoliza.ToString(),
                     vehiculoId = p.vehiculoId
                 }).FirstOrDefault();
-                
-                if(poliza == null){
-                    throw new Exception("No se encontraron vehiculos con ese nombre y apellido Error 404");
-                }
-                return poliza;
 
+                return poliza!;
+
+            }
+            catch(ArgumentNullException ex)
+            {
+                throw new RCVException("No se encontraron polizas", ex);
             }
             catch(Exception ex)
             {
@@ -116,13 +120,18 @@ namespace administracion.Persistence.DAOs
             }
         }
 
+        /// <summary>
+        /// obtiene la poliza activa del vehiculo por el id del vehiculo
+        /// </summary>
+        /// <param name="vehiculoId">id del vehiculo</param>
+        /// <returns>DTO con la informacion de la poliza</returns>
         public PolizaDTO GetPolizaByVehiculoGuid(Guid vehiculoID)
         {
             try
             {
                 var poliza = _context.Polizas
                     .Include(p => p.vehiculo)
-                    .Include(p => p.vehiculo.asegurado)
+                    .Include(p => p.vehiculo!.asegurado)
                     .Where(p => p.vehiculoId == vehiculoID 
                         && p.fechaVencimiento > DateTime.Now
                         )
@@ -144,13 +153,10 @@ namespace administracion.Persistence.DAOs
                             }
                         }
                     }).FirstOrDefault();
-                if(poliza == null){
-                    throw new RCVException("");
-                }
-                return poliza;
+                return poliza!;
 
             }
-            catch(RCVException ex)
+            catch(ArgumentNullException ex)
             {
                 throw new RCVException("No se encontraron polizas vigentes para el vehiculo solcitado", ex);
             }

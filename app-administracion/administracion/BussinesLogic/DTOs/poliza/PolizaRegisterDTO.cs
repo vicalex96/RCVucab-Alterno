@@ -8,7 +8,10 @@ using System.Text.Json.Serialization;
 
 namespace administracion.BussinesLogic.DTOs
 {
-    public class PolizaSimpleDTO
+    /// <summary>
+    /// DTO para registrar una poliza
+    /// </summary>
+    public class PolizaRegisterDTO
     {
         public Guid Id {get; set;}
         public DateTime fechaRegistro {get; set;}

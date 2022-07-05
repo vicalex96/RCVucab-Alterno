@@ -35,10 +35,10 @@ namespace RCVUcab.Test.UnitTests.Controllers
         public Task RegisterIncidente()
         {
             _serviceMock
-                .Setup(x => x.RegisterIncidente(It.IsAny<IncidenteSimpleDTO>()))
+                .Setup(x => x.RegisterIncidente(It.IsAny<IncidenteRegisterDTO>()))
                 .Returns(It.IsAny<bool>());
             
-            var result = _controller.RegistrarIncidente(It.IsAny<IncidenteSimpleDTO>());
+            var result = _controller.RegistrarIncidente(It.IsAny<IncidenteRegisterDTO>());
 
             Assert.IsType<ApplicationResponse<bool>>(result);
             return Task.CompletedTask;
@@ -47,10 +47,10 @@ namespace RCVUcab.Test.UnitTests.Controllers
         public Task RegisterIncidenteException()
         {
             _serviceMock
-                .Setup(x => x.RegisterIncidente(It.IsAny<IncidenteSimpleDTO>()))
+                .Setup(x => x.RegisterIncidente(It.IsAny<IncidenteRegisterDTO>()))
                 .Throws(new RCVException("",new Exception()));
 
-            var ex = _controller.RegistrarIncidente(It.IsAny<IncidenteSimpleDTO>());
+            var ex = _controller.RegistrarIncidente(It.IsAny<IncidenteRegisterDTO>());
 
             Assert.False(ex.Success);
 

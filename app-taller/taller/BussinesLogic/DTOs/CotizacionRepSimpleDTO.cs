@@ -8,7 +8,7 @@ using taller.Persistence.Entities;
 
 namespace taller.BussinesLogic.DTOs
 {
-    public class CotizacionRepSimpleDTO
+    public class CotizacionRepRegisterDTO
     {  
         public Guid Id {get; set;}
         public Guid tallerId {get; set;}

@@ -5,6 +5,7 @@ using administracion.Exceptions;
 using administracion.Responses;
 using System.ComponentModel.DataAnnotations;
 using administracion.Conections.rabbit;
+using administracion.BussinesLogic.LogicClasses;
 
 namespace administracion.Controllers
 {
@@ -16,14 +17,14 @@ namespace administracion.Controllers
     public class ProveedorController: Controller
     {
         private readonly IProveedorDAO _proveedorDao;
-        private readonly IProductorRabbit _ProductorRabbit;
+        private readonly IProveedorLogic _proveedorLogic;
         private readonly ILogger<ProveedorController> _logger;
 
-        public ProveedorController(ILogger<ProveedorController> logger, IProveedorDAO proveedorDao, IProductorRabbit productorRabbit)
+        public ProveedorController(ILogger<ProveedorController> logger, IProveedorDAO proveedorDao, IProveedorLogic proveedorLogic)
         {
             _proveedorDao = proveedorDao;
             _logger = logger;
-            _ProductorRabbit = productorRabbit;
+            _proveedorLogic = proveedorLogic;
         }
         /// <summary>
         /// Mostrar un listado de proveedores que existen en el sistema
@@ -73,22 +74,18 @@ namespace administracion.Controllers
         /// <summary>
         /// Registra un proveedor en el sistema
         /// </summary>
-        /// <param name="proveedorSimpleDTO">Proveedor a registrar</param>
+        /// <param name="proveedorRegisterDTO">Proveedor a registrar</param>
         /// <returns>Proveedor registrado</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<Guid> RegistrarProveedor([FromBody] ProveedorSimpleDTO proveedor)
+        public ApplicationResponse<bool> RegistrarProveedor([FromBody] ProveedorRegisterDTO proveedor)
         {
-            var response = new ApplicationResponse<Guid>();
+            var response = new ApplicationResponse<bool>();
             try
             {
-                response.Data = _proveedorDao.RegisterProveedor(proveedor);
-                _ProductorRabbit.SendMessage(
-                    Routings.proveedor,
-                    "registrar_proveedor",
-                    response.Data.ToString()
-                );
+                response.Data = _proveedorLogic.RegisterProveedor(proveedor);
+                response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
-                response.Message = "Proveedor Registrado";
+                response.Message = "Proveedor registrado";
             }
             catch (RCVException ex)
             {
@@ -102,16 +99,44 @@ namespace administracion.Controllers
         /// <summary>
         /// Actualiza un proveedor indicado segun su id, se puede agregar una marca o incidar que trabaja con todas
         /// </summary>
-        /// <param name="proveedorSimpleDTO">Proveedor a actualizar</param>
+        /// <param name="proveedorRegisterDTO">Proveedor a actualizar</param>
         /// <returns>Proveedor actualizado</returns>
-        [HttpPost("agregar_marca/{ProveedorId}/{marca}/{agregarTodas}")]
-        public ApplicationResponse<bool> AgregarMarcaAProveedor([Required][FromRoute] Guid ProveedorId, [FromRoute] string marca = "-", [FromRoute] bool agregarTodas = false)
+        [HttpPatch("agregar_marca/{proveedorId}/{marca}")]
+        public ApplicationResponse<bool> AgregarMarcaAproveedor([FromRoute] Guid proveedorId, [FromRoute] string marca)
         {
             var response = new ApplicationResponse<bool>();
             try
             {
-                response.Success = _proveedorDao.AddMarca(ProveedorId, marca, agregarTodas);
-                response.Message = "marca registrada";
+                response.Data = _proveedorLogic.AddMarca(proveedorId, marca);
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Especializacion agregada";
+            }
+            catch (RCVException ex)
+            {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
+                response.Success = false;
+                response.Message = ex.Mensaje.ToString();
+                response.Exception = ex.Excepcion!.ToString();
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Especializa el proveedor en todas las marcas
+        /// </summary>
+        /// <param name="proveedorId">Id del proveedor</param>
+        /// <returns>Boleano true si todo salio bien</returns>
+        [HttpPatch("agrega_marca/todas/{proveedorId}")]
+        public ApplicationResponse<bool> AgregarTodasLasMarcasAProveedor([FromRoute] Guid proveedorId)
+        {
+            var response = new ApplicationResponse<bool>();
+            try
+            {
+                response.Data = _proveedorLogic.AddAllMarcas(proveedorId);
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Especializaciones agregadas";
             }
             catch (RCVException ex)
             {

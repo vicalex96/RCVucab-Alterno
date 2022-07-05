@@ -13,14 +13,14 @@ namespace levantamiento.Conections.APIs
             PropertyNameCaseInsensitive = true
         };
 
-        public async Task<bool> RegisterVehiculo(VehiculoSimpleDTO vehiculo)
+        public async Task<bool> RegisterVehiculo(VehiculoRegisterDTO vehiculo)
         {
             var localUrl = url + "vehiculo/crear";
             try
             {
                 using(var httpClient = new HttpClient())
                 {
-                    var serializedVechiulo = JsonSerializer.    Serialize<VehiculoSimpleDTO>(vehiculo);
+                    var serializedVechiulo = JsonSerializer.    Serialize<VehiculoRegisterDTO>(vehiculo);
                     Console.WriteLine(serializedVechiulo);
                     var response = await httpClient.PostAsJsonAsync(localUrl, vehiculo);
 

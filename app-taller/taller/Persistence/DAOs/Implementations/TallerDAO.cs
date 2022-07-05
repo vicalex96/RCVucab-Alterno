@@ -19,7 +19,7 @@ namespace taller.Persistence.DAOs
         }
 
 
-        public string RegisterTaller(TallerSimpleDTO taller)
+        public string RegisterTaller(TallerRegisterDTO taller)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace taller.Persistence.DAOs
         {
             return "";
         }
-    public string RegisterTallerPorAPI(TallerSimpleDTO taller)
+    public string RegisterTallerPorAPI(TallerRegisterDTO taller)
     {
         try
         {

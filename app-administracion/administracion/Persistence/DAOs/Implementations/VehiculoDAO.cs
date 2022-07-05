@@ -3,9 +3,6 @@ using administracion.Persistence.Database;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
 using administracion.BussinesLogic.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace administracion.Persistence.DAOs
 {
@@ -18,13 +15,18 @@ namespace administracion.Persistence.DAOs
             _context = context;
         }
 
+        /// <summary>
+        /// Pide la inforamcion de todos los vehiculos registrados
+        /// </summary>
+        /// <returns>Lista de DTOs con la informacion de los vehiculos</returns>
         public List<VehiculoDTO> GetAllVehiculos()
         {
             try
             {
                 var vehiculos = _context.Vehiculos
-                //.Include(v => v.asegurado)
+                .Include(v => v.asegurado)
                 .Include(v => v.polizas)
+                .Include(v => v.asegurado)
                 .Select( v=> new VehiculoDTO{
                     Id = v.vehiculoId,
                     anioModelo = v.anioModelo,
@@ -32,23 +34,20 @@ namespace administracion.Persistence.DAOs
                     placa = v.placa!,
                     color = v.color.ToString(),
                     marca = v.marca.ToString(),
-                    asegurado =  _context.Asegurados
-                    .Where(a => a.aseguradoId == v.aseguradoId)
-                    .Select(a =>
-                    new AseguradoDTO{
+                    asegurado = (v.aseguradoId != null)? new AseguradoDTO{
                         Id = v.asegurado!.aseguradoId,
                         nombre = v.asegurado.nombre,
                         apellido = v.asegurado.apellido
-                    }).FirstOrDefault(),
+                    }: null,
                     polizas = v.polizas!.Select( p => new PolizaDTO{
-                            Id = p.polizaId,
-                            fechaRegistro = p.fechaRegistro,
-                            fechaVencimiento = p.fechaVencimiento,
-                            tipoPoliza = p.tipoPoliza.ToString(),
-                            vehiculoId = v.vehiculoId,
+                        Id = p.polizaId,
+                        fechaRegistro = p.fechaRegistro,
+                        fechaVencimiento = p.fechaVencimiento,
+                        tipoPoliza = p.tipoPoliza.ToString(),
+                        vehiculoId = v.vehiculoId,
                     }).ToList()
                 }).ToList();
-                Console.WriteLine(vehiculos);
+
                 if(vehiculos.Count == 0){
                     throw new Exception("No se encontraron vehiculos con ese nombre y apellido Error 404");
                 }
@@ -61,38 +60,42 @@ namespace administracion.Persistence.DAOs
             }
         }
 
-        public VehiculoDTO GetVehiculoByGuid(Guid Id)
+        /// <summary>
+        /// Pide la inforamcion de un vehiculo por el id del vehiculo
+        /// </summary>
+        /// <param name="vehiculoId">id del vehiculo</param>
+        /// <returns>DTO con la informacion del vehiculo</returns>
+        public VehiculoDTO GetVehiculoByGuid(Guid vehiculoId)
         {   
             try
             {
                 VehiculoDTO data = _context.Vehiculos
-                    .Include(v => v.asegurado)
-                    .Where(v => v.vehiculoId == Id)
-                    .Select(v => new VehiculoDTO
-                    {
-                        Id = v.vehiculoId,
-                        anioModelo = v.anioModelo,
-                        fechaCompra = v.fechaCompra,
-                        placa = v.placa!,
-                        color = v.color.ToString(),
-                        marca = v.marca.ToString(),
-                        asegurado = new AseguradoDTO{
-                            Id = v.asegurado!.aseguradoId,
-                            nombre = v.asegurado!.nombre,
-                            apellido = v.asegurado!.apellido
-                        },
-                        polizas = v.polizas!.Select( p => new PolizaDTO{
-                            Id = p.polizaId,
-                            fechaRegistro = p.fechaRegistro,
-                            fechaVencimiento = p.fechaVencimiento,
-                            tipoPoliza = p.tipoPoliza.ToString(),
-                            vehiculoId = v.vehiculoId,
+                .Include(v => v.asegurado)
+                .Where(v => v.vehiculoId == vehiculoId)
+                .Select(v => new VehiculoDTO
+                {
+                    Id = v.vehiculoId,
+                    anioModelo = v.anioModelo,
+                    fechaCompra = v.fechaCompra,
+                    placa = v.placa!,
+                    color = v.color.ToString(),
+                    marca = v.marca.ToString(),
+                    asegurado = (v.aseguradoId == null)
+                    ? null
+                    : new AseguradoDTO{
+                        Id = v.asegurado!.aseguradoId,
+                        nombre = v.asegurado.nombre,
+                        apellido = v.asegurado.apellido
+                    },
+                    polizas = v.polizas!.Select( p => new PolizaDTO{
+                        Id = p.polizaId,
+                        fechaRegistro = p.fechaRegistro,
+                        fechaVencimiento = p.fechaVencimiento,
+                        tipoPoliza = p.tipoPoliza.ToString(),
+                        vehiculoId = v.vehiculoId,
                     }).ToList()
 
-                }).FirstOrDefault()!; 
-                if(data == null)
-                    throw new RCVException("No se encontró algún  vehículo con el id especificado");
-                
+                }).First();     
                 return data;
             }
             catch (RCVException ex) {
@@ -106,6 +109,11 @@ namespace administracion.Persistence.DAOs
 
         }
         
+        /// <summary>
+        /// Pide el listado de los vehiculos de un asegurado
+        /// </summary>
+        /// <param name="aseguradoId">id del asegurado</param>
+        /// <returns>Lista de DTOs con la informacion de los vehiculos</returns>
         public List<VehiculoDTO> GetVehiculosByAsegurado(Guid aseguradoId)
         {
             try
@@ -122,13 +130,11 @@ namespace administracion.Persistence.DAOs
                         placa = v.placa!,
                         color = v.color.ToString(),
                         marca = v.marca.ToString(),
-                        asegurado =  _context.Asegurados
-                        .Where(a => a.aseguradoId == v.aseguradoId)
-                        .Select(a => new AseguradoDTO{
+                        asegurado = (v.aseguradoId != null)? new AseguradoDTO{
                             Id = v.asegurado!.aseguradoId,
-                            nombre = v.asegurado!.nombre,
-                            apellido = v.asegurado!.apellido
-                        }).FirstOrDefault(),
+                            nombre = v.asegurado.nombre,
+                            apellido = v.asegurado.apellido
+                        }: null,
                         polizas = v.polizas!.Select( p => new PolizaDTO{
                             Id = p.polizaId,
                             fechaRegistro = p.fechaRegistro,
@@ -149,43 +155,35 @@ namespace administracion.Persistence.DAOs
             }
         }
         
-        public bool RegisterVehiculo(VehiculoSimpleDTO auto)
+        /// <summary>
+        /// Regsitra un vehiculo en el sistema
+        /// </summary>
+        /// <param name="vehiculo">DTO de regsitro con la informacion del vehiculo</param>
+        /// <returns>Boleano true si todo salio bien</returns>
+        public bool RegisterVehiculo(Vehiculo vehiculo)
         {
             try{
-                Color _color = (Color)Enum.Parse(typeof(Color), auto.color);
-                Marca _marca = (Marca)Enum.Parse(typeof(Marca), auto.marca);
-                var vehiculo = new Vehiculo();
-                vehiculo.vehiculoId = auto.Id;
-                vehiculo.anioModelo = auto.anioModelo;
-                vehiculo.fechaCompra = auto.fechaCompra;
-                vehiculo.color = _color;
-                vehiculo.placa = auto.placa;
-                vehiculo.marca = _marca;
+
                 _context.Vehiculos.Add(vehiculo);
                 _context.DbContext.SaveChanges();
 
                 return true;
-            }
-            catch(ArgumentException ex)
-            {
-                throw new RCVException("Error: alguno de los argumentos no es valido, color y marca deben de existir en el sistema, la placa tiene un maximo de 7 caracteres", ex);
             }
             catch(Exception ex){
                 throw new RCVException("Error: Se genero un error desconcido, recibe bien los datos suministrados y vuelva a intentar", ex);
             }
         }
 
-        public bool AddAsegurado(Guid vehiculoId , Guid  aseguradoId)
+        /// <summary>
+        /// Asocia un asegurado a un vehiculo que no tenga uno ya registrado
+        /// </summary>
+        /// <param name="vehiculoId">id del vehiculo</param>
+        /// <param name="aseguradoId">id del asegurado</param>
+        /// <returns>Boleano true si todo salio bien</returns>
+        public bool AddAsegurado(Vehiculo vehiculo , Guid  aseguradoId)
         {
             try
             {
-                Vehiculo vehiculo = _context.Vehiculos
-                    .Where(v => v.vehiculoId == vehiculoId)
-                    .First()!;
-                
-                Asegurado asegurado = _context.Asegurados
-                    .Where(v => v.aseguradoId == aseguradoId)
-                    .First();
                 vehiculo.aseguradoId = aseguradoId;
                 _context.Vehiculos.Update(vehiculo);
                 _context.DbContext.SaveChanges();

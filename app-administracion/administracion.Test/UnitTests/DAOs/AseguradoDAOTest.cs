@@ -34,7 +34,7 @@ namespace administracion.Test.UnitTests.DAOs
             public IEnumerator<object[]> GetEnumerator()
             {
                 yield return new object[] {
-                    new AseguradoSimpleDTO()
+                    new AseguradoRegisterDTO()
                     {
                         Id = new Guid (" 38f401c9-12aa-46bf-82a2-05ff65bb2500"),
                         nombre = "Pablo",
@@ -77,7 +77,7 @@ namespace administracion.Test.UnitTests.DAOs
         [Fact(DisplayName = "DAO: Agregar Asegurado retornar verdadero")]
         public Task RegisterAseguradoReturnTrue()
         {
-            AseguradoSimpleDTO asegurado = new AseguradoSimpleDTO()
+            AseguradoRegisterDTO asegurado = new AseguradoRegisterDTO()
             {
                 Id = new Guid (" 38f401c9-12aa-46bf-82a2-05ff65bb2500"),
                 nombre = "Pablo",
@@ -92,7 +92,7 @@ namespace administracion.Test.UnitTests.DAOs
         [Fact(DisplayName = "DAO: Evitar Agregar Asegurado con campos vacios")]
         public Task AvoidREgisteAseguradoWithEmptyFields()
         {
-            AseguradoSimpleDTO asegurado = new AseguradoSimpleDTO()
+            AseguradoRegisterDTO asegurado = new AseguradoRegisterDTO()
             {
                 Id = new Guid ("00000000-0001-46bf-82a2-05ff65bb2c86"),
                 nombre = "",
@@ -105,7 +105,7 @@ namespace administracion.Test.UnitTests.DAOs
         [Fact(DisplayName = "DAO: Evitar Agregar Asegurado con campos por defecto")]
         public Task AvoidREgisteAseguradoWithDefaultFields()
         {
-            AseguradoSimpleDTO asegurado = new AseguradoSimpleDTO()
+            AseguradoRegisterDTO asegurado = new AseguradoRegisterDTO()
             {
                 Id = new Guid (" 38f401c9-12aa-46bf-82a2-05ff65bb2500"),
                 nombre = "string",

@@ -5,12 +5,6 @@ namespace administracion.Persistence.Database
 {
     public class AdminDBContext: DbContext, IAdminDBContext
     {
-        public AdminDBContext(){}
-
-        public AdminDBContext(DbContextOptions<AdminDBContext> options) : base(options)
-        {
-        }
-        
         public DbContext DbContext
         {
             get
@@ -18,7 +12,7 @@ namespace administracion.Persistence.Database
                 return this;
             }
         }
-        public virtual  DbSet<Asegurado> Asegurados {get; set;}
+        public virtual DbSet<Asegurado> Asegurados {get; set;}
         public virtual DbSet<Vehiculo> Vehiculos {get; set;}
         public virtual DbSet<Poliza> Polizas {get; set;}
         public virtual DbSet<Incidente> Incidentes {get; set;}
@@ -27,6 +21,13 @@ namespace administracion.Persistence.Database
         public virtual DbSet<Taller> Talleres {get; set;}
         public virtual DbSet<MarcaTaller> MarcasTaller {get; set;}
         public virtual DbSet<MarcaProveedor> MarcasProveedor {get; set;}
+
+        public AdminDBContext(){}
+
+        public AdminDBContext(DbContextOptions<AdminDBContext> options) : base(options)
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             

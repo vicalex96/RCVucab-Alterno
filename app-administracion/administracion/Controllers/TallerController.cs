@@ -5,6 +5,7 @@ using administracion.Exceptions;
 using administracion.Responses;
 using System.ComponentModel.DataAnnotations;
 using administracion.Conections.rabbit;
+using administracion.BussinesLogic.LogicClasses;
 
 namespace administracion.Controllers
 {
@@ -16,15 +17,15 @@ namespace administracion.Controllers
     public class TallerController: Controller
     {
         private readonly ITallerDAO _TallerDao;
-        private readonly IProductorRabbit _ProductorRabbit;
+        private readonly ITallerLogic _tallerLogic;
 
         private readonly ILogger<TallerController> _logger;
 
-        public TallerController(ILogger<TallerController> logger, ITallerDAO TallerDao, IProductorRabbit productorRabbit)
+        public TallerController(ILogger<TallerController> logger, ITallerDAO TallerDao, ITallerLogic tallerLogic)
         {
             _TallerDao = TallerDao;
             _logger = logger;
-            _ProductorRabbit = productorRabbit;
+            _tallerLogic = tallerLogic;
         }
 
         /// <summary>
@@ -38,7 +39,9 @@ namespace administracion.Controllers
             try
             {
                 response.Data = _TallerDao.GetTalleres();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
+                response.Message = "Listado de talleres cargado";
             }
             catch (RCVException ex)
             {
@@ -61,7 +64,9 @@ namespace administracion.Controllers
             try
             {
                 response.Data = _TallerDao.GetTallerByGuid(tallerId);
+                response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
+                response.Message = "taller encontrado";
             }
             catch (RCVException ex)
             {
@@ -75,20 +80,16 @@ namespace administracion.Controllers
         /// <summary>
         /// Registra un taller en el sistema
         /// </summary>
-        /// <param name="tallerSimpleDTO">Taller a registrar</param>
+        /// <param name="tallerRegisterDTO">Taller a registrar</param>
         /// <returns>Taller registrado</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<Guid> RegistrarTaller([FromBody] TallerSimpleDTO taller)
+        public ApplicationResponse<bool> RegistrarTaller([FromBody] TallerRegisterDTO taller)
         {
-            var response = new ApplicationResponse<Guid>();
+            var response = new ApplicationResponse<bool>();
             try
             {
-                response.Data = _TallerDao.RegisterTaller(taller);
-                _ProductorRabbit.SendMessage(
-                    Routings.taller,
-                    "registrar_taller",
-                    response.Data.ToString()
-                );
+                response.Data = _tallerLogic.RegisterTaller(taller);
+                response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "Taller registrado";
             }
@@ -104,16 +105,44 @@ namespace administracion.Controllers
         /// <summary>
         /// Actualiza un taller indicado segun su id, se puede agregar una marca o incidar que trabaja con todas
         /// </summary>
-        /// <param name="tallerSimpleDTO">taller a actualizar</param>
+        /// <param name="tallerRegisterDTO">taller a actualizar</param>
         /// <returns>taller actualizado</returns>
-        [HttpPost("agregar_marca/{tallerId}/{marca}/{agregarTodas?}")]
-        public ApplicationResponse<bool> AgregarMarcaATaller([FromRoute] Guid tallerId, [FromRoute] string marca = "-", [FromRoute] bool agregarTodas = false)
+        [HttpPatch("agregar_marca/{tallerId}/{marca}")]
+        public ApplicationResponse<bool> AgregarMarcaATaller([FromRoute] Guid tallerId, [FromRoute] string marca)
         {
             var response = new ApplicationResponse<bool>();
             try
             {
-                response.Success = _TallerDao.AddMarca(tallerId, marca, agregarTodas);
-                response.Message = "marca/s registrada";
+                response.Data = _tallerLogic.AddMarca(tallerId, marca);
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Especializacion agregada";
+            }
+            catch (RCVException ex)
+            {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
+                response.Success = false;
+                response.Message = ex.Mensaje.ToString();
+                response.Exception = ex.Excepcion!.ToString();
+            }
+            return response;
+        }
+        
+        /// <summary>
+        /// Especializa el taller en todas las marcas
+        /// </summary>
+        /// <param name="tallerId">Id del taller</param>
+        /// <returns>Boleano true si todo salio bien</returns>
+        [HttpPatch("agrega_marca/todas/{tallerId}")]
+        public ApplicationResponse<bool> AgregarTodasLasMarcasATaller([FromRoute] Guid tallerId)
+        {
+            var response = new ApplicationResponse<bool>();
+            try
+            {
+                response.Data = _tallerLogic.AddAllMarcas(tallerId);
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Especializaciones agregadas";
             }
             catch (RCVException ex)
             {

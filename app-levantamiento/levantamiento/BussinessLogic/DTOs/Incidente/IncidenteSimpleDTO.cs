@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace levantamiento.BussinesLogic.DTOs
 {
-    public class IncidenteSimpleDTO
+    public class IncidenteRegisterDTO
     {
         public Guid incidenteId {get; set;} 
         public Guid polizaId {get; set;}

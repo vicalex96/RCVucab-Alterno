@@ -36,13 +36,13 @@ namespace RCVUcab.Test.UnitTests.Controllers
         public Task RegisterTaller()
         {
             _serviceMock
-                .Setup(x => x.RegisterTaller(It.IsAny<TallerSimpleDTO>()))
+                .Setup(x => x.RegisterTaller(It.IsAny<TallerRegisterDTO>()))
                 .Returns(It.IsAny<Guid>());
             _serviceRabbit
                 .Setup(x => x.SendMessage(It.IsAny<Routings>(),It.IsAny<string>(),It.IsAny<string>()))
                 .Returns(It.IsAny<bool>());
         
-            var result = _controller.RegistrarTaller(It.IsAny<TallerSimpleDTO>());
+            var result = _controller.RegistrarTaller(It.IsAny<TallerRegisterDTO>());
 
             Assert.IsType<ApplicationResponse<Guid>>(result);
             return Task.CompletedTask;
@@ -52,10 +52,10 @@ namespace RCVUcab.Test.UnitTests.Controllers
         public Task RegisterTallerException()
         {
             _serviceMock
-                .Setup(x => x.RegisterTaller(It.IsAny<TallerSimpleDTO>()))
+                .Setup(x => x.RegisterTaller(It.IsAny<TallerRegisterDTO>()))
                 .Throws(new RCVException("", new Exception()));
 
-            var ex = _controller.RegistrarTaller(It.IsAny<TallerSimpleDTO>());
+            var ex = _controller.RegistrarTaller(It.IsAny<TallerRegisterDTO>());
             Assert.False(ex.Success);
 
             return Task.CompletedTask;

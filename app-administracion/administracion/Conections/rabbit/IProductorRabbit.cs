@@ -1,6 +1,9 @@
 namespace administracion.Conections.rabbit
 {
     
+    /// <summary>
+    /// Interfaz para el productor de mensajes Rabbit
+    /// </summary>
     public interface IProductorRabbit
     {
         public bool SendMessage(Routings routing, string instruccion, string contenido);

@@ -8,6 +8,9 @@ using administracion.Persistence.Entities;
 
 namespace administracion.BussinesLogic.DTOs
 {
+    /// <summary>
+    /// DTO para mostra informacion de un Vehiculo
+    /// </summary>
     public class VehiculoDTO
     {
         public Guid Id { get; set; }

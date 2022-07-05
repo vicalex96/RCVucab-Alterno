@@ -6,6 +6,9 @@ using System.Text.Json.Serialization;
 
 namespace administracion.BussinesLogic.DTOs
 {
+    /// <summary>
+    /// DTO para mostrar informacion de incidente
+    /// </summary>
     public class IncidenteDTO
     {
         public Guid Id {get; set;} 

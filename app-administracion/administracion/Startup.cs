@@ -1,12 +1,8 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using administracion.Persistence.DAOs;
 using administracion.Persistence.Database;
+using administracion.BussinesLogic.LogicClasses;
 using administracion.Conections.rabbit;
 
 namespace administracion
@@ -31,13 +27,21 @@ namespace administracion
                 );
                 
             services.AddTransient<IAdminDBContext, AdminDBContext>();
-            services.AddTransient<IAseguradoDAO, AseguradoDAO>();
-            services.AddTransient<IVehiculoDAO, VehiculoDAO>();
-            services.AddTransient<IPolizaDAO, PolizaDAO>();
-            services.AddTransient<IIncidenteDAO, IncidenteDAO>();
-            services.AddTransient<ITallerDAO, TallerDAO>();
-            services.AddTransient<IProveedorDAO, ProveedorDAO>();
             services.AddTransient<IProductorRabbit, ProductorRabbit>();
+
+            services.AddTransient<IAseguradoDAO, AseguradoDAO>();
+            services.AddTransient<IIncidenteDAO, IncidenteDAO>();
+            services.AddTransient<IPolizaDAO, PolizaDAO>();
+            services.AddTransient<IProveedorDAO, ProveedorDAO>();
+            services.AddTransient<ITallerDAO, TallerDAO>();
+            services.AddTransient<IVehiculoDAO, VehiculoDAO>();
+
+            services.AddTransient<IAseguradoLogic, AseguradoLogic>();
+            services.AddTransient<IIncidenteLogic,IncidenteLogic>();
+            services.AddTransient<IPolizaLogic, PolizaLogic>();
+            services.AddTransient<IProveedorLogic, ProveedorLogic>();
+            services.AddTransient<ITallerLogic, TallerLogic>();
+            services.AddTransient<IVehiculoLogic, VehiculoLogic>();
 
             services.AddSwaggerGen(c =>
             {

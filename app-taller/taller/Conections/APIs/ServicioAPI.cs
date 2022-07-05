@@ -38,7 +38,7 @@ namespace taller.Conections.APIs
 
                         Console.WriteLine("Talleres: {0} -> {1}",taller.Data.nombreLocal, taller.Data.marcas.ToList()[0].nombreMarca);
 
-                        TallerSimpleDTO t = new TallerSimpleDTO()
+                        TallerRegisterDTO t = new TallerRegisterDTO()
                         {
                             Id = taller.Data.Id,
                             nombreLocal = taller.Data.nombreLocal,

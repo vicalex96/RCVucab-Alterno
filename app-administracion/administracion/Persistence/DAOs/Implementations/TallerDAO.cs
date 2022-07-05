@@ -3,11 +3,6 @@ using administracion.Persistence.Database;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
 using administracion.BussinesLogic.DTOs;
-using administracion.Conections.rabbit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data.SqlClient;
 
 namespace administracion.Persistence.DAOs
 {
@@ -19,6 +14,11 @@ namespace administracion.Persistence.DAOs
         {
             _context = context;
         }
+        /// <summary>
+        /// Obtiene un Taller según su Id
+        /// </summary>
+        /// <param name="id">Id del Taller</param>
+        /// <returns>DTO con la informacion del Taller</returns>
         public TallerDTO GetTallerByGuid(Guid tallerId)
         {
             try
@@ -49,6 +49,11 @@ namespace administracion.Persistence.DAOs
             }
 
         }
+        
+        /// <summary>
+        /// Obtiene todos los taller registrados
+        /// </summary>
+        /// <returns>Lista de DTOs con la informacion de los talleres</returns>
         public List<TallerDTO> GetTalleres()
         {
             try
@@ -79,7 +84,12 @@ namespace administracion.Persistence.DAOs
             }
         }
         
-        public Guid RegisterTaller(TallerSimpleDTO taller)
+        /// <summary>
+        /// Registra un taller en el sistema
+        /// </summary>
+        /// <param name="taller">DTO de registro con la informacion del taller</param>
+        /// <returns>Guid con el Id del taller</returns>
+        public Guid RegisterTaller(Taller taller)
         {
             try
             {
@@ -90,12 +100,12 @@ namespace administracion.Persistence.DAOs
                 }
                 Taller tallerEntity = new Taller
                 {
-                    tallerId = taller.Id,
+                    tallerId = taller.tallerId,
                     nombreLocal = taller.nombreLocal,
                 };
                 _context.Talleres.Add(tallerEntity);
                 _context.DbContext.SaveChanges();
-                return taller.Id;
+                return taller.tallerId;
             }
             catch (DbUpdateException)
             {
@@ -108,71 +118,56 @@ namespace administracion.Persistence.DAOs
             }
         }
 
-        public bool AddMarca(Guid tallerId, string marcaStr="-", bool todasLasMarcas = false)
+        /// <summary>
+        /// Revisa si la marca existe como especializacion en el taller
+        /// </summary>
+        /// <param name="tallerId">Id del taller</param>
+        /// <param name="marca">Marca a revisar</param>
+        /// <returns>True si existe, False si no existe</returns>
+        public bool IsMarcaExistsOnTaller(Guid tallerId, Marca marca)
         {
             try
             {
-                Marca marca = new Marca();
-                MarcaTaller marcaEntity;
-
-                if(todasLasMarcas == true)
-                {
-                    DeleteMarcasFromTaller(tallerId);
-                    marcaEntity = new MarcaTaller
-                    {
-                        marcaId = Guid.NewGuid(),
-                        tallerId = tallerId,
-                        manejaTodas = false,
-                        marca = marca
-                    };
-                }
-                else
-                {
-                    if(MarcaTaller.IsMarca(marcaStr))
-                    {
-                        marca = MarcaTaller.ConvertToMarca(marcaStr);
-                    } else
-                    {
-                        throw new RCVException("La marca introducida no es valida");
-                    }
-                    var marcas = _context.MarcasTaller
-                        .Where(v => v.tallerId == tallerId
-                            && (v.manejaTodas == true || v.marca == marca))
-                        .ToList();
-
-                    if (marcas.Count() != 0)
-                    {
-                        throw new RCVException("La marca que se intenta registrar al taller ya lo esta");
-                    }
-
-                    marcaEntity = new MarcaTaller
-                    {
-                        marcaId = Guid.NewGuid(),
-                        tallerId = tallerId,
-                        manejaTodas = todasLasMarcas,
-                    };
-                }
-
-                _context.MarcasTaller.Add(marcaEntity);
-                _context.DbContext.SaveChanges();
+                var data = _context.MarcasTaller
+                .Where(m => m.tallerId == tallerId 
+                    && (m.marca == marca || m.manejaTodas == true))
+                .First();
                 return true;
             }
-            catch (RCVException ex)
+            catch (Exception)
             {
-                throw new RCVException(ex.Mensaje);
+                return false;
             }
-            catch (ArgumentNullException ex)
+        }
+
+        /// <summary>
+        /// Agrega una marca a un taller existente o indica todas las marcas
+        /// al indicar todas se borran los registros y se deja uno con el todasLasMarcas= true
+        /// </summary>
+        /// <param name="tallerId">Id del taller</param>
+        /// <param name="marca">DTO con la informacion de la marca</param>
+        /// <param name="todasLasMarcas"> true si se manejan todas las marcas</param>
+        /// <returns>Booleano True si se realizo bien</returns>
+        public bool AddMarca(MarcaTaller marca)
+        {
+            try
             {
-                throw new RCVException("Error no se encontró ningun taller con el Guid indicado", ex, ex.Message, "404");
+                _context.MarcasTaller.Add(marca);
+                _context.DbContext.SaveChanges();
+                return true;
             }
             catch (Exception ex)
             {
                 throw new RCVException("Error al crear el asegurado", ex);
-
             }
         }
     
-        private void DeleteMarcasFromTaller(Guid tallerId)
+        /// <summary>
+        /// Elimina todas las marcas de un taller
+        /// </summary>
+        /// <param name="tallerId"></param>
+        /// <returns> void </returns>
+        public bool DeleteMarcasFromTaller(Guid tallerId)
         {
             try
             {
@@ -182,6 +177,7 @@ namespace administracion.Persistence.DAOs
                 _context.MarcasTaller
                     .RemoveRange(data.ToList());
                 _context.DbContext.SaveChanges();
+                return true;
             }
             catch (Exception ex)
             {

@@ -40,7 +40,7 @@ namespace administracion.Controllers
         }
             
         [HttpPost("registrar")]
-        public async Task<ApplicationResponse<bool>> RegisterVehiculo([Required][FromBody] VehiculoSimpleDTO vehiculo)
+        public async Task<ApplicationResponse<bool>> RegisterVehiculo([Required][FromBody] VehiculoRegisterDTO vehiculo)
         {
             var response = new ApplicationResponse<bool>();
             try

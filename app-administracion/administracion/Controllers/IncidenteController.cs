@@ -4,6 +4,7 @@ using administracion.Persistence.DAOs;
 using administracion.Exceptions;
 using administracion.Responses;
 using System.ComponentModel.DataAnnotations;
+using administracion.BussinesLogic.LogicClasses;
 
 namespace administracion.Controllers
 {
@@ -15,11 +16,14 @@ namespace administracion.Controllers
     public class IncidenteController: Controller
     {
         private readonly IIncidenteDAO _incidenteDao;
+
+        private readonly IIncidenteLogic _incidenteLogic;
         private readonly ILogger<IncidenteController> _logger;
 
-        public IncidenteController(ILogger<IncidenteController> logger, IIncidenteDAO incidenteDao)
+        public IncidenteController(ILogger<IncidenteController> logger, IIncidenteDAO incidenteDao, IIncidenteLogic incidenteLogic)
         {
             _incidenteDao = incidenteDao;
+            _incidenteLogic = incidenteLogic;
             _logger = logger;
         }
 
@@ -68,15 +72,17 @@ namespace administracion.Controllers
         /// <summary>
         /// Registra un incidente en el sistema
         /// </summary>
-        /// <param name="incidenteSimpleDTO">Incidente a registrar</param>
+        /// <param name="incidenteRegisterDTO">Incidente a registrar</param>
         /// <returns>Incidente registrado</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> RegistrarIncidente([FromBody] IncidenteSimpleDTO incidente)
+        public ApplicationResponse<bool> RegistrarIncidente([FromBody] IncidenteRegisterDTO incidente)
         {
             var response = new ApplicationResponse<bool>();
             try
             {
-                response.Success = _incidenteDao.RegisterIncidente(incidente);
+                response.Success = _incidenteLogic.RegisterIncidente(incidente);
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
                 response.Message = "Incidente registrado";
             }
             catch (RCVException ex)

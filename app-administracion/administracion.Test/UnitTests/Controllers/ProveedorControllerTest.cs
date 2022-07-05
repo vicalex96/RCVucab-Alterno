@@ -35,14 +35,14 @@ namespace RCVUcab.Test.UnitTests.Controllers
         public Task RegisterProveedor()
         {
             _serviceMock
-                .Setup(x => x.RegisterProveedor(It.IsAny<ProveedorSimpleDTO>()))
+                .Setup(x => x.RegisterProveedor(It.IsAny<ProveedorRegisterDTO>()))
                 .Returns(It.IsAny<Guid>());
             
             _serviceRabbit
                 .Setup(x => x.SendMessage(It.IsAny<Routings>(),It.IsAny<string>(),It.IsAny<string>()))
                 .Returns(It.IsAny<bool>());
 
-            var result = _controller.RegistrarProveedor(It.IsAny<ProveedorSimpleDTO>());
+            var result = _controller.RegistrarProveedor(It.IsAny<ProveedorRegisterDTO>());
 
             Assert.IsType<ApplicationResponse<Guid>>(result);
             return Task.CompletedTask;
@@ -52,10 +52,10 @@ namespace RCVUcab.Test.UnitTests.Controllers
         public Task RegisterProveedorException()
         {
             _serviceMock
-                .Setup(x => x.RegisterProveedor(It.IsAny<ProveedorSimpleDTO>()))
+                .Setup(x => x.RegisterProveedor(It.IsAny<ProveedorRegisterDTO>()))
                 .Throws(new RCVException("", new Exception()));
 
-            var ex = _controller.RegistrarProveedor(It.IsAny<ProveedorSimpleDTO>());
+            var ex = _controller.RegistrarProveedor(It.IsAny<ProveedorRegisterDTO>());
             Assert.False(ex.Success);
 
             return Task.CompletedTask;

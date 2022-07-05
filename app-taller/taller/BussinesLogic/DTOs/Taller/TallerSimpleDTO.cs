@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace taller.BussinesLogic.DTOs
 {
-    public class TallerSimpleDTO
+    public class TallerRegisterDTO
     {
         public Guid Id { get; set; }
         public string nombreLocal {get; set;} 

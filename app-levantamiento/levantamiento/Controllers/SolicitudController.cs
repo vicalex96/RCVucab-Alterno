@@ -130,7 +130,7 @@ namespace administracion.Controllers
         /// <param name="solicitud">Solicitud</param>
         /// <returns>bool</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> RegistrarSolicitud([Required][FromBody] SolicitudesRespacionSimpleDTO solicitud)
+        public ApplicationResponse<bool> RegistrarSolicitud([Required][FromBody] SolicitudesRespacionRegisterDTO solicitud)
         {
             var response = new ApplicationResponse<bool>();
             try

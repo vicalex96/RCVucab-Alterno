@@ -8,6 +8,9 @@ using System.Text.Json.Serialization;
 
 namespace administracion.BussinesLogic.DTOs
 {
+    /// <summary>
+    /// DTO para mostrar la informacion de la poliza
+    /// </summary>
     public class PolizaDTO
     {
         public Guid Id {get; set;}

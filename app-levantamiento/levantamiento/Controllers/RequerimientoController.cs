@@ -51,7 +51,7 @@ namespace administracion.Controllers
         ///<param name="RequerimientoDTO">requerimiento que se va a registrar</param>
         ///<returns>Respuesta bool true or false indicando el exito de la operacion</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> RegisterRequerimiento ([FromBody] RequerimientoSimpleDTO Requerimiento)
+        public ApplicationResponse<bool> RegisterRequerimiento ([FromBody] RequerimientoRegisterDTO Requerimiento)
         {
             var response = new ApplicationResponse<bool>();
             try
