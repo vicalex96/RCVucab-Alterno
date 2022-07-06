@@ -29,20 +29,20 @@ namespace administracion.BussinesLogic.LogicClasses
                 PolizaDTO polizaDTO = _polizaDAO.GetPolizaByVehiculoGuid(poliza.vehiculoId);
                 if(polizaDTO != null)
                 {
-                    throw new RCVException("El vehiculo ya tiene una poliza registrada y activa");
+                    throw new RCVNullException("El vehiculo ya tiene una poliza registrada y activa");
                 }
 
                 // el vehiculo tiene que estar asignado a un asegurado
                 VehiculoDTO vehiculoDTO = _vehiculoDao.GetVehiculoByGuid(poliza.vehiculoId);
                 if(vehiculoDTO.asegurado == null)
                 {
-                    throw new RCVException("El vehiculo no tiene un asegurado asignado");
+                    throw new RCVAsociationException("El vehiculo no tiene un asegurado asignado");
                 }
 
                 // El rango de fechas de la poliza debe ser correcto
                 if(poliza.fechaVencimiento < poliza.fechaRegistro)
                 {
-                    throw new RCVException("La fecha de vencimiento debe ser mayor a la fecha de registro");
+                    throw new RCVDateOrderException("La fecha de vencimiento debe ser mayor a la fecha de registro");
                 }
 
                 Poliza polizaEntity = new Poliza();
@@ -55,9 +55,21 @@ namespace administracion.BussinesLogic.LogicClasses
 
                 return _polizaDAO.RegisterPoliza(polizaEntity);
             }   
-            catch(RCVException ex)
+            catch(RCVNullException ex)
             {
-                throw new RCVException(ex.Mensaje, ex);
+                throw ex;
+            }
+            catch(RCVAsociationException ex)
+            {
+                throw ex;
+            }
+            catch(RCVDateOrderException ex)
+            {
+                throw ex;
+            }
+            catch(ArgumentException ex)
+            {
+                throw new RCVInvalidFieldException("El tipo de póliza no es valido", ex);
             }
             catch(Exception ex)
             {

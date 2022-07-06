@@ -46,7 +46,7 @@ namespace administracion.Persistence.DAOs
         /// </summary>
         /// <param name="incidenteId">Id del incidente</param>
         /// <returns>DTO con la informacion del incidente</returns>
-        public IncidenteDTO consultarIncidente(Guid incidenteID)
+        public IncidenteDTO GetIncidenteById(Guid incidenteID)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace administracion.Persistence.DAOs
         /// Obtiene una lista de incidentes que estan actualimente activos
         /// </summary>
         /// <returns>Lista de incidentes</returns>
-        public List<IncidenteDTO> ConsultarIncidentesActivos()
+        public List<IncidenteDTO> GetActiveIncidentes()
         {
             try
             {
@@ -113,7 +113,7 @@ namespace administracion.Persistence.DAOs
         /// <param name="incidenteId">Id del incidente</param>
         /// <param name="EstadoIncidente">Estado del incidente</param>
         /// <returns>booleano true</returns>
-        public bool actualizarIncidente(Incidente incidente)
+        public bool UpdateIncidente(Incidente incidente)
         {
             try
             {
@@ -122,13 +122,10 @@ namespace administracion.Persistence.DAOs
                 return true;
 
             }
-            catch (RCVException ex)
-            {
-                throw new RCVException("No se encontro ningun incidente con dicho identificador", ex);
-            }
+
             catch (Exception ex)
             {
-                throw new RCVException("No se pudo actualizar el incidente", ex);
+                throw new RCVUpdateException("Acurrio un problema y no se pudo actualizar el incidente", ex);
             }
         }
 

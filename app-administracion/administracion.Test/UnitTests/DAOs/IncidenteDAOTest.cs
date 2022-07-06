@@ -31,7 +31,7 @@ namespace administracion.Test.UnitTests.DAOs
         [InlineData("000001c9-12aa-46bf-82a2-05ff65bb0000")]
         public Task ShouldGetIncidenteByGuid(Guid id)
         {
-            IncidenteDTO incidente = _dao.consultarIncidente(id);
+            IncidenteDTO incidente = _dao.GetIncidenteById(id);
 
             Assert.NotNull(incidente);
             return Task.CompletedTask;
@@ -41,7 +41,7 @@ namespace administracion.Test.UnitTests.DAOs
         public Task ShouldGetActiveIncidentes()
         {
             //Arrage
-            var result = _dao.ConsultarIncidentesActivos();
+            var result = _dao.GetActiveIncidentes();
             //Act
             var isNoEmpty = result.Any();
             //Assert
@@ -79,7 +79,7 @@ namespace administracion.Test.UnitTests.DAOs
             Incidente incidente = new Incidente();
             _contextMock.Setup(m => m.DbContext.SaveChanges())
                 .Returns(0);
-            bool result = _dao.actualizarIncidente(incidente);
+            bool result = _dao.UpdateIncidente(incidente);
 
             Assert.True(result);
             return Task.CompletedTask;
@@ -92,7 +92,7 @@ namespace administracion.Test.UnitTests.DAOs
             _contextMock.Setup(m => m.DbContext.SaveChanges())
                 .Throws(new Exception());
             
-            Assert.Throws<RCVException>(() => _dao.actualizarIncidente(incidente));
+            Assert.Throws<RCVUpdateException>(() => _dao.UpdateIncidente(incidente));
             return Task.CompletedTask;
         }   
     

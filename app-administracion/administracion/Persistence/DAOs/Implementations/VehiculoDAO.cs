@@ -180,10 +180,13 @@ namespace administracion.Persistence.DAOs
         /// <param name="vehiculoId">id del vehiculo</param>
         /// <param name="aseguradoId">id del asegurado</param>
         /// <returns>Boleano true si todo salio bien</returns>
-        public bool AddAsegurado(Vehiculo vehiculo , Guid  aseguradoId)
+        public bool AddAsegurado(Guid vehiculoId , Guid  aseguradoId)
         {
             try
-            {
+            {   
+                Vehiculo vehiculo = _context.Vehiculos
+                    .Where(v => v.vehiculoId == vehiculoId)
+                    .First();
                 vehiculo.aseguradoId = aseguradoId;
                 _context.Vehiculos.Update(vehiculo);
                 _context.DbContext.SaveChanges();

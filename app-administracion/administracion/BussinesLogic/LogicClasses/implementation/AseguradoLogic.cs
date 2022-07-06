@@ -25,11 +25,11 @@ namespace administracion.BussinesLogic.LogicClasses
             {
                 //El nombre y el apellido no pueden estar vacios
                 if(asegurado.nombre.ToLower() == "string" || 
-                    asegurado.nombre.Count() == 0 && 
+                    asegurado.nombre.Count() == 0 || 
                     asegurado.apellido.ToLower() == "string" || 
                     asegurado.apellido.Count() == 0 )
                 {
-                    throw new RCVException("El nombre y/o el apellido estan vacios");
+                    throw new RCVInvalidFieldException("El nombre y/o el apellido estan vacios");
                 }
 
                 Asegurado aseguradoEntity = new Asegurado{
@@ -40,9 +40,9 @@ namespace administracion.BussinesLogic.LogicClasses
 
                 return _aseguradoDAO.RegisterAsegurado(aseguradoEntity);
             }
-            catch(RCVException ex)
+            catch(RCVInvalidFieldException ex)
             {
-                throw new RCVException(ex.Mensaje, ex);
+                throw ex;
             }
             catch(Exception ex)
             {

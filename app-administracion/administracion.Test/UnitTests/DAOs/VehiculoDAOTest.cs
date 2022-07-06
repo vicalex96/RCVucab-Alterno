@@ -88,14 +88,13 @@ namespace administracion.Test.UnitTests.DAOs
         }
 
     
-        [Fact(DisplayName = "asociar vehiculo con un asegurado retorna un boleano true")]
-        public Task shouldAssociatedAVehiculoWithAseguradoReturnTrue()
+        [Theory(DisplayName = "asociar vehiculo con un asegurado retorna un boleano true")]
+        [InlineData("00f401c9-12aa-46bf-82a3-05bb34bb2c03","00000001-12aa-46bf-82a2-05ff65bb2c86")]
+        public Task shouldAssociatedAVehiculoWithAseguradoReturnTrue(Guid vehiculoId, Guid aseguradoId)
         {   
-            Vehiculo vehiculo = new Vehiculo();
-            Guid aseguradoId = new Guid();
             _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
 
-            bool result = _dao.AddAsegurado(vehiculo,aseguradoId);
+            bool result = _dao.AddAsegurado(vehiculoId,aseguradoId);
             Assert.True(result);
             return Task.CompletedTask;
         }
@@ -105,10 +104,11 @@ namespace administracion.Test.UnitTests.DAOs
         {   
             Vehiculo vehiculo = new Vehiculo();
             Guid aseguradoId = new Guid();
+            Guid vehiculoId = new Guid();
             _contextMock.Setup(m => m.DbContext.SaveChanges())
                 .Throws(new Exception()); 
 
-            Assert.Throws<RCVException>(() => _dao.AddAsegurado(vehiculo,aseguradoId));
+            Assert.Throws<RCVException>(() => _dao.AddAsegurado(vehiculoId,aseguradoId));
             return Task.CompletedTask;
         }
 

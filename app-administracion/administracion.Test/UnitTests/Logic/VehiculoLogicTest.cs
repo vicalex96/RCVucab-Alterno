@@ -1,11 +1,10 @@
-/*using Microsoft.Extensions.Logging;
 using Moq;
 using administracion.Persistence.DAOs;
 using administracion.Persistence.Database;
 using administracion.BussinesLogic.DTOs;
 using administracion.Persistence.Entities;
+using administracion.BussinesLogic.LogicClasses;
 using administracion.Exceptions;
-using administracion.Test.DataSeed;
 using Xunit;
 using System.Collections;
 
@@ -13,19 +12,17 @@ namespace administracion.Test.UnitTests.Logic
 {
     public class VehiculoLogicTest
     {
-        private readonly VehiculoDAO _dao;
-        private readonly Mock<IAdminDBContext> _contextMock;
-        private readonly Mock<ILogger<VehiculoDAO>> _mockLogger;
+        private readonly VehiculoLogic _logic;
+        private readonly Mock<IVehiculoDAO> _serviceMockVehiculo;
+        private readonly Mock<IAseguradoDAO> _serviceMockAsegurado;
 
-        public VehiculoDAOShould()
+        private readonly Mock<IAdminDBContext> _contextMock;
+        public VehiculoLogicTest()
         {
             _contextMock = new Mock<IAdminDBContext>();
-            
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
-            _mockLogger = new Mock<ILogger<VehiculoDAO>>();
-
-            _dao = new VehiculoDAO(_contextMock.Object);
-            _contextMock.SetupDbContextDataIncidenteProcess();
+            _serviceMockVehiculo = new Mock<IVehiculoDAO>();
+            _serviceMockAsegurado = new Mock<IAseguradoDAO>();
+            _logic = new VehiculoLogic(_serviceMockVehiculo.Object, _serviceMockAsegurado.Object);
         }
 
         public class VehiculoClassData : IEnumerable<object[]>
@@ -47,45 +44,157 @@ namespace administracion.Test.UnitTests.Logic
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        [Fact(DisplayName = "DAO: Consulta vehiculos retorna la lista de vehiculos ")]
-        public Task shouldReturnAVehiculosList()
-        {
-            var result = _dao.GetAllVehiculos();
-            Assert.Equal(4, result.Count());
-            return Task.CompletedTask;
-        }
-
-        [Theory(DisplayName = "DAO: Consultar vehiculos por Guid y retornar un VehiculoDTO")]
-        [InlineData("00f401c9-12aa-46bf-82a3-05bb34bb2c03")]
-        public Task shouldUseGuidForReturnVehiculo(Guid vehiculoId)
-        {
-            //Arrage
-            var vehiculoDTO = _dao.GetVehiculoByGuid(vehiculoId);
-            //Assert
-            Assert.IsType<VehiculoDTO>(vehiculoDTO);
-            return Task.CompletedTask;
-        }
-
-        [Theory(DisplayName = "DAO: Agregar Vehiculo y regresar un mensaje de verifiacion")]
+        [Theory (DisplayName ="Logic: Ejecuta la logica para registrar un vehiculo retorna true")]
         [ClassData(typeof(VehiculoClassData))]
-        public Task shouldAddVehiculoReturnMenssage(VehiculoRegisterDTO vehiculo)
+        public Task ShouldExcuteRegisterVehiculoLogicReturnTrue(VehiculoRegisterDTO vehiculo)
         {
-            var resultado = _dao.RegisterVehiculo(vehiculo);
+            _serviceMockVehiculo
+                .Setup(x => x.RegisterVehiculo(It.IsAny<Vehiculo>()))
+                .Returns(true);
+            var result = _logic.RegisterVehiculo(vehiculo);
 
-            Assert.True(resultado);
+            Assert.True(result);
+            return Task.CompletedTask;
+        }
+
+        public class VehiculoClassDataInvalidfileds : IEnumerable<object[]>
+        {
+            public IEnumerator<object[]> GetEnumerator()
+            {
+                yield return new object[] {
+                    new VehiculoRegisterDTO()
+                    {
+                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
+                        anioModelo = 2003,
+                        fechaCompra = new DateTime(2022, 6, 22, 19, 25, 41, 41, DateTimeKind.Local),
+                        color = "esto no es un color",
+                        placa = "AB123CM",
+                        marca = "Toyota"
+                    }
+                };
+                yield return new object[] {
+                    new VehiculoRegisterDTO()
+                    {
+                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
+                        anioModelo = 2003,
+                        fechaCompra = new DateTime(2022, 6, 22, 19, 25, 41, 41, DateTimeKind.Local),
+                        color = "Verde",
+                        placa = "Esta placa es muy larga",
+                        marca = "Toyota"
+                    }
+                };
+                yield return new object[] {
+                    new VehiculoRegisterDTO()
+                    {
+                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
+                        anioModelo = 2003,
+                        fechaCompra = new DateTime(2022, 6, 22, 19, 25, 41, 41, DateTimeKind.Local),
+                        color = "Verde",
+                        placa = "AB123CM",
+                        marca = "esto no es una placa"
+                    }
+                };
+            }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+        
+        [Theory (DisplayName ="Logic: Ejecuta la logica para registrar un vehiculo retorna RCVInvalidFieldException")]
+        [ClassData(typeof(VehiculoClassDataInvalidfileds))]
+        public Task ShouldExcuteRegisterVehiculoLogicReturnRCVInvalidFieldException(VehiculoRegisterDTO vehiculo)
+        {
+            Assert.Throws<RCVInvalidFieldException>(() =>  _logic.RegisterVehiculo(vehiculo));
+            return Task.CompletedTask;
+        }
+    
+
+        [Fact (DisplayName ="Logic: Agrega asegurado a un Vehiculo retorna true")]
+        public Task ShouldAseguradoTovehiculoReturnTrue()
+        {
+            Guid vehiculoId = new Guid();
+            Guid aseguradoId = new Guid();
+
+            _serviceMockVehiculo   
+                .Setup(x => x.GetVehiculoByGuid(It.IsAny<Guid>()))
+                .Returns(new VehiculoDTO());
+            _serviceMockAsegurado  
+                .Setup(x => x.GetAseguradoByGuid(It.IsAny<Guid>()))
+                .Returns(new AseguradoDTO()); 
+            
+            _serviceMockVehiculo
+                .Setup(x => x.AddAsegurado(It.IsAny<Guid>(),It.IsAny<Guid>()))
+                .Returns(true);   
+                
+            var result = _logic.AddAseguradoToVehiculo(vehiculoId,aseguradoId);
+
+            Assert.True(result);
             return Task.CompletedTask;
         }
 
 
-        [Theory(DisplayName = "asociar vehiculo con un asegurado")]
-        [InlineData("00f401c9-12aa-46bf-82a3-05bb34bb2c03","00000001-12aa-46bf-82a2-05ff65bb2c86")]
-        public Task shouldAssociatedAVehiculoWithAseguradoReturnTrue(Guid vehiculoId, Guid aseguradoId)
-        {   
-            bool result = _dao.AddAsegurado(vehiculo,aseguradoId);
-            Assert.True(result);
+        [Fact (DisplayName ="Logic: Intenta agregar asegurado a vehiculo retorna RCVNullException vehiculo no existe")]
+        public Task ShouldAseguradoTovehiculoReturnRCVNullExceptionVehiculoNull()
+        {
+            Guid vehiculoId = new Guid();
+            Guid aseguradoId = new Guid();
+
+            _serviceMockVehiculo   
+                .Setup(x => x.GetVehiculoByGuid(It.IsAny<Guid>()));
+            _serviceMockAsegurado  
+                .Setup(x => x.GetAseguradoByGuid(It.IsAny<Guid>()))
+                .Returns(new AseguradoDTO());   
+            
+            _serviceMockVehiculo
+                .Setup(x => x.AddAsegurado(It.IsAny<Guid>(),It.IsAny<Guid>()))
+                .Returns(true);
+                
+            Assert.Throws<RCVNullException>(() => _logic.AddAseguradoToVehiculo(vehiculoId,aseguradoId));
+            return Task.CompletedTask;
+        }
+
+        [Fact (DisplayName ="Logic: Intenta agregar asegurado a vehiculo que ya tiene un asegurado Retorna RCVNAsociationException")]
+        public Task ShouldAseguradoTovehiculoReturnRCVNAsociationException()
+        {
+            Guid vehiculoId = new Guid();
+            Guid aseguradoId = new Guid();
+
+            _serviceMockVehiculo   
+                .Setup(x => x.GetVehiculoByGuid(It.IsAny<Guid>()))
+                .Returns(new VehiculoDTO{
+                    Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+                    asegurado  = new AseguradoDTO()
+                }); 
+            _serviceMockAsegurado  
+                .Setup(x => x.GetAseguradoByGuid(It.IsAny<Guid>()))
+                .Returns(new AseguradoDTO{
+                    Id = Guid.Parse("00000000-0000-0000-0000-000000000001")
+                });   
+            
+            _serviceMockVehiculo
+                .Setup(x => x.AddAsegurado(It.IsAny<Guid>(),It.IsAny<Guid>()))
+                .Returns(true);
+                
+            Assert.Throws<RCVAsociationException>(() => _logic.AddAseguradoToVehiculo(vehiculoId,aseguradoId));
+            return Task.CompletedTask;
+        }
+
+        [Fact (DisplayName ="Logic: Intenta agregar asegurado a vehiculo retorna RCVNullException asegurado no existe")]
+        public Task ShouldAseguradoTovehiculoReturnRCVNullExceptionAseguradoNull()
+        {
+            Guid vehiculoId = new Guid();
+            Guid aseguradoId = new Guid();
+
+            _serviceMockVehiculo   
+                .Setup(x => x.GetVehiculoByGuid(It.IsAny<Guid>()))
+                .Returns(new VehiculoDTO());
+            _serviceMockAsegurado  
+                .Setup(x => x.GetAseguradoByGuid(It.IsAny<Guid>()));
+            
+            _serviceMockVehiculo
+                .Setup(x => x.AddAsegurado(It.IsAny<Guid>(),It.IsAny<Guid>()))
+                .Returns(true);
+                
+            Assert.Throws<RCVNullException>(() => _logic.AddAseguradoToVehiculo(vehiculoId,aseguradoId));
             return Task.CompletedTask;
         }
     }
 }
-
-*/

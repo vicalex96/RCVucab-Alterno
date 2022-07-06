@@ -37,7 +37,7 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<IncidenteDTO>();
             try
             {
-                response.Data = _incidenteDao.consultarIncidente(incidenteID);
+                response.Data = _incidenteDao.GetIncidenteById(incidenteID);
             }
             catch (RCVException ex)
             {
@@ -58,7 +58,7 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<List<IncidenteDTO>>();
             try
             {
-                response.Data = _incidenteDao.ConsultarIncidentesActivos();
+                response.Data = _incidenteDao.GetActiveIncidentes();
             }
             catch (RCVException ex)
             {
@@ -101,12 +101,12 @@ namespace administracion.Controllers
         /// <param name="estado">el estado del incidente</param>
         /// <returns>Incidente actualizado</returns>
         [HttpPatch("actualizar/{incidenteID}/{estado}")]
-        public ApplicationResponse<bool> actualizarIncidente([Required][FromRoute] Guid incidenteID, [Required][FromRoute] EstadoIncidente estado)
+        public ApplicationResponse<bool> UpdateIncidente([Required][FromRoute] Guid incidenteID, [Required][FromRoute] EstadoIncidente estado)
         {
             var response = new ApplicationResponse<bool>();
             try
             {
-                response.Data = _incidenteLogic.actualizarIncidente(incidenteID, estado);
+                response.Data = _incidenteLogic.UpdateIncidenteState(incidenteID, estado);
 
             }
             catch (RCVException ex)

@@ -32,7 +32,9 @@ namespace administracion.BussinesLogic.LogicClasses
                     estadoIncidente = EstadoIncidente.Pendiente,
                     fechaRegistrado = DateTime.Today,
                 }; 
+                
                 bool response =_incidenteDAO.RegisterIncidente(incidenteEntity);
+
                 if(response)
                 {
                     _productorRabbit.SendMessage(
@@ -49,28 +51,33 @@ namespace administracion.BussinesLogic.LogicClasses
             }
         }
 
-        public bool actualizarIncidente(Guid incidenteId, EstadoIncidente estado)
+        public bool UpdateIncidenteState(Guid incidenteId, EstadoIncidente estado)
         {
             try
             {
-                //Revisa si el incidente existe
+                //Revisa que existe el incidente
+                IncidenteDTO incidente =_incidenteDAO.GetIncidenteById(incidenteId);
+                
+                if(incidente == null)
+                    throw new RCVNullException("No existe ningun incidente con el id suministrado");
 
-                IncidenteDTO incidente =_incidenteDAO.consultarIncidente(incidenteId);
                 Incidente incidenteEntity = new Incidente();
                 incidenteEntity.incidenteId = incidente.Id;
                 incidenteEntity.polizaId = incidente.polizaId;
                 incidenteEntity.estadoIncidente = estado;
+                
+                return _incidenteDAO.UpdateIncidente(incidenteEntity);
 
-                if(incidente != null)
-                {
-                    _incidenteDAO.actualizarIncidente(incidenteEntity);
-                }
-                throw new RCVException("");
             }
-            catch (RCVException ex)
+            catch (RCVNullException ex)
             {
-                throw new RCVException("No se encontro ningun incidente con dicho identificador", ex);
+                throw ex;
             }
+            catch (RCVUpdateException ex)
+            {
+                throw ex;
+            }
+
             catch (Exception ex)
             {
                 throw new RCVException("No se pudo actualizar el incidente", ex);

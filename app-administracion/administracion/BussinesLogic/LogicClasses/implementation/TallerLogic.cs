@@ -29,7 +29,7 @@ namespace administracion.BussinesLogic.LogicClasses
                 if(Taller.nombreLocal.ToLower() == "string" || 
                     Taller.nombreLocal.Count() == 0)
                 {
-                    throw new Exception("Error");
+                    throw new RCVInvalidFieldException("Error: el nombre del local no puede estar vacio o por defecto");
                 }
                 Taller tallerEntity = new Taller
                 {
@@ -49,11 +49,16 @@ namespace administracion.BussinesLogic.LogicClasses
 
                 return true;
             }
+            catch(RCVInvalidFieldException ex)
+            {
+                throw ex;
+            }
             catch(Exception ex)
             {
                 throw new RCVException("Error al registrar el Taller", ex);
             }
         }
+
 
         /// <summary>
         /// Agrega una o todas las marcas al taller
@@ -67,17 +72,14 @@ namespace administracion.BussinesLogic.LogicClasses
             {
                 Marca marca = new Marca();
 
-                //Revisa que la marca introducida exita y la convierte de string a tipo Marca
-                if(MarcaTaller.IsMarca(marcaStr))
-                    marca = MarcaTaller.ConvertToMarca(marcaStr);
-                else
-                    throw new RCVException("La marca introducida no es valida");
+                //Convierte la marca introducida al formato Marca si no se encuentra la marca lanza una excepcion
+                marca = (Marca) Enum.Parse(typeof(Marca), marcaStr);
 
                 //Revisa que la no este registrada en el taller
                 bool exists = _tallerDAO.IsMarcaExistsOnTaller(tallerId, marca);
 
                 if (exists)
-                    throw new RCVException("El taller ya se especializa en dicha marca");
+                    throw new RCVAsociationException("El taller ya se especializa en dicha marca");
 
                 MarcaTaller marcaEntity = new MarcaTaller
                 {
@@ -88,9 +90,13 @@ namespace administracion.BussinesLogic.LogicClasses
                 };
                 return _tallerDAO.AddMarca(marcaEntity);
             }
-            catch (RCVException ex)
+            catch(ArgumentException ex)
             {
-                throw new RCVException(ex.Mensaje, ex);
+                throw new RCVInvalidFieldException("La marca introducida no existe en el sistema o esta mal escrita", ex);
+            }
+            catch (RCVAsociationException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -110,11 +116,8 @@ namespace administracion.BussinesLogic.LogicClasses
                 MarcaTaller marcaEntity;
 
                 //Borra los posible registros de marcas del taller
-                bool success = _tallerDAO.DeleteMarcasFromTaller(tallerId);
+                _tallerDAO.DeleteMarcasFromTaller(tallerId);
 
-                if(!success)
-                    throw new RCVException("Ocurrio un problema al intentar Limpriar la lista de especificaciones");
-            
                 //Genera una entidad marca que indique todas las marcas
                 marcaEntity = new MarcaTaller
                 {
@@ -122,16 +125,12 @@ namespace administracion.BussinesLogic.LogicClasses
                     tallerId = tallerId,
                     manejaTodas = true,
                 };
-                
+
                 return _tallerDAO.AddMarca(marcaEntity);
-            }
-            catch (RCVException ex)
-            {
-                throw new RCVException(ex.Mensaje, ex);
             }
             catch (Exception ex)
             {
-                throw new RCVException("Error al registrar el incidente", ex);
+                throw new RCVException("Ocurrio algun error al intentar registrar el incidente", ex);
             }
         }
     

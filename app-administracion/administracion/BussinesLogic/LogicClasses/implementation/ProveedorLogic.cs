@@ -30,7 +30,7 @@ namespace administracion.BussinesLogic.LogicClasses
                 if(proveedor.nombreLocal.ToLower() == "string" || 
                     proveedor.nombreLocal.Count() == 0)
                 {
-                    throw new Exception("Error");
+                    throw new RCVInvalidFieldException("Error: el nombre del local no puede estar vacio o por defecto");
                 }
                 Proveedor proveedorEntity = new Proveedor
                 {
@@ -49,6 +49,10 @@ namespace administracion.BussinesLogic.LogicClasses
                 );
 
                 return true;
+            }
+            catch(RCVInvalidFieldException ex)
+            {
+                throw ex;
             }
             catch(Exception ex)
             {
@@ -69,16 +73,13 @@ namespace administracion.BussinesLogic.LogicClasses
                 Marca marca = new Marca();
 
                 //Revisa que la marca introducida exita y la convierte de string a tipo Marca
-                if(MarcaProveedor.IsMarca(marcaStr))
-                    marca = MarcaProveedor.ConvertToMarca(marcaStr);
-                else
-                    throw new RCVException("La marca introducida no es valida");
+                marca = (Marca) Enum.Parse(typeof(Marca), marcaStr);
 
                 //Revisa que la no este registrada en el proveedor
                 bool exists = _proveedorDAO.IsMarcaExistsOnProveedor(proveedorId, marca);
 
                 if (exists)
-                    throw new RCVException("El proveedor ya se especializa en dicha marca");
+                    throw new RCVAsociationException("El proveedor ya se especializa en dicha marca");
 
                 MarcaProveedor marcaEntity = new MarcaProveedor
                 {
@@ -89,9 +90,13 @@ namespace administracion.BussinesLogic.LogicClasses
                 };
                 return _proveedorDAO.AddMarca(marcaEntity);
             }
-            catch (RCVException ex)
+            catch(ArgumentException ex)
             {
-                throw new RCVException(ex.Mensaje, ex);
+                throw new RCVInvalidFieldException("La marca introducida no existe en el sistema o esta mal escrita", ex);
+            }
+            catch (RCVAsociationException ex)
+            {
+                throw ex;
             }
             catch (Exception ex)
             {
@@ -111,10 +116,7 @@ namespace administracion.BussinesLogic.LogicClasses
                 MarcaProveedor marcaEntity;
 
                 //Borra los posible registros de marcas del proveedor
-                bool success = _proveedorDAO.DeleteMarcasFromProveedor(proveedorId);
-
-                if(!success)
-                    throw new RCVException("Ocurrio un problema al intentar Limpriar la lista de especificaciones");
+                _proveedorDAO.DeleteMarcasFromProveedor(proveedorId);
             
                 //Genera una entidad marca que indique todas las marcas
                 marcaEntity = new MarcaProveedor
@@ -125,10 +127,6 @@ namespace administracion.BussinesLogic.LogicClasses
                 };
                 
                 return _proveedorDAO.AddMarca(marcaEntity);
-            }
-            catch (RCVException ex)
-            {
-                throw new RCVException(ex.Mensaje, ex);
             }
             catch (Exception ex)
             {

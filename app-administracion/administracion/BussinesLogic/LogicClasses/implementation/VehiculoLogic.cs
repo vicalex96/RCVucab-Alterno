@@ -11,7 +11,7 @@ namespace administracion.BussinesLogic.LogicClasses
         private readonly IVehiculoDAO _vehiculoDao;
         private readonly IAseguradoDAO _aseguradoDao;
 
-        public VehiculoLogic (IVehiculoDAO vehiculoDao,IAseguradoDAO aseguradoDao, IAseguradoDAO aseguradoDAO)
+        public VehiculoLogic (IVehiculoDAO vehiculoDao,IAseguradoDAO aseguradoDao)
         {
             _vehiculoDao = vehiculoDao;
             _aseguradoDao = aseguradoDao;
@@ -31,6 +31,8 @@ namespace administracion.BussinesLogic.LogicClasses
                     .Parse(typeof(Color), vehiculo.color);
                 Marca _marca = (Marca)Enum
                     .Parse(typeof(Marca), vehiculo.marca);
+                if(vehiculo.placa.Count() >7)
+                    throw new ArgumentException();
 
                 var vehiculoEntity = new Vehiculo();
                 vehiculoEntity.vehiculoId = vehiculo.Id;
@@ -44,7 +46,7 @@ namespace administracion.BussinesLogic.LogicClasses
             }
             catch(ArgumentException ex)
             {
-                throw new RCVException("Error: alguno de los argumentos no es valido, color y marca deben de existir en el sistema, la placa tiene un maximo de 7 caracteres", ex);
+                throw new RCVInvalidFieldException("Error: alguno de los argumentos no es valido, color y marca deben de existir en el sistema, la placa tiene un maximo de 7 caracteres", ex);
             }
             catch (Exception e)
             {
@@ -65,34 +67,26 @@ namespace administracion.BussinesLogic.LogicClasses
                 //El vehiculo tiene que existir
                 VehiculoDTO vehiculoDTO = _vehiculoDao.GetVehiculoByGuid(vehiculoId);
                 if(vehiculoDTO == null)
-                    throw new Exception("El vehiculo no existe en el sistema");
-
-                Vehiculo vehiculo = new Vehiculo();
-                vehiculo.vehiculoId = vehiculoDTO.Id;
-                vehiculo.marca = (Marca) Enum
-                    .Parse(typeof(Marca), vehiculoDTO.marca);
-                vehiculo.anioModelo = vehiculoDTO.anioModelo;
-                vehiculo.color = (Color) Enum
-                    .Parse(typeof(Color), vehiculoDTO.color);
-                vehiculo.placa = vehiculoDTO.placa;
-                vehiculo.aseguradoId = (vehiculoDTO.asegurado == null)
-                ? null 
-                : vehiculoDTO.asegurado.Id;
+                    throw new RCVNullException("El vehiculo no existe en el sistema");
                 
                 //El vehiculo no puede tener un asegurado ya registrado
                 if(vehiculoDTO.asegurado != null)
-                    throw new Exception("El vehiculo ya esta asignado a un asegurado");
+                    throw new RCVAsociationException("El vehiculo ya esta asignado a un asegurado");
 
                 //el asegurado tiene que estar registrado
                 if(_aseguradoDao.GetAseguradoByGuid(aseguradoId) == null)
-                    throw new Exception("No existe ningun asegurado con dicho Id");
+                    throw new RCVNullException("No existe ningun asegurado con dicho Id");
 
-                _vehiculoDao.AddAsegurado(vehiculo, aseguradoId);
+                _vehiculoDao.AddAsegurado(vehiculoId, aseguradoId);
                 return true;
             }
-            catch(RCVException ex)
+            catch(RCVNullException ex)
             {
-                throw new RCVException(ex.Mensaje,ex);
+                throw ex;
+            }
+            catch(RCVAsociationException ex)
+            {
+                throw ex;
             }
             catch(Exception ex)
             {

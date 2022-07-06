@@ -13,7 +13,7 @@ namespace administracion.Persistence.DAOs
         public VehiculoDTO GetVehiculoByGuid(Guid Id);
         public List<VehiculoDTO> GetVehiculosByAsegurado(Guid aseguradoId);
         public bool RegisterVehiculo(Vehiculo auto);
-        public bool AddAsegurado(Vehiculo vehiculo, Guid aseguradoId);
+        public bool AddAsegurado(Guid vehiculoId, Guid aseguradoId);
         
     }
 }

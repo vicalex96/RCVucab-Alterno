@@ -34,8 +34,8 @@ namespace RCVUcab.Test.UnitTests.Controllers
             _controller.ControllerContext.ActionDescriptor = new ControllerActionDescriptor();
         }
 
-        [Fact(DisplayName = "Controller: Obtener todos los Vehiculos")]
-        public Task GetVehiculos()
+        [Fact(DisplayName = "Controller: Obtener todos los Vehiculos retorna vehiculos")]
+        public Task ShouldGetVehiculosReturnVehiculos()
         {
             _serviceMockVehiculo
                 .Setup(x => x.GetAllVehiculos())
@@ -48,7 +48,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         }
 
         [Fact(DisplayName = "Controller: Obtener Excepticion al pedir todos los Vehiculos")]
-        public Task GetVehiculosException()
+        public Task ShouldGetVehiculosReturnException()
         {
             _serviceMockVehiculo
                 .Setup(x => x.GetAllVehiculos())
@@ -61,7 +61,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         }
 
         [Fact(DisplayName = "Controller: Obtener un Vehiculo a traves de su guid")]
-        public Task GetVehiculoByGuid()
+        public Task ShouldGetVehiculoByGuidReturnVehiculo()
         {
             _serviceMockVehiculo.Setup(x => x.GetVehiculoByGuid(It.IsAny<Guid>()))
             .Returns(new VehiculoDTO());
@@ -72,7 +72,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         }
 
         [Fact(DisplayName = "Controller: Obtener Excepticion al pedir Vehiculo por Guid")]
-        public Task GetVehiculoByGuidException()
+        public Task ShouldGetVehiculoByGuidReturnException()
         {
             _serviceMockVehiculo
                 .Setup(x => x.GetVehiculoByGuid(It.IsAny<Guid>()))
@@ -85,7 +85,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         }
 
         [Fact(DisplayName = "Controller: registrar un vehiculo")]
-        public Task RegisterVehiculo()
+        public Task ShouldRegisterVehiculoReturnTrue()
         {
             _serviceMockLogic
                 .Setup(x => x.RegisterVehiculo(It.IsAny<VehiculoRegisterDTO>()))
@@ -98,7 +98,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         }
 
         [Fact(DisplayName = "Controller: Obtener Excepticion al registrar vehiculo")]
-        public Task RegisterVehiculoException()
+        public Task ShouldRegisterVehiculoReturnException()
         {
             _serviceMockLogic
                 .Setup(x => x.RegisterVehiculo(It.IsAny<VehiculoRegisterDTO>()))
@@ -111,7 +111,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         }
 
         [Fact(DisplayName = "Controller: asociar el vehiculo con un asegurado")]
-        public Task AssociateVehiculoWithAsegurado()
+        public Task ShouldAssociateVehiculoWithAseguradoReturnTrue()
         {
             _serviceMockLogic
                 .Setup(x => x.AddAseguradoToVehiculo(
@@ -127,7 +127,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         }
 
         [Fact(DisplayName = "Controller: Agregar asegurado al Vehiculo arroja excepcion")]
-        public Task AssociateVehiculoWithAseguradoException()
+        public Task ShouldAssociateVehiculoWithAseguradoReturnException()
         {
             _serviceMockLogic
                 .Setup(x => x.AddAseguradoToVehiculo(
