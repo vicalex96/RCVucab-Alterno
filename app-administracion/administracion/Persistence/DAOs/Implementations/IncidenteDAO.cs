@@ -113,20 +113,14 @@ namespace administracion.Persistence.DAOs
         /// <param name="incidenteId">Id del incidente</param>
         /// <param name="EstadoIncidente">Estado del incidente</param>
         /// <returns>booleano true</returns>
-        public bool actualizarIncidente(Guid incidenteId, EstadoIncidente estado)
+        public bool actualizarIncidente(Incidente incidente)
         {
             try
             {
-                var incidente = _context.Incidentes
-                    .Where(i => i.incidenteId == incidenteId)
-                    .FirstOrDefault();
-                if(incidente != null)
-                {
-                    incidente.estadoIncidente = estado;
-                    _context.DbContext.SaveChanges();
-                    return true;
-                }
-                throw new RCVException("");
+                _context.DbContext.Update(incidente);
+                _context.DbContext.SaveChanges();
+                return true;
+
             }
             catch (RCVException ex)
             {

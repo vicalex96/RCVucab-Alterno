@@ -106,7 +106,7 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<bool>();
             try
             {
-                response.Data = _incidenteDao.actualizarIncidente(incidenteID, estado);
+                response.Data = _incidenteLogic.actualizarIncidente(incidenteID, estado);
 
             }
             catch (RCVException ex)

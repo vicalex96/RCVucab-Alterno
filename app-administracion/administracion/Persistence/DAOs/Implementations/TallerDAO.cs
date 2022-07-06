@@ -131,12 +131,12 @@ namespace administracion.Persistence.DAOs
                 var data = _context.MarcasTaller
                 .Where(m => m.tallerId == tallerId 
                     && (m.marca == marca || m.manejaTodas == true))
-                .First();
-                return true;
+                .FirstOrDefault();
+                return data != null? true : false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                throw new RCVException("Fallo al intenta buscar la existencia de la marca",ex);
             }
         }
 

@@ -125,8 +125,12 @@ namespace administracion.Persistence.DAOs
                 var data = _context.MarcasProveedor
                 .Where(m => m.proveedorId == proveedorId 
                     && (m.marca == marca || m.manejaTodas == true))
-                .First();
-                return true;
+                .FirstOrDefault();
+                return data != null? true : false;
+            }
+            catch(ArgumentNullException)
+            {
+                return false;
             }
             catch (Exception)
             {

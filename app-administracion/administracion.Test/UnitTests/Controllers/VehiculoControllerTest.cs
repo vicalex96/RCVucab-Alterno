@@ -17,18 +17,17 @@ namespace RCVUcab.Test.UnitTests.Controllers
     {
         private readonly VehiculoController _controller;
         private readonly Mock<IVehiculoDAO> _serviceMockVehiculo;
-        private readonly Mock<IAseguradoDAO> _serviceMockAsegurado;
-        private readonly Mock<IVehiculoLogic> _serviceMockVehiculoLogic;
+        private readonly Mock<IVehiculoLogic> _serviceMockLogic;
+        
         private readonly Mock<ILogger<VehiculoController>> _loggerMock;
 
         public VehiculoControllerTest()
         {
             _loggerMock = new Mock<ILogger<VehiculoController>>();
             _serviceMockVehiculo = new Mock<IVehiculoDAO>();
-            _serviceMockAsegurado = new Mock<IAseguradoDAO>();
-            _serviceMockVehiculoLogic = new Mock<IVehiculoLogic>();
+            _serviceMockLogic = new Mock<IVehiculoLogic>();
             
-            _controller = new VehiculoController(_loggerMock.Object, _serviceMockVehiculo.Object, _serviceMockVehiculoLogic.Object);
+            _controller = new VehiculoController(_loggerMock.Object, _serviceMockVehiculo.Object, _serviceMockLogic.Object);
 
             _controller.ControllerContext = new ControllerContext();
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
@@ -88,9 +87,11 @@ namespace RCVUcab.Test.UnitTests.Controllers
         [Fact(DisplayName = "Controller: registrar un vehiculo")]
         public Task RegisterVehiculo()
         {
-            _serviceMockVehiculo.Setup(x => x.RegisterVehiculo(It.IsAny<VehiculoRegisterDTO>()))
-            .Returns(It.IsAny<bool>());
-            var result = _controller.createVehiculo(It.IsAny<VehiculoRegisterDTO>());
+            _serviceMockLogic
+                .Setup(x => x.RegisterVehiculo(It.IsAny<VehiculoRegisterDTO>()))
+                .Returns(It.IsAny<bool>());
+            var result = _controller
+                .createVehiculo(It.IsAny<VehiculoRegisterDTO>());
 
             Assert.IsType<ApplicationResponse<bool>>(result);
             return Task.CompletedTask;
@@ -99,7 +100,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         [Fact(DisplayName = "Controller: Obtener Excepticion al registrar vehiculo")]
         public Task RegisterVehiculoException()
         {
-            _serviceMockVehiculo
+            _serviceMockLogic
                 .Setup(x => x.RegisterVehiculo(It.IsAny<VehiculoRegisterDTO>()))
                 .Throws(new RCVException("", new Exception()));
 
@@ -112,7 +113,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         [Fact(DisplayName = "Controller: asociar el vehiculo con un asegurado")]
         public Task AssociateVehiculoWithAsegurado()
         {
-            _serviceMockVehiculoLogic
+            _serviceMockLogic
                 .Setup(x => x.AddAseguradoToVehiculo(
                     It.IsAny<Guid>(), 
                     It.IsAny<Guid>())
@@ -128,7 +129,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         [Fact(DisplayName = "Controller: Agregar asegurado al Vehiculo arroja excepcion")]
         public Task AssociateVehiculoWithAseguradoException()
         {
-            _serviceMockVehiculoLogic
+            _serviceMockLogic
                 .Setup(x => x.AddAseguradoToVehiculo(
                     It.IsAny<Guid>(), 
                     It.IsAny<Guid>())

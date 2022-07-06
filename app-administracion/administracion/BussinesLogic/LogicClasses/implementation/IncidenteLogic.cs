@@ -48,5 +48,34 @@ namespace administracion.BussinesLogic.LogicClasses
                 throw new RCVException("Error al registrar el incidente", e);
             }
         }
+
+        public bool actualizarIncidente(Guid incidenteId, EstadoIncidente estado)
+        {
+            try
+            {
+                //Revisa si el incidente existe
+
+                IncidenteDTO incidente =_incidenteDAO.consultarIncidente(incidenteId);
+                Incidente incidenteEntity = new Incidente();
+                incidenteEntity.incidenteId = incidente.Id;
+                incidenteEntity.polizaId = incidente.polizaId;
+                incidenteEntity.estadoIncidente = estado;
+
+                if(incidente != null)
+                {
+                    _incidenteDAO.actualizarIncidente(incidenteEntity);
+                }
+                throw new RCVException("");
+            }
+            catch (RCVException ex)
+            {
+                throw new RCVException("No se encontro ningun incidente con dicho identificador", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new RCVException("No se pudo actualizar el incidente", ex);
+            }
+        }
+
     }
 }

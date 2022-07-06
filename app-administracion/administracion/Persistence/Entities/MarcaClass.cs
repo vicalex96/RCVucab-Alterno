@@ -13,7 +13,7 @@ namespace  administracion.Persistence.Entities
         public Taller? taller {get; set;}
         [Required]
         public bool manejaTodas {get; set;}= false;
-        public Marca? marca {get; set;}
+        public Marca? marca {get; set;} = null;
 
         public static bool IsMarca (string marca)
         {
@@ -40,7 +40,7 @@ namespace  administracion.Persistence.Entities
         public Proveedor? proveedor {get; set;}
         [Required]
         public bool manejaTodas {get; set;}= false;
-        public Marca? marca {get; set;}
+        public Marca? marca {get; set;} = null;
 
         public static bool IsMarca (string marca)
         {

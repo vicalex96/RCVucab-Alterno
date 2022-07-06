@@ -9,6 +9,7 @@ using administracion.Exceptions;
 using administracion.Persistence.DAOs;
 using administracion.Responses;
 using Xunit;
+using administracion.BussinesLogic.LogicClasses;
 
 namespace RCVUcab.Test.UnitTests.Controllers
 {
@@ -16,16 +17,17 @@ namespace RCVUcab.Test.UnitTests.Controllers
     {
         private readonly IncidenteController _controller;
         private readonly Mock<IIncidenteDAO> _serviceMock;
+        private readonly Mock<IIncidenteLogic> _serviceMockLogic;
         private readonly Mock<ILogger<IncidenteController>> _loggerMock;
 
         public IncidenteControllerTest()
         {
             _loggerMock = new Mock<ILogger<IncidenteController>>();
             _serviceMock = new Mock<IIncidenteDAO>();
+            _serviceMockLogic = new Mock<IIncidenteLogic>();
             _controller = new IncidenteController(_loggerMock.Object,
-                _serviceMock.Object);
+                _serviceMock.Object,_serviceMockLogic.Object);
             
-
             _controller.ControllerContext = new ControllerContext();
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
             _controller.ControllerContext.ActionDescriptor = new ControllerActionDescriptor();
@@ -34,7 +36,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         [Fact(DisplayName = "Controller: Registrar Incidente")]
         public Task RegisterIncidente()
         {
-            _serviceMock
+            _serviceMockLogic
                 .Setup(x => x.RegisterIncidente(It.IsAny<IncidenteRegisterDTO>()))
                 .Returns(It.IsAny<bool>());
             
@@ -46,7 +48,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         [Fact(DisplayName = "Controller: Registrar Incidente regresa una excepcion")]
         public Task RegisterIncidenteException()
         {
-            _serviceMock
+            _serviceMockLogic
                 .Setup(x => x.RegisterIncidente(It.IsAny<IncidenteRegisterDTO>()))
                 .Throws(new RCVException("",new Exception()));
 
@@ -109,7 +111,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         [Fact(DisplayName = "Controller: Actualizar Estado Incidente")]
         public Task UpdateIncidenteState()
         {
-            _serviceMock.Setup( x => x.actualizarIncidente(It.IsAny<Guid>(),It.IsAny<EstadoIncidente>()))
+            _serviceMockLogic.Setup( x => x.actualizarIncidente(It.IsAny<Guid>(),It.IsAny<EstadoIncidente>()))
             .Returns(It.IsAny<bool>());
             var result = _controller.actualizarIncidente(It.IsAny<Guid>(),It.IsAny<EstadoIncidente>());
             
@@ -120,7 +122,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         [Fact(DisplayName = "Controller: Actualizar Estado Incidente arroja excepcion")]
         public Task CreateIncidenteException()
         {
-            _serviceMock
+            _serviceMockLogic
                 .Setup(x => x.actualizarIncidente(It.IsAny<Guid>(),It.IsAny<EstadoIncidente>()))
                 .Throws(new RCVException("",new Exception()));
 

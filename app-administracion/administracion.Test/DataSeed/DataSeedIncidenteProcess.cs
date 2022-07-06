@@ -77,7 +77,7 @@ namespace administracion.Test.DataSeed
                 }
             };
 
-            var vehiculos = asegurados.SelectMany(q => q.vehiculos).Concat(new List<Vehiculo>
+            var vehiculos = asegurados.SelectMany(q => q.vehiculos!).Concat(new List<Vehiculo>
             {
                 new Vehiculo //vehiculo 3
                 {
@@ -126,6 +126,10 @@ namespace administracion.Test.DataSeed
                     vehiculo = vehiculos.ToList()[1], 
                 },
             };
+            vehiculos.ToList()[0].polizas!.Add(polizas[0]);
+            vehiculos.ToList()[0].polizas!.Add(polizas[1]);
+            vehiculos.ToList()[1].polizas!.Add(polizas[2]);
+            
             var incidentes = new List<Incidente>
             {
                 new Incidente

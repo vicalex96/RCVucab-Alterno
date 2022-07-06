@@ -79,10 +79,6 @@ namespace administracion.Persistence.DAOs
                 _context.DbContext.SaveChanges();
                 return true;
             }
-            catch(RCVException ex)
-            {
-                throw ex;
-            }
             catch(Exception ex){
                 throw new RCVException("Error al crear el asegurado", ex);
             }
@@ -153,7 +149,7 @@ namespace administracion.Persistence.DAOs
                             }
                         }
                     }).FirstOrDefault();
-                return poliza!;
+                return poliza! ;
 
             }
             catch(ArgumentNullException ex)
