@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using levantamiento.BussinesLogic.DTOs;
-using levantamiento.BussinesLogic.QueueLogic;
+using levantamiento.BussinesLogic.Logic;
 using levantamiento.Persistence.DAOs;
 using levantamiento.Exceptions;
 using levantamiento.Responses;
 using System.ComponentModel.DataAnnotations;
 
-namespace administracion.Controllers
+namespace levantamiento.Controllers
 {
     /// <summary>
     /// Clase que representa el controlador de incidentes, nos da las herramientas para trabajar con el incidente, desde leer la cola de incidentes nuevos hasta mostrar la informacion en detalle
@@ -15,12 +15,14 @@ namespace administracion.Controllers
     [Route("Incidente")]
     public class IncidenteController: Controller
     {
-        private readonly IIncidenteDAO _IncidentDAO;
+        private readonly IIncidenteDAO _incidentDAO;
+        private readonly IIncidenteLogic _incidentLogic;
         private readonly ILogger<IncidenteController> _logger;
 
-        public IncidenteController(ILogger<IncidenteController> logger, IIncidenteDAO incidenteDAO)
+        public IncidenteController(ILogger<IncidenteController> logger, IIncidenteDAO incidenteDAO, IIncidenteLogic incidenteLogic)
         {
-            _IncidentDAO = incidenteDAO;
+            _incidentDAO = incidenteDAO;
+            _incidentLogic = incidenteLogic;
             _logger = logger;
         }
 
@@ -28,23 +30,22 @@ namespace administracion.Controllers
         /// actualiza el listado de incidentes que esten en la colar
         /// </summary>
         /// <returns>True or False</returns>
-        [HttpGet("actualizar_listado")]
-        public async Task<ApplicationResponse<bool>> UpdateListado()
+        [HttpPost("actualizar_listado")]
+        public ApplicationResponse<bool> UpdateListado()
         {
             var response = new ApplicationResponse<bool>();
             try
             {
-                IncidenteQueue queue = new IncidenteQueue();
-                ICollection<IncidenteQueueDTO> lista = await queue.GetDataFromQueue();
-                response.Success = _IncidentDAO.UpdateList(lista);
-                response.Message = "listado actualizado, total de elementos: " + lista.Count();
+                int count = _incidentLogic.UpdateIncidenteRegisters();
+                response.Success = true;
+                response.Message = "listado actualizado, total de elementos: " + count;
             }
             catch (RCVException ex)
             {
                 response.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }
@@ -59,7 +60,7 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<ICollection<IncidenteToShowDTO>>();
             try
             {
-                response.Data = _IncidentDAO.GetAllWithoutSolicitud();
+                response.Data = _incidentDAO.GetAllWithoutSolicitud();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "listado de incidentes";
@@ -69,7 +70,7 @@ namespace administracion.Controllers
                 response.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 response.Success = false;
                 response.Message = ex.Message;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }
@@ -84,7 +85,7 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<ICollection<IncidenteToShowDTO>>();
             try
             {
-                response.Data = _IncidentDAO.GetAll();
+                response.Data = _incidentDAO.GetAll();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "listado de incidentes";
@@ -94,7 +95,7 @@ namespace administracion.Controllers
                 response.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 response.Success = false;
                 response.Message = ex.Message;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }
@@ -106,7 +107,7 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<IncidenteDTO>();
             try
             {
-                response.Data = await _IncidentDAO.GetDetailedIncidente(incidenteId);
+                response.Data = await _incidentLogic.GetDetailedIncidente(incidenteId);
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "Informacion detallada del incidente";
@@ -116,7 +117,7 @@ namespace administracion.Controllers
                 response.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             }
             return response;
         }

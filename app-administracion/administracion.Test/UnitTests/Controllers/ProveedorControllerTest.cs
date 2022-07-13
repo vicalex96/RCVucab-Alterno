@@ -37,11 +37,11 @@ namespace RCVUcab.Test.UnitTests.Controllers
         {
             _serviceMockLogic
                 .Setup(x => x.RegisterProveedor(It.IsAny<ProveedorRegisterDTO>()))
-                .Returns(It.IsAny<bool>());
+                .Returns(It.IsAny<int>());
 
             var result = _controller.RegistrarProveedor(It.IsAny<ProveedorRegisterDTO>());
 
-            Assert.IsType<ApplicationResponse<bool>>(result);
+            Assert.IsType<ApplicationResponse<int>>(result);
             return Task.CompletedTask;
         }
 

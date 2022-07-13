@@ -20,12 +20,16 @@ namespace levantamiento.Persistence.DAOs
             _context = context;
         }
 
+        ///<summary>
         ///Muestra todas los requerimientos asociados a una solicitud
+        ///</summary>
+        ///<param name="solicitudId">id de la solicitud</param>
+        ///<returns>lista de requerimientos</returns>
         public List<RequerimientoDTO> GetRequerimientosBySolicitudId(Guid solicitudId)
         {
             try
             {
-                var data = _context.Requerimientos
+                return _context.Requerimientos
                 .Where(x => x.solicitudReparacionId == solicitudId)
                 .Select(r => new RequerimientoDTO{
                     Id = r.requerimientoId,
@@ -35,15 +39,11 @@ namespace levantamiento.Persistence.DAOs
                     tipoRequerimiento = r.tipoRequerimiento.ToString(),
                     cantidad = r.cantidad,
                     parte = new ParteDTO{
-                        Id = r.parte.parteId,
+                        Id = r.parte!.parteId,
                         nombre = r.parte.nombre,
                     }
                 })
                 .ToList();
-                if(data.Count == 0){
-                    throw new Exception();
-                }
-                return data;
             }
             catch(Exception ex)
             {
@@ -51,33 +51,16 @@ namespace levantamiento.Persistence.DAOs
             }
         }
 
+        ///<summary>
         ///Registra un nuevo requerimiento en el sistema, asegurandose que cumpla con las restricciones necesarias
-        public bool RegisterRequerimiento(RequerimientoRegisterDTO requerimiento)
+        ///</summary>
+        ///<param name="requerimiento">requerimiento a registrar</param>
+        ///<returns>true si se registro correctamente</returns>
+        public bool RegisterRequerimiento(Requerimiento requerimiento)
         {
             try
             {
-                var solicitud = _context.SolicitudesReparacion.Where(s => s.SolicitudReparacionId == requerimiento.solicitudId).FirstOrDefault();
-                var parte = _context.Partes.Where(p => p.parteId == requerimiento.parteId).FirstOrDefault();
-
-                if(solicitud == null)
-                    throw new RCVException("Error: no se puede registra el requerimiento, la solicitud no existe");
-
-                if(parte == null)
-                    throw new RCVException("Error: no se puede registra el requerimiento, el parte no existe");
-
-                if(requerimiento.cantidad <= 0)
-                    throw new ArgumentException();
-
-                var requerimientoEntity = new Requerimiento
-                {
-                    requerimientoId = requerimiento.Id,
-                    solicitudReparacionId = requerimiento.solicitudId,
-                    parteId = requerimiento.parteId,
-                    descripcion = requerimiento.descripcion,
-                    tipoRequerimiento =  (TipoRequerimiento)Enum.Parse(typeof(TipoRequerimiento), requerimiento.tipoRequerimiento),
-                    cantidad = requerimiento.cantidad,
-                };
-                _context.Requerimientos.Add(requerimientoEntity);
+                _context.Requerimientos.Add(requerimiento);
                 _context.DbContext.SaveChanges();
                 return true;
             }
@@ -94,5 +77,6 @@ namespace levantamiento.Persistence.DAOs
                 throw new RCVException("Error: No se logro registrar el requerimiento por algun error desconocido", ex);
             }
         }
+    
     }
 }

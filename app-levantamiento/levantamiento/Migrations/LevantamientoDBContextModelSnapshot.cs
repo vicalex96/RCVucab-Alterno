@@ -38,18 +38,18 @@ namespace levantamiento.Migrations
                     b.HasData(
                         new
                         {
-                            incidenteId = new Guid("0c5c3262-d5ef-46c7-bc01-97530821c04b"),
-                            polizaId = new Guid("0c5c3262-d5ef-46c7-bc0e-97530821c04b")
+                            incidenteId = new Guid("0c5c3262-d5ef-46c7-0004-000000000001"),
+                            polizaId = new Guid("0c5c3262-d5ef-46c7-0003-000000000001")
                         },
                         new
                         {
-                            incidenteId = new Guid("0c5c3262-d5ef-46c7-bc01-97530821c05b"),
-                            polizaId = new Guid("0c5c3262-d5ef-46c7-bc0e-97530821c04c")
+                            incidenteId = new Guid("0c5c3262-d5ef-46c7-0004-000000000002"),
+                            polizaId = new Guid("0c5c3262-d5ef-46c7-0003-000000000002")
                         },
                         new
                         {
-                            incidenteId = new Guid("0c5c3262-d5ef-46c7-bc01-97530821c06b"),
-                            polizaId = new Guid("0c5c3262-d5ef-46c7-bc0e-97530821c04d")
+                            incidenteId = new Guid("0c5c3262-d5ef-46c7-0004-000000000003"),
+                            polizaId = new Guid("0c5c3262-d5ef-46c7-0003-000000000003")
                         });
                 });
 
@@ -179,10 +179,10 @@ namespace levantamiento.Migrations
                         new
                         {
                             SolicitudReparacionId = new Guid("0c5c3262-d5ef-46c7-bc0e-97530821c0cc"),
-                            fechaSolicitud = new DateTime(2022, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            incidenteId = new Guid("0c5c3262-d5ef-46c7-bc01-97530821c06b"),
-                            tallerId = new Guid("10003262-d5ef-46c7-bc0e-97530823c05b"),
-                            vehiculoId = new Guid("0c5c3262-d5ef-46c7-bc0e-97530821c04b")
+                            fechaSolicitud = new DateTime(2010, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            incidenteId = new Guid("0c5c3262-d5ef-46c7-0004-000000000001"),
+                            tallerId = new Guid("0c5c3262-d5ef-46c7-0005-000000000002"),
+                            vehiculoId = new Guid("0c5c3262-d5ef-46c7-0002-000000000001")
                         });
                 });
 

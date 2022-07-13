@@ -40,11 +40,11 @@ namespace RCVUcab.Test.UnitTests.Controllers
         {
             _serviceMockPolizaLogic
                 .Setup(x => x.RegisterPoliza(It.IsAny<PolizaRegisterDTO>()))
-                .Returns(It.IsAny<bool>);
+                .Returns(It.IsAny<int>);
 
             var result = _controller.registrarPoliza(It.IsAny<PolizaRegisterDTO>());
 
-            Assert.IsType<ApplicationResponse<bool>>(result);
+            Assert.IsType<ApplicationResponse<int>>(result);
             return Task.CompletedTask;
         }
         [Fact(DisplayName = "Controller: Obtener Excepticion al Registrar polizas")]

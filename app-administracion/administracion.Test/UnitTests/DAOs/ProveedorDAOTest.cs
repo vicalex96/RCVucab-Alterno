@@ -1,4 +1,3 @@
-
 using Microsoft.Extensions.Logging;
 using Moq;
 using administracion.Persistence.DAOs;
@@ -8,6 +7,7 @@ using administracion.Test.DataSeed;
 using administracion.Exceptions;
 using Xunit;
 using administracion.Persistence.Entities;
+using administracion.Persistence.Enums;
 
 namespace administracion.Test.UnitTests.DAOs
 {
@@ -52,13 +52,13 @@ namespace administracion.Test.UnitTests.DAOs
         public Task ShouldRegisterProveedorReturnGuid()
         {
             Proveedor Proveedor = new Proveedor{
-                proveedorId = new Guid(),
+                Id = new Guid(),
                 nombreLocal = "Proveedor 1",
             };
             _contextMock.Setup(m => m.DbContext.SaveChanges())
-                .Returns(0);
-            Guid id = _dao.RegisterProveedor(Proveedor);
-            Assert.NotNull(id.ToString());
+                .Returns(1);
+            int result = _dao.RegisterProveedor(Proveedor);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
         
@@ -72,15 +72,15 @@ namespace administracion.Test.UnitTests.DAOs
             return Task.CompletedTask;
         }
 
-        [Fact(DisplayName = "DAO: Registrar una Marca para el Proveedor deberia retornar true ")]
+        [Fact(DisplayName = "DAO: Registrar una MarcaName para el Proveedor deberia retornar true ")]
         public Task ShouldAddMarcaToProveedorRetrunsTrue()
         {
             MarcaProveedor marca = new MarcaProveedor();
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
+            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(1);
             
-            bool respuesta = _dao.AddMarca(marca);
+            int respuesta = _dao.AddMarca(marca);
 
-            Assert.True(respuesta);
+            Assert.Equal(1,respuesta);
             return Task.CompletedTask;
         }
 
@@ -99,10 +99,10 @@ namespace administracion.Test.UnitTests.DAOs
         public Task ShouldDeleteMarcasFromProveedorRetrunsTrue()
         {
             Guid ProveedorId = new Guid();
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
+            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(1);
             
-            bool respuesta = _dao.DeleteMarcasFromProveedor(ProveedorId);
-            Assert.True(respuesta);
+            int respuesta = _dao.DeleteMarcasFromProveedor(ProveedorId);
+            Assert.Equal(1,respuesta);
             return Task.CompletedTask;
         }
 
@@ -118,10 +118,10 @@ namespace administracion.Test.UnitTests.DAOs
         }
 
         [Theory(DisplayName = "DAO: Revisa si una marca existe en un Proveedor regresa True ")]
-        [InlineData("200001c9-1212-46bf-82a3-05ff65bb2c87",Marca.Suzuki)]
-        public Task ShouldGetExistingMarcaFromProveedorReturnTrue(Guid ProveedorId, Marca marca)
+        [InlineData("200001c9-1212-46bf-82a3-05ff65bb2c87",MarcaName.Suzuki)]
+        public Task ShouldGetExistingMarcaFromProveedorReturnTrue(Guid ProveedorId, MarcaName marca)
         {
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
+            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(1);
             
             bool respuesta = _dao.IsMarcaExistsOnProveedor(ProveedorId, marca);
             Assert.True(respuesta);
@@ -129,8 +129,8 @@ namespace administracion.Test.UnitTests.DAOs
         }
 
         [Theory(DisplayName = "DAO: Revisa si una marca existe en un Proveedor con todas las marcas regresa True ")]
-        [InlineData("200001c9-1212-46bf-82a3-05ff65bb2c87",Marca.Volkswagen)]
-        public Task ShouldGetExistingMarcaFromProveedorWithAllMarcasReturnTrue(Guid ProveedorId, Marca marca)
+        [InlineData("200001c9-1212-46bf-82a3-05ff65bb2c87",MarcaName.Volkswagen)]
+        public Task ShouldGetExistingMarcaFromProveedorWithAllMarcasReturnTrue(Guid ProveedorId, MarcaName marca)
         {
             _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
             
@@ -140,8 +140,8 @@ namespace administracion.Test.UnitTests.DAOs
         }
 
         [Theory(DisplayName = "DAO: Revisa si una marca no existe en un Proveedor regresa False ")]
-        [InlineData("200001c9-1212-46bf-82a3-05ff65bb2c87",Marca.Toyota)]
-        public Task ShouldGetExistingMarcaFromProveedorReturnFalse(Guid ProveedorId, Marca marca)
+        [InlineData("200001c9-1212-46bf-82a3-05ff65bb2c87",MarcaName.Toyota)]
+        public Task ShouldGetExistingMarcaFromProveedorReturnFalse(Guid ProveedorId, MarcaName marca)
         {
             bool respuesta = _dao.IsMarcaExistsOnProveedor(ProveedorId, marca);
             Assert.False(respuesta);

@@ -1,14 +1,9 @@
-//using Bogus;
 using Microsoft.Extensions.Logging;
 using Moq;
 using administracion.Persistence.DAOs;
 using administracion.Persistence.Database;
-using administracion.BussinesLogic.DTOs;
 using administracion.Test.DataSeed;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
-using System.Collections;
 using administracion.Exceptions;
 using administracion.Persistence.Entities;
 
@@ -43,7 +38,7 @@ namespace administracion.Test.UnitTests.DAOs
         public Task GetAsegurado_PorID_ReturnTrue(Guid aseguradoId)
         {
             var aseguradoDTO = _dao.GetAseguradoByGuid(aseguradoId);
-            Assert.Equal(aseguradoId.ToString(), aseguradoDTO.Id.ToString());
+            Assert.Equal(aseguradoId, aseguradoDTO.Id);
             return Task.CompletedTask;
         }
 
@@ -63,9 +58,9 @@ namespace administracion.Test.UnitTests.DAOs
         {
             Asegurado asegurado = new Asegurado();
             _contextMock.Setup(m => m.DbContext.SaveChanges())
-                .Returns(0);
-            bool result =_dao.RegisterAsegurado(asegurado);
-            Assert.True(result); 
+                .Returns(1);
+            int result =_dao.RegisterAsegurado(asegurado);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 

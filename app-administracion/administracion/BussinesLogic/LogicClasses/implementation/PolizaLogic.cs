@@ -2,6 +2,7 @@ using administracion.BussinesLogic.DTOs;
 using administracion.Persistence.DAOs;
 using administracion.Exceptions;
 using administracion.Persistence.Entities;
+using administracion.Persistence.Enums;
 
 namespace administracion.BussinesLogic.LogicClasses
 {
@@ -21,7 +22,7 @@ namespace administracion.BussinesLogic.LogicClasses
         /// </summary>
         /// <param name="poliza">DTO de registro con la data de poliza</param>
         /// <returns>boleano true si todo salio bien</returns>
-        public bool RegisterPoliza(PolizaRegisterDTO poliza)
+        public int RegisterPoliza(PolizaRegisterDTO poliza)
         {
             try
             {
@@ -47,7 +48,7 @@ namespace administracion.BussinesLogic.LogicClasses
 
                 Poliza polizaEntity = new Poliza();
 
-                polizaEntity.polizaId = poliza.Id;
+                polizaEntity.Id = poliza.Id;
                 polizaEntity.fechaRegistro = poliza.fechaRegistro;
                 polizaEntity.fechaVencimiento = poliza.fechaVencimiento;
                 polizaEntity.tipoPoliza = (TipoPoliza)Enum.Parse(typeof(TipoPoliza), poliza.tipoPoliza);

@@ -3,6 +3,7 @@ using administracion.BussinesLogic.DTOs;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
 using administracion.Conections.rabbit;
+using administracion.Persistence.Enums;
 
 namespace administracion.BussinesLogic.LogicClasses
 {
@@ -22,27 +23,28 @@ namespace administracion.BussinesLogic.LogicClasses
         /// </summary>
         /// <param name="Incidente">DTO de registro con la data de incidente</param>
         /// <returns>boleano true si todo salio bien</returns>
-        public bool RegisterIncidente(IncidenteRegisterDTO incidente)
+        public int RegisterIncidente(IncidenteRegisterDTO incidente)
         {
             try
             {
                 Incidente incidenteEntity = new Incidente{
-                    incidenteId = incidente.Id,
+                    Id = incidente.Id,
                     polizaId = incidente.polizaId,
                     estadoIncidente = EstadoIncidente.Pendiente,
                     fechaRegistrado = DateTime.Today,
                 }; 
                 
-                bool response =_incidenteDAO.RegisterIncidente(incidenteEntity);
+                int response =_incidenteDAO.RegisterIncidente(incidenteEntity);
 
-                if(response)
-                {
-                    _productorRabbit.SendMessage(
-                        Routings.perito,
-                        "registrar_incidente",
-                        incidente.Id.ToString()
-                    );
-                }
+                _productorRabbit.SendMessage(
+                    Routings.perito,
+                    "registrar_incidente",
+                    "Id-"+
+                    incidente.Id.ToString()+
+                    ":polizaId-"+
+                    incidente.polizaId.ToString()
+                );
+                
                 return response;
             }
             catch (Exception e)
@@ -51,7 +53,7 @@ namespace administracion.BussinesLogic.LogicClasses
             }
         }
 
-        public bool UpdateIncidenteState(Guid incidenteId, EstadoIncidente estado)
+        public int UpdateIncidenteState(Guid incidenteId, EstadoIncidente estado)
         {
             try
             {
@@ -62,7 +64,7 @@ namespace administracion.BussinesLogic.LogicClasses
                     throw new RCVNullException("No existe ningun incidente con el id suministrado");
 
                 Incidente incidenteEntity = new Incidente();
-                incidenteEntity.incidenteId = incidente.Id;
+                incidenteEntity.Id = incidente.Id;
                 incidenteEntity.polizaId = incidente.polizaId;
                 incidenteEntity.estadoIncidente = estado;
                 
@@ -81,6 +83,37 @@ namespace administracion.BussinesLogic.LogicClasses
             catch (Exception ex)
             {
                 throw new RCVException("No se pudo actualizar el incidente", ex);
+            }
+        }
+
+        /// <summary>
+        //Refresa la cola con los incidentes pendientes de ser atendidos
+        /// </summary>
+        /// <returns>cantidad de incidentes pendientes enviados a la cola</returns>
+        public int RefreshIncidenteLogic()
+        {
+            try
+            {
+                int counter = 0;
+                List<IncidenteDTO> incidentes = _incidenteDAO.GetIncidentesByState(EstadoIncidente.Pendiente);
+
+                foreach (IncidenteDTO incidente in incidentes)
+                {
+                    bool response = _productorRabbit.SendMessage(
+                        Routings.perito,
+                        "registrar_incidente",
+                        "Id-"+
+                        incidente.Id.ToString()+
+                        ":polizaId-"+
+                        incidente.polizaId.ToString()
+                    );
+                    counter = (response == true)? counter++ : counter;
+                }
+                return counter;
+            }
+            catch (Exception ex)
+            {
+                throw new RCVException("Error al refrescar la cola de incidentes", ex);
             }
         }
 

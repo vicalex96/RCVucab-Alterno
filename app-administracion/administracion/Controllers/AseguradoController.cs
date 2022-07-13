@@ -103,9 +103,9 @@ namespace administracion.Controllers
         /// <param name="aseguradoDTO">Asegurado a registrar</param>
         /// <returns>Asegurado registrado</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> AddAsegurado([FromBody] AseguradoRegisterDTO asegurado)
+        public ApplicationResponse<int> AddAsegurado([FromBody] AseguradoRegisterDTO asegurado)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<int>();
             try
             {
                 response.Data = _aseguradoLogic.RegisterAsegurado(asegurado);

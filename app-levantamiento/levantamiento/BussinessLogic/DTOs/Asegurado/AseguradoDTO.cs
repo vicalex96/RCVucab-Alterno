@@ -10,8 +10,8 @@ namespace levantamiento.BussinesLogic.DTOs
     public class AseguradoDTO
     {
         public Guid Id { get; set; }
-        public string nombre { get; set; }
-        public string apellido {get; set;}
+        public string nombre { get; set; } = "";
+        public string apellido {get; set;} = "";
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ICollection<VehiculoDTO>? vehiculos {get; set;}
     }

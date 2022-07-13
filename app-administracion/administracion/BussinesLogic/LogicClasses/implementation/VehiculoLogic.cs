@@ -2,6 +2,7 @@ using administracion.Persistence.DAOs;
 using administracion.BussinesLogic.DTOs;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
+using administracion.Persistence.Enums;
 
 namespace administracion.BussinesLogic.LogicClasses
 {
@@ -22,20 +23,20 @@ namespace administracion.BussinesLogic.LogicClasses
         /// </summary>
         /// <param name="Vehiculo">DTO de registro con la data de Vehiculo</param>
         /// <returns>boleano true si todo salio bien</returns>
-        public bool RegisterVehiculo(VehiculoRegisterDTO vehiculo)
+        public int RegisterVehiculo(VehiculoRegisterDTO vehiculo)
         {
             try
             {
                 //convierte el string de color y marca a enum, si no lo logra retorna una ArgumentException
                 Color _color = (Color)Enum
                     .Parse(typeof(Color), vehiculo.color);
-                Marca _marca = (Marca)Enum
-                    .Parse(typeof(Marca), vehiculo.marca);
+                MarcaName _marca = (MarcaName)Enum
+                    .Parse(typeof(MarcaName), vehiculo.marca);
                 if(vehiculo.placa.Count() >7)
                     throw new ArgumentException();
 
                 var vehiculoEntity = new Vehiculo();
-                vehiculoEntity.vehiculoId = vehiculo.Id;
+                vehiculoEntity.Id = vehiculo.Id;
                 vehiculoEntity.anioModelo = vehiculo.anioModelo;
                 vehiculoEntity.fechaCompra = vehiculo.fechaCompra;
                 vehiculoEntity.color = _color;
@@ -60,7 +61,7 @@ namespace administracion.BussinesLogic.LogicClasses
         /// <param name="vehiculoId">Identificador del vehiculo</param>
         /// <param name="aseguradoId">Identificador del asegurado</param>
         /// <returns>True si el vehiculo se registro correctamente, false si no</returns>
-        public bool AddAseguradoToVehiculo(Guid vehiculoId, Guid aseguradoId)
+        public int AddAseguradoToVehiculo(Guid vehiculoId, Guid aseguradoId)
         {
             try
             {
@@ -77,8 +78,7 @@ namespace administracion.BussinesLogic.LogicClasses
                 if(_aseguradoDao.GetAseguradoByGuid(aseguradoId) == null)
                     throw new RCVNullException("No existe ningun asegurado con dicho Id");
 
-                _vehiculoDao.AddAsegurado(vehiculoId, aseguradoId);
-                return true;
+                return _vehiculoDao.AddAsegurado(vehiculoId, aseguradoId);
             }
             catch(RCVNullException ex)
             {

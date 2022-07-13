@@ -4,6 +4,6 @@ namespace administracion.BussinesLogic.LogicClasses
 {
     public interface IPolizaLogic
     {
-        public bool RegisterPoliza(PolizaRegisterDTO poliza);
+        public int RegisterPoliza(PolizaRegisterDTO poliza);
     }
 }

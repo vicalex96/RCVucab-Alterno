@@ -1,16 +1,11 @@
-
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-
-
 
 namespace administracion.Persistence.Entities
 {
     public class Asegurado
     {
         [Key]
-        public Guid aseguradoId {get; set;}
+        public Guid Id {get; set;}
         [Required][MaxLength(100)]
         public string nombre {get; set;} ="";
         [Required][MaxLength(100)]

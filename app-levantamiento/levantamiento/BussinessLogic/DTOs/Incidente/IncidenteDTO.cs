@@ -10,10 +10,11 @@ namespace levantamiento.BussinesLogic.DTOs
     {
         public Guid Id {get; set;} 
         public Guid polizaId {get; set;}
-        public string estadoIncidente {get; set;} 
+        public string estadoIncidente {get; set;} = "";
 
-        public PolizaDTO poliza {get; set;}
-        public ICollection<SolicitudesResparacionDTO> solicitudes {get; set;}
+
+        public PolizaDTO? poliza {get; set;}
+        public ICollection<SolicitudesReparacionDTO>? solicitudes {get; set;}
     }
 
 }

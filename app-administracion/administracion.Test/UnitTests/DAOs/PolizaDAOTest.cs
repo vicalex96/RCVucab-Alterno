@@ -5,7 +5,6 @@ using administracion.Persistence.Database;
 using administracion.BussinesLogic.DTOs;
 using administracion.Test.DataSeed;
 using Xunit;
-using System.Collections;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
 
@@ -72,10 +71,10 @@ namespace administracion.Test.UnitTests.DAOs
         public Task ShouldRegisterPolizaReturnTrue()
         {
             Poliza poliza = new Poliza();
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
-            var result = _dao.RegisterPoliza(poliza);
+            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(1);
+            int result = _dao.RegisterPoliza(poliza);
             
-            Assert.True(result);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 

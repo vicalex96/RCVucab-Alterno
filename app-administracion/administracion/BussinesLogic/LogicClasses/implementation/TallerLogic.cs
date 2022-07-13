@@ -3,6 +3,7 @@ using administracion.BussinesLogic.DTOs;
 using administracion.Persistence.Entities;
 using administracion.Conections.rabbit;
 using administracion.Exceptions;
+using administracion.Persistence.Enums;
 
 namespace administracion.BussinesLogic.LogicClasses
 {
@@ -21,7 +22,7 @@ namespace administracion.BussinesLogic.LogicClasses
         /// </summary>
         /// <param name="taller">DTO de registro con la data de taller</param>
         /// <returns>boleano true si todo salio bien</returns>
-        public bool RegisterTaller (TallerRegisterDTO Taller)
+        public int RegisterTaller (TallerRegisterDTO Taller)
         {
             try
             {
@@ -33,21 +34,21 @@ namespace administracion.BussinesLogic.LogicClasses
                 }
                 Taller tallerEntity = new Taller
                 {
-                    tallerId = Taller.Id,
+                    Id = Taller.Id,
                     nombreLocal = Taller.nombreLocal,
                 };
 
                 //registra el Taller en el sistema
-                Guid Id = _tallerDAO.RegisterTaller(tallerEntity);
+                int result = _tallerDAO.RegisterTaller(tallerEntity);
 
                 //envia la informacion a la cola de mensajes
                 _productorRabbit.SendMessage(
                     Routings.taller,
                     "registrar_taller",
-                    Id.ToString()
+                    Taller.Id.ToString()
                 );
 
-                return true;
+                return result;
             }
             catch(RCVInvalidFieldException ex)
             {
@@ -66,14 +67,14 @@ namespace administracion.BussinesLogic.LogicClasses
         /// <param name="tallerId">Id del taller</param>
         /// <param name="marcaStr">nombre de la marca</param>
         /// <returns>boleano true si todo salio bien</returns>
-        public bool AddMarca(Guid tallerId, string marcaStr)
+        public int AddMarca(Guid tallerId, string marcaStr)
         {
             try
             {
-                Marca marca = new Marca();
+                MarcaName marca = new MarcaName();
 
                 //Convierte la marca introducida al formato Marca si no se encuentra la marca lanza una excepcion
-                marca = (Marca) Enum.Parse(typeof(Marca), marcaStr);
+                marca = (MarcaName) Enum.Parse(typeof(MarcaName), marcaStr);
 
                 //Revisa que la no este registrada en el taller
                 bool exists = _tallerDAO.IsMarcaExistsOnTaller(tallerId, marca);
@@ -83,7 +84,7 @@ namespace administracion.BussinesLogic.LogicClasses
 
                 MarcaTaller marcaEntity = new MarcaTaller
                 {
-                    marcaId = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
                     tallerId = tallerId,
                     manejaTodas = false,
                     marca = marca
@@ -109,7 +110,7 @@ namespace administracion.BussinesLogic.LogicClasses
         /// </sumary>
         /// <param name="tallerId">Id del taller</param>
         /// <returns>boleano true si todo salio bien</returns>
-        public bool AddAllMarcas(Guid tallerId)
+        public int AddAllMarcas(Guid tallerId)
         {
             try
             {
@@ -121,7 +122,7 @@ namespace administracion.BussinesLogic.LogicClasses
                 //Genera una entidad marca que indique todas las marcas
                 marcaEntity = new MarcaTaller
                 {
-                    marcaId = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
                     tallerId = tallerId,
                     manejaTodas = true,
                 };

@@ -8,6 +8,7 @@ using administracion.Test.DataSeed;
 using administracion.Exceptions;
 using Xunit;
 using administracion.Persistence.Entities;
+using administracion.Persistence.Enums;
 
 namespace administracion.Test.UnitTests.DAOs
 {
@@ -50,13 +51,13 @@ namespace administracion.Test.UnitTests.DAOs
         public Task ShouldRegisterTallerReturnGuid()
         {
             Taller taller = new Taller{
-                tallerId = new Guid(),
+                Id = new Guid(),
                 nombreLocal = "Taller 1",
             };
             _contextMock.Setup(m => m.DbContext.SaveChanges())
-                .Returns(0);
-            Guid id = _dao.RegisterTaller(taller);
-            Assert.NotNull(id.ToString());
+                .Returns(1);
+            int result = _dao.RegisterTaller(taller);
+            Assert.NotNull(result);
             return Task.CompletedTask;
         }
         
@@ -74,11 +75,11 @@ namespace administracion.Test.UnitTests.DAOs
         public Task ShouldAddMarcaToTallerRetrunsTrue()
         {
             MarcaTaller marca = new MarcaTaller();
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
+            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(1);
             
-            bool respuesta = _dao.AddMarca(marca);
+            int result = _dao.AddMarca(marca);
 
-            Assert.True(respuesta);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 
@@ -97,10 +98,10 @@ namespace administracion.Test.UnitTests.DAOs
         public Task ShouldDeleteMarcasFromTallerRetrunsTrue()
         {
             Guid tallerId = new Guid();
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
+            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(1);
             
-            bool respuesta = _dao.DeleteMarcasFromTaller(tallerId);
-            Assert.True(respuesta);
+            int result = _dao.DeleteMarcasFromTaller(tallerId);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 
@@ -116,10 +117,10 @@ namespace administracion.Test.UnitTests.DAOs
         }
 
         [Theory(DisplayName = "DAO: Revisa si una marca existe en un Taller regresa True ")]
-        [InlineData("200001c9-12aa-46bf-82a3-05ff65bb2c87",Marca.Suzuki)]
-        public Task ShouldGetExistingMarcaFromTallerReturnTrue(Guid tallerId, Marca marca)
+        [InlineData("200001c9-12aa-46bf-82a3-05ff65bb2c87",MarcaName.Suzuki)]
+        public Task ShouldGetExistingMarcaFromTallerReturnTrue(Guid tallerId, MarcaName marca)
         {
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
+            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(1);
             
             bool respuesta = _dao.IsMarcaExistsOnTaller(tallerId, marca);
             Assert.True(respuesta);
@@ -127,10 +128,10 @@ namespace administracion.Test.UnitTests.DAOs
         }
 
         [Theory(DisplayName = "DAO: Revisa si una marca existe en un Taller con todas las marcas regresa True ")]
-        [InlineData("100001c9-12aa-46bf-82a3-05ff65bb2c86",Marca.Toyota)]
-        public Task ShouldGetExistingMarcaFromTallerWithAllMarcasReturnTrue(Guid tallerId, Marca marca)
+        [InlineData("100001c9-12aa-46bf-82a3-05ff65bb2c86",MarcaName.Toyota)]
+        public Task ShouldGetExistingMarcaFromTallerWithAllMarcasReturnTrue(Guid tallerId, MarcaName marca)
         {
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
+            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(1);
             
             bool respuesta = _dao.IsMarcaExistsOnTaller(tallerId, marca);
             Assert.True(respuesta);
@@ -138,10 +139,10 @@ namespace administracion.Test.UnitTests.DAOs
         }
 
         [Theory(DisplayName = "DAO: Revisa si una marca no existe en un Taller regresa False ")]
-        [InlineData("200001c9-12aa-46bf-82a3-05ff65bb2c87",Marca.Renault)]
-        public Task ShouldGetExistingMarcaFromTallerReturnFalse(Guid tallerId, Marca marca)
+        [InlineData("200001c9-12aa-46bf-82a3-05ff65bb2c87",MarcaName.Renault)]
+        public Task ShouldGetExistingMarcaFromTallerReturnFalse(Guid tallerId, MarcaName marca)
         {
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
+            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(1);
             bool respuesta = _dao.IsMarcaExistsOnTaller(tallerId, marca);
             Assert.False(respuesta);
             return Task.CompletedTask;

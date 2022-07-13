@@ -7,6 +7,6 @@ namespace levantamiento.Persistence.Entities
         [Key]
         public Guid incidenteId {get; set;}
         public Guid polizaId {get; set;}
-        public ICollection<SolicitudReparacion> solicitudes {get; set;}
+        public ICollection<SolicitudReparacion>? solicitudes {get; set;}
     }
 }

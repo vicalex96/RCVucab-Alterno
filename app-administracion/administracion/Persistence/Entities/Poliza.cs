@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using administracion.Persistence.Enums;
 
 namespace administracion.Persistence.Entities
 {
     public class Poliza
     {
         [Key]
-        public Guid polizaId {get; set;}
+        public Guid Id {get; set;}
         [Required]
         public DateTime fechaRegistro {get; set;}
         [Required]
@@ -21,8 +22,4 @@ namespace administracion.Persistence.Entities
         public ICollection<Incidente>? incidente {get; set;}
     }
 
-    public enum TipoPoliza {
-        CoberturaCompleta,
-        DaniosATerceros
-    }
 }

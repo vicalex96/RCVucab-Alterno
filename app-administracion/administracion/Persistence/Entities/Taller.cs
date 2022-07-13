@@ -7,7 +7,7 @@ namespace administracion.Persistence.Entities
     public class Taller
     {
         [Key]
-        public Guid tallerId { get; set; }
+        public Guid Id { get; set; }
         [Required]
         public string nombreLocal {get; set;} ="";
         public ICollection<MarcaTaller>? marcas {get; set;}

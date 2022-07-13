@@ -13,9 +13,14 @@ namespace levantamiento.Conections.APIs
             PropertyNameCaseInsensitive = true
         };
 
+        ///<summary>
+        ///Metodo asincrono que se comunica con la API de Administracion para registrar un vehiculo
+        ///</summary>
+        ///<param name="vehiculo">vehiculo que se va a registrar</param>
+        ///<returns>Respuesta bool true si el registro fue exitoso</returns>
         public async Task<bool> RegisterVehiculo(VehiculoRegisterDTO vehiculo)
         {
-            var localUrl = url + "vehiculo/crear";
+            var localUrl = url + "vehiculo/registrar";
             try
             {
                 using(var httpClient = new HttpClient())
@@ -29,7 +34,7 @@ namespace levantamiento.Conections.APIs
                         var content = await response.Content.ReadAsStringAsync();
                         var APIResponse = JsonSerializer.Deserialize<ApplicationResponse<bool>>(content, options);
 
-                        return APIResponse.Data;
+                        return APIResponse!.Data;
                     }    
                     else
                         throw new HttpRequestException("ocurrio algun problema al conectarse con el API");
@@ -44,6 +49,12 @@ namespace levantamiento.Conections.APIs
                 throw new RCVException("Ocurrio un error desconcido", ex);
             }
         }
+        
+        ///<summary>
+        /// Metodo asincrono que solicita al API de Administracion los datos de un vehiculo segun su Id
+        ///</summary>
+        ///<param name="vehiculoId">Id del vehiculo que se desea obtener</param>
+        ///<returns>Respuesta con el vehiculo solicitado</returns>
         public async Task<VehiculoDTO> GetVehiculoFromAdmin(Guid vehiculoId)
         {
             var localUrl = url + "vehiculo/buscar_por/{0}";
@@ -60,7 +71,7 @@ namespace levantamiento.Conections.APIs
                         var content = await response.Content.ReadAsStringAsync();
                         var vehiculo = JsonSerializer.Deserialize<ApplicationResponse<VehiculoDTO>>(content, options);
 
-                        return vehiculo.Data;
+                        return vehiculo!.Data!;
                     }    
                     else
                         throw new HttpRequestException("ocurrio algun problema al conectarse con el API");

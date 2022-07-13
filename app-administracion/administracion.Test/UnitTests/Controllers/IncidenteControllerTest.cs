@@ -10,6 +10,7 @@ using administracion.Persistence.DAOs;
 using administracion.Responses;
 using Xunit;
 using administracion.BussinesLogic.LogicClasses;
+using administracion.Persistence.Enums;
 
 namespace RCVUcab.Test.UnitTests.Controllers
 {
@@ -38,11 +39,11 @@ namespace RCVUcab.Test.UnitTests.Controllers
         {
             _serviceMockLogic
                 .Setup(x => x.RegisterIncidente(It.IsAny<IncidenteRegisterDTO>()))
-                .Returns(It.IsAny<bool>());
+                .Returns(It.IsAny<int>());
             
             var result = _controller.RegistrarIncidente(It.IsAny<IncidenteRegisterDTO>());
 
-            Assert.IsType<ApplicationResponse<bool>>(result);
+            Assert.IsType<ApplicationResponse<int>>(result);
             return Task.CompletedTask;
         }
         [Fact(DisplayName = "Controller: Registrar Incidente regresa una excepcion")]
@@ -83,25 +84,25 @@ namespace RCVUcab.Test.UnitTests.Controllers
             return Task.CompletedTask;
         }
 
-        [Fact(DisplayName = "Controller: Obtener un Incidentes activos")]
-        public Task GetActiveIncidentes()
+        [Fact(DisplayName = "Controller: Obtener una listad de Incidentes según su estado retorna una lista")]
+        public Task ShouldGetIncidentesByStateReturnList()
         {
-            _serviceMock.Setup( x => x.GetActiveIncidentes())
+            _serviceMock.Setup( x => x.GetIncidentesByState(It.IsAny<EstadoIncidente>()))
             .Returns(new List<IncidenteDTO>());
-            var result = _controller.ConsultarIncidentesActivos();
+            var result = _controller.ConsultarIncidentesPorEstado(It.IsAny<EstadoIncidente>());
             
             Assert.IsType<ApplicationResponse<List<IncidenteDTO>>>(result);
             return Task.CompletedTask;
         }
 
-        [Fact(DisplayName = "Controller: Obtener un Incidentes activos provoca una excepcion")]
+        [Fact(DisplayName = "Controller: Obtener una lista Incidentes por su estado provoca una excepcion")]
         public Task GetActiveIncidentesException()
         {
             _serviceMock
-                .Setup(x => x.GetActiveIncidentes())
+                .Setup(x => x.GetIncidentesByState(It.IsAny<EstadoIncidente>()))
                 .Throws(new RCVException("",new Exception()));
 
-            var ex = _controller.ConsultarIncidentesActivos();
+            var ex = _controller.ConsultarIncidentesPorEstado(It.IsAny<EstadoIncidente>());
 
             Assert.False(ex.Success);
 
@@ -112,10 +113,10 @@ namespace RCVUcab.Test.UnitTests.Controllers
         public Task UpdateIncidenteState()
         {
             _serviceMockLogic.Setup( x => x.UpdateIncidenteState(It.IsAny<Guid>(),It.IsAny<EstadoIncidente>()))
-            .Returns(It.IsAny<bool>());
+            .Returns(It.IsAny<int>());
             var result = _controller.UpdateIncidente(It.IsAny<Guid>(),It.IsAny<EstadoIncidente>());
             
-            Assert.IsType<ApplicationResponse<bool>>(result);
+            Assert.IsType<ApplicationResponse<int>>(result);
             return Task.CompletedTask;
         }
 

@@ -34,9 +34,9 @@ namespace administracion.Controllers
         /// <param name="polizaDTO">Poliza a registrar</param>
         /// <returns>Poliza registrada</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> registrarPoliza([FromBody] PolizaRegisterDTO poliza)
+        public ApplicationResponse<int> registrarPoliza([FromBody] PolizaRegisterDTO poliza)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<int>();
             try
             {
                 response.Data  = _polizaLogic.RegisterPoliza(poliza);

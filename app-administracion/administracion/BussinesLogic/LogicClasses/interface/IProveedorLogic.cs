@@ -5,9 +5,9 @@ namespace administracion.BussinesLogic.LogicClasses
 {
     public interface IProveedorLogic
     {
-        public bool RegisterProveedor(ProveedorRegisterDTO proveedor);
+        public int RegisterProveedor(ProveedorRegisterDTO proveedor);
 
-        public bool AddMarca(Guid proveedorId, string marcaStr);
-        public bool AddAllMarcas(Guid proveedorId);
+        public int AddMarca(Guid proveedorId, string marcaStr);
+        public int AddAllMarcas(Guid proveedorId);
     }
 }

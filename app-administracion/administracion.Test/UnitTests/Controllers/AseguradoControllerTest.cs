@@ -108,10 +108,10 @@ namespace RCVUcab.Test.UnitTests.Controllers
         public Task CreateAsegurado()
         {
             _serviceMockLogic.Setup( x => x.RegisterAsegurado(It.IsAny<AseguradoRegisterDTO>()))
-            .Returns(It.IsAny<bool>());
+            .Returns(It.IsAny<int>());
             var result = _controller.AddAsegurado(It.IsAny<AseguradoRegisterDTO>());
             
-            Assert.IsType<ApplicationResponse<bool>>(result);
+            Assert.IsType<ApplicationResponse<int>>(result);
             return Task.CompletedTask;
         }
 

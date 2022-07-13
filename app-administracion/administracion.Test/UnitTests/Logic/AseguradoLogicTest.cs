@@ -14,10 +14,8 @@ namespace administracion.Test.UnitTests.Logic
     {
         private readonly AseguradoLogic _logic;
         private readonly Mock<IAseguradoDAO> _serviceMockAsegurado;
-        private readonly Mock<IAdminDBContext> _contextMock;
         public AseguradoLogicTest()
         {
-            _contextMock = new Mock<IAdminDBContext>();
             _serviceMockAsegurado = new Mock<IAseguradoDAO>();
             _logic = new AseguradoLogic(_serviceMockAsegurado.Object);
         }
@@ -44,10 +42,10 @@ namespace administracion.Test.UnitTests.Logic
         {
             _serviceMockAsegurado
                 .Setup(x => x.RegisterAsegurado(It.IsAny<Asegurado>()))
-                .Returns(true);
+                .Returns(1);
             
-            bool result = _logic.RegisterAsegurado(asegurado);
-            Assert.True(result);
+            int result = _logic.RegisterAsegurado(asegurado);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
         public class AseguradoClassDataInvalidfileds : IEnumerable<object[]>

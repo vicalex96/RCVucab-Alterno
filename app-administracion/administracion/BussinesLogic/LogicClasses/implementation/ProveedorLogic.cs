@@ -3,6 +3,7 @@ using administracion.BussinesLogic.DTOs;
 using administracion.Persistence.Entities;
 using administracion.Conections.rabbit;
 using administracion.Exceptions;
+using administracion.Persistence.Enums;
 
 namespace administracion.BussinesLogic.LogicClasses
 {
@@ -22,7 +23,7 @@ namespace administracion.BussinesLogic.LogicClasses
         /// </summary>
         /// <param name="proveedor">DTO de registro con la data de proveedor</param>
         /// <returns>boleano true si todo salio bien</returns>
-        public bool RegisterProveedor (ProveedorRegisterDTO proveedor)
+        public int  RegisterProveedor (ProveedorRegisterDTO proveedor)
         {
             try
             {
@@ -34,21 +35,21 @@ namespace administracion.BussinesLogic.LogicClasses
                 }
                 Proveedor proveedorEntity = new Proveedor
                 {
-                    proveedorId = proveedor.Id,
+                    Id = proveedor.Id,
                     nombreLocal = proveedor.nombreLocal,
                 };
 
                 //registra el proveedor en el sistema
-                Guid Id = _proveedorDAO.RegisterProveedor(proveedorEntity);
+                int result= _proveedorDAO.RegisterProveedor(proveedorEntity);
 
                 //envia la informacion a la cola de mensajes
                 _productorRabbit.SendMessage(
                     Routings.proveedor,
                     "registrar_proveedor",
-                    Id.ToString()
+                    proveedor.Id.ToString()
                 );
 
-                return true;
+                return result;
             }
             catch(RCVInvalidFieldException ex)
             {
@@ -66,14 +67,14 @@ namespace administracion.BussinesLogic.LogicClasses
         /// <param name="proveedorId">Id del proveedor</param>
         /// <param name="marcaStr">nombre de la marca</param>
         /// <returns>boleano true si todo salio bien</returns>
-        public bool AddMarca(Guid proveedorId, string marcaStr)
+        public int AddMarca(Guid proveedorId, string marcaStr)
         {
             try
             {
-                Marca marca = new Marca();
+                MarcaName marca = new MarcaName();
 
                 //Revisa que la marca introducida exita y la convierte de string a tipo Marca
-                marca = (Marca) Enum.Parse(typeof(Marca), marcaStr);
+                marca = (MarcaName) Enum.Parse(typeof(MarcaName), marcaStr);
 
                 //Revisa que la no este registrada en el proveedor
                 bool exists = _proveedorDAO.IsMarcaExistsOnProveedor(proveedorId, marca);
@@ -83,7 +84,7 @@ namespace administracion.BussinesLogic.LogicClasses
 
                 MarcaProveedor marcaEntity = new MarcaProveedor
                 {
-                    marcaId = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
                     proveedorId = proveedorId,
                     manejaTodas = false,
                     marca = marca
@@ -109,7 +110,7 @@ namespace administracion.BussinesLogic.LogicClasses
         /// </sumary>
         /// <param name="proveedorId">Id del proveedor</param>
         /// <returns>boleano true si todo salio bien</returns>
-        public bool AddAllMarcas(Guid proveedorId)
+        public int AddAllMarcas(Guid proveedorId)
         {
             try
             {
@@ -121,7 +122,7 @@ namespace administracion.BussinesLogic.LogicClasses
                 //Genera una entidad marca que indique todas las marcas
                 marcaEntity = new MarcaProveedor
                 {
-                    marcaId = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
                     proveedorId = proveedorId,
                     manejaTodas = true,
                 };

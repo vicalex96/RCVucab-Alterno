@@ -19,7 +19,7 @@ namespace administracion.BussinesLogic.LogicClasses
         /// </summary>
         /// <param name="asegurado">DTO de registro con la data de asegurado</param>
         /// <returns>boleano true si todo salio bien</returns>
-        public bool RegisterAsegurado(AseguradoRegisterDTO asegurado)
+        public int RegisterAsegurado(AseguradoRegisterDTO asegurado)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace administracion.BussinesLogic.LogicClasses
                 }
 
                 Asegurado aseguradoEntity = new Asegurado{
-                    aseguradoId = asegurado.Id, 
+                    Id = asegurado.Id, 
                     nombre = asegurado.nombre, 
                     apellido = asegurado.apellido
                 };

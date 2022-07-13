@@ -7,12 +7,11 @@ namespace levantamiento.Persistence.DAOs
 {
     public interface IIncidenteDAO
     {
-        public bool UpdateList(ICollection<IncidenteQueueDTO> dataList);
+        public bool RegisterIncidente(Incidente incidente);
         public ICollection<IncidenteToShowDTO> GetAll();
         public ICollection<IncidenteToShowDTO> GetAllWithoutSolicitud();
 
-        public ICollection <IncidenteDTO> GetIncidenteById(Guid incidenteId);
+        public IncidenteDTO GetIncidenteById(Guid incidenteId);
 
-        public Task<IncidenteDTO> GetDetailedIncidente (Guid IncidenteId);
     }
 }

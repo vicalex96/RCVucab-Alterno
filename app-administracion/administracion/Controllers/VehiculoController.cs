@@ -78,9 +78,9 @@ namespace administracion.Controllers
         /// <param name="vehiculo">Vehiculo a crear</param>
         /// <returns>Vehiculo registrado</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> createVehiculo([FromBody] VehiculoRegisterDTO Vehiculo)
+        public ApplicationResponse<int> createVehiculo([FromBody] VehiculoRegisterDTO Vehiculo)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<int>();
             try
             {
                 response.Data = _vehiculoLogic.RegisterVehiculo(Vehiculo);
@@ -105,9 +105,9 @@ namespace administracion.Controllers
         /// <param name="aseguradoId">Id asegurado a asociar</param>
         /// <returns>Vehiculo actualizado</returns>
         [HttpPost("asociar_asegurado/{vehiculoId}/{aseguradoId}")]
-        public ApplicationResponse<bool> AddAsegurado([Required][FromRoute] Guid vehiculoId ,[Required][FromRoute] Guid aseguradoId)
+        public ApplicationResponse<int> AddAsegurado([Required][FromRoute] Guid vehiculoId ,[Required][FromRoute] Guid aseguradoId)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<int>();
             try
             {
                 response.Data = _vehiculoLogic.AddAseguradoToVehiculo(vehiculoId, aseguradoId );

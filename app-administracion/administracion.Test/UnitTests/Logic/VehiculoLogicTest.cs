@@ -16,10 +16,8 @@ namespace administracion.Test.UnitTests.Logic
         private readonly Mock<IVehiculoDAO> _serviceMockVehiculo;
         private readonly Mock<IAseguradoDAO> _serviceMockAsegurado;
 
-        private readonly Mock<IAdminDBContext> _contextMock;
         public VehiculoLogicTest()
         {
-            _contextMock = new Mock<IAdminDBContext>();
             _serviceMockVehiculo = new Mock<IVehiculoDAO>();
             _serviceMockAsegurado = new Mock<IAseguradoDAO>();
             _logic = new VehiculoLogic(_serviceMockVehiculo.Object, _serviceMockAsegurado.Object);
@@ -50,10 +48,10 @@ namespace administracion.Test.UnitTests.Logic
         {
             _serviceMockVehiculo
                 .Setup(x => x.RegisterVehiculo(It.IsAny<Vehiculo>()))
-                .Returns(true);
-            var result = _logic.RegisterVehiculo(vehiculo);
+                .Returns(1);
+            int result = _logic.RegisterVehiculo(vehiculo);
 
-            Assert.True(result);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 
@@ -122,11 +120,11 @@ namespace administracion.Test.UnitTests.Logic
             
             _serviceMockVehiculo
                 .Setup(x => x.AddAsegurado(It.IsAny<Guid>(),It.IsAny<Guid>()))
-                .Returns(true);   
+                .Returns(1);   
                 
-            var result = _logic.AddAseguradoToVehiculo(vehiculoId,aseguradoId);
+            int result = _logic.AddAseguradoToVehiculo(vehiculoId,aseguradoId);
 
-            Assert.True(result);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 
@@ -145,7 +143,7 @@ namespace administracion.Test.UnitTests.Logic
             
             _serviceMockVehiculo
                 .Setup(x => x.AddAsegurado(It.IsAny<Guid>(),It.IsAny<Guid>()))
-                .Returns(true);
+                .Returns(1);
                 
             Assert.Throws<RCVNullException>(() => _logic.AddAseguradoToVehiculo(vehiculoId,aseguradoId));
             return Task.CompletedTask;
@@ -171,7 +169,7 @@ namespace administracion.Test.UnitTests.Logic
             
             _serviceMockVehiculo
                 .Setup(x => x.AddAsegurado(It.IsAny<Guid>(),It.IsAny<Guid>()))
-                .Returns(true);
+                .Returns(1);
                 
             Assert.Throws<RCVAsociationException>(() => _logic.AddAseguradoToVehiculo(vehiculoId,aseguradoId));
             return Task.CompletedTask;
@@ -191,7 +189,7 @@ namespace administracion.Test.UnitTests.Logic
             
             _serviceMockVehiculo
                 .Setup(x => x.AddAsegurado(It.IsAny<Guid>(),It.IsAny<Guid>()))
-                .Returns(true);
+                .Returns(1);
                 
             Assert.Throws<RCVNullException>(() => _logic.AddAseguradoToVehiculo(vehiculoId,aseguradoId));
             return Task.CompletedTask;

@@ -77,9 +77,9 @@ namespace administracion.Controllers
         /// <param name="proveedorRegisterDTO">Proveedor a registrar</param>
         /// <returns>Proveedor registrado</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> RegistrarProveedor([FromBody] ProveedorRegisterDTO proveedor)
+        public ApplicationResponse<int> RegistrarProveedor([FromBody] ProveedorRegisterDTO proveedor)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<int>();
             try
             {
                 response.Data = _proveedorLogic.RegisterProveedor(proveedor);
@@ -102,9 +102,9 @@ namespace administracion.Controllers
         /// <param name="proveedorRegisterDTO">Proveedor a actualizar</param>
         /// <returns>Proveedor actualizado</returns>
         [HttpPatch("agregar_marca/{proveedorId}/{marca}")]
-        public ApplicationResponse<bool> AgregarMarcaAproveedor([FromRoute] Guid proveedorId, [FromRoute] string marca)
+        public ApplicationResponse<int> AgregarMarcaAproveedor([FromRoute] Guid proveedorId, [FromRoute] string marca)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<int>();
             try
             {
                 response.Data = _proveedorLogic.AddMarca(proveedorId, marca);
@@ -128,9 +128,9 @@ namespace administracion.Controllers
         /// <param name="proveedorId">Id del proveedor</param>
         /// <returns>Boleano true si todo salio bien</returns>
         [HttpPatch("agrega_marca/todas/{proveedorId}")]
-        public ApplicationResponse<bool> AgregarTodasLasMarcasAProveedor([FromRoute] Guid proveedorId)
+        public ApplicationResponse<int> AgregarTodasLasMarcasAProveedor([FromRoute] Guid proveedorId)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<int>();
             try
             {
                 response.Data = _proveedorLogic.AddAllMarcas(proveedorId);

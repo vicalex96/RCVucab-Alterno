@@ -8,6 +8,7 @@ using administracion.Exceptions;
 using administracion.Test.DataSeed;
 using Xunit;
 using System.Collections;
+using administracion.Persistence.Enums;
 
 namespace administracion.Test.UnitTests.DAOs
 {
@@ -34,12 +35,12 @@ namespace administracion.Test.UnitTests.DAOs
                 yield return new object[] {
                     new Vehiculo()
                     {
-                        vehiculoId = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
+                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
                         anioModelo = 2003,
                         fechaCompra = new DateTime(2022, 6, 22, 19, 25, 41, 41, DateTimeKind.Local),
                         color = Color.Verde,
                         placa = "AB123CM",
-                        marca = Marca.Toyota
+                        marca = MarcaName.Toyota
                     }
                 };
             }
@@ -69,10 +70,10 @@ namespace administracion.Test.UnitTests.DAOs
         public Task shouldAddVehiculoReturnTrue()
         {
             Vehiculo vehiculo = new Vehiculo();
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
-            var resultado = _dao.RegisterVehiculo(vehiculo);
+            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(1);
+            int result = _dao.RegisterVehiculo(vehiculo);
 
-            Assert.True(resultado);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 
@@ -92,10 +93,10 @@ namespace administracion.Test.UnitTests.DAOs
         [InlineData("00f401c9-12aa-46bf-82a3-05bb34bb2c03","00000001-12aa-46bf-82a2-05ff65bb2c86")]
         public Task shouldAssociatedAVehiculoWithAseguradoReturnTrue(Guid vehiculoId, Guid aseguradoId)
         {   
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
+            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(1);
 
-            bool result = _dao.AddAsegurado(vehiculoId,aseguradoId);
-            Assert.True(result);
+            int result = _dao.AddAsegurado(vehiculoId,aseguradoId);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 

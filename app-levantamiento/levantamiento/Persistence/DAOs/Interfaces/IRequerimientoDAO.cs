@@ -7,7 +7,7 @@ namespace levantamiento.Persistence.DAOs
 {
     public interface IRequerimientoDAO
     {
-        public bool RegisterRequerimiento(RequerimientoRegisterDTO requerimiento);
+        public bool RegisterRequerimiento(Requerimiento requerimiento);
 
         public List<RequerimientoDTO> GetRequerimientosBySolicitudId(Guid solicitudId);
     }

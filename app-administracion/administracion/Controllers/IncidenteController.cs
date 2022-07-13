@@ -5,6 +5,7 @@ using administracion.Exceptions;
 using administracion.Responses;
 using System.ComponentModel.DataAnnotations;
 using administracion.BussinesLogic.LogicClasses;
+using administracion.Persistence.Enums;
 
 namespace administracion.Controllers
 {
@@ -52,13 +53,13 @@ namespace administracion.Controllers
         /// Obtiene una lista de incidentes registrados en el sistema
         /// </summary>
         /// <returns>Lista de incidentes</returns>
-        [HttpGet("consultar_lista_activos")]
-        public ApplicationResponse<List<IncidenteDTO>> ConsultarIncidentesActivos()
+        [HttpGet("consultar/estado/{estado}")]
+        public ApplicationResponse<List<IncidenteDTO>> ConsultarIncidentesPorEstado([Required][FromRoute] EstadoIncidente estado)
         {
             var response = new ApplicationResponse<List<IncidenteDTO>>();
             try
             {
-                response.Data = _incidenteDao.GetActiveIncidentes();
+                response.Data = _incidenteDao.GetIncidentesByState(estado);
             }
             catch (RCVException ex)
             {
@@ -75,12 +76,12 @@ namespace administracion.Controllers
         /// <param name="incidenteRegisterDTO">Incidente a registrar</param>
         /// <returns>Incidente registrado</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> RegistrarIncidente([FromBody] IncidenteRegisterDTO incidente)
+        public ApplicationResponse<int> RegistrarIncidente([FromBody] IncidenteRegisterDTO incidente)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<int>();
             try
             {
-                response.Success = _incidenteLogic.RegisterIncidente(incidente);
+                response.Data = _incidenteLogic.RegisterIncidente(incidente);
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "Incidente registrado";
@@ -101,9 +102,9 @@ namespace administracion.Controllers
         /// <param name="estado">el estado del incidente</param>
         /// <returns>Incidente actualizado</returns>
         [HttpPatch("actualizar/{incidenteID}/{estado}")]
-        public ApplicationResponse<bool> UpdateIncidente([Required][FromRoute] Guid incidenteID, [Required][FromRoute] EstadoIncidente estado)
+        public ApplicationResponse<int> UpdateIncidente([Required][FromRoute] Guid incidenteID, [Required][FromRoute] EstadoIncidente estado)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<int>();
             try
             {
                 response.Data = _incidenteLogic.UpdateIncidenteState(incidenteID, estado);

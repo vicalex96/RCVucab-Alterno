@@ -13,6 +13,11 @@ namespace levantamiento.Conections.APIs
             PropertyNameCaseInsensitive = true
         };
 
+        ///<summary>
+        /// Metodo asincrono que solicita la informacion de un Incidente al API de administracion
+        ///</summary>
+        ///<param name="incidenteId">Id del incidente que se desea obtener</param>
+        ///<returns>Respuesta con el incidente solicitado</returns>
         public async Task<IncidenteDTO> GetIncidenteFromAdmin(Guid incidenteId)
         {
             var localUrl = url + "incidente/consultar/{0}";
@@ -29,7 +34,7 @@ namespace levantamiento.Conections.APIs
                         var content = await response.Content.ReadAsStringAsync();
                         var incidente = JsonSerializer.Deserialize<ApplicationResponse<IncidenteDTO>>(content, options);
 
-                        return incidente.Data;
+                        return incidente!.Data!;
                     }    
                     else
                         throw new HttpRequestException("ocurrio algun problema al conectarse con el API");

@@ -9,8 +9,7 @@ namespace levantamiento.BussinesLogic.DTOs
     public class IncidenteToShowDTO
     {
         public Guid Id {get; set;}
-
-        public ICollection<SolicitudesResparacionDTO> solicitudesRespacion {get; set;} 
+        public ICollection<SolicitudesReparacionDTO>? solicitudesRepacion {get; set;} 
         
     }
 

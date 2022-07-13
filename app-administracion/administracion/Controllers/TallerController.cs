@@ -83,9 +83,9 @@ namespace administracion.Controllers
         /// <param name="tallerRegisterDTO">Taller a registrar</param>
         /// <returns>Taller registrado</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> RegistrarTaller([FromBody] TallerRegisterDTO taller)
+        public ApplicationResponse<int> RegistrarTaller([FromBody] TallerRegisterDTO taller)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<int>();
             try
             {
                 response.Data = _tallerLogic.RegisterTaller(taller);
@@ -108,9 +108,9 @@ namespace administracion.Controllers
         /// <param name="tallerRegisterDTO">taller a actualizar</param>
         /// <returns>taller actualizado</returns>
         [HttpPatch("agregar_marca/{tallerId}/{marca}")]
-        public ApplicationResponse<bool> AgregarMarcaATaller([FromRoute] Guid tallerId, [FromRoute] string marca)
+        public ApplicationResponse<int> AgregarMarcaATaller([FromRoute] Guid tallerId, [FromRoute] string marca)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<int>();
             try
             {
                 response.Data = _tallerLogic.AddMarca(tallerId, marca);
@@ -134,9 +134,9 @@ namespace administracion.Controllers
         /// <param name="tallerId">Id del taller</param>
         /// <returns>Boleano true si todo salio bien</returns>
         [HttpPatch("agrega_marca/todas/{tallerId}")]
-        public ApplicationResponse<bool> AgregarTodasLasMarcasATaller([FromRoute] Guid tallerId)
+        public ApplicationResponse<int> AgregarTodasLasMarcasATaller([FromRoute] Guid tallerId)
         {
-            var response = new ApplicationResponse<bool>();
+            var response = new ApplicationResponse<int>();
             try
             {
                 response.Data = _tallerLogic.AddAllMarcas(tallerId);

@@ -10,6 +10,7 @@ using administracion.Exceptions;
 using administracion.Test.DataSeed;
 using Xunit;
 using System.Collections;
+using administracion.Persistence.Enums;
 
 namespace administracion.Test.UnitTests.Logic
 {
@@ -19,10 +20,8 @@ namespace administracion.Test.UnitTests.Logic
         private readonly Mock<ITallerDAO> _serviceMockTaller;
         private readonly Mock<IProductorRabbit> _serviceMockRabbit;
 
-        private readonly Mock<IAdminDBContext> _contextMock;
         public TallerLogicTest()
         {
-            _contextMock = new Mock<IAdminDBContext>();
             _serviceMockTaller = new Mock<ITallerDAO>();
             _serviceMockRabbit = new Mock<IProductorRabbit>();
             _logic = new TallerLogic(_serviceMockTaller.Object, _serviceMockRabbit.Object);
@@ -49,10 +48,10 @@ namespace administracion.Test.UnitTests.Logic
         {
             _serviceMockTaller
                 .Setup(x => x.RegisterTaller(It.IsAny<Taller>()))
-                .Returns(It.IsAny<Guid>());
-            var result = _logic.RegisterTaller(taller);
+                .Returns(1);
+            int result = _logic.RegisterTaller(taller);
 
-            Assert.True(result);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 
@@ -94,15 +93,15 @@ namespace administracion.Test.UnitTests.Logic
         {
             Guid tallerId = new Guid();
             _serviceMockTaller
-                .Setup(x => x.IsMarcaExistsOnTaller(It.IsAny<Guid>(), It.IsAny<Marca>()))
+                .Setup(x => x.IsMarcaExistsOnTaller(It.IsAny<Guid>(), It.IsAny<MarcaName>()))
                 .Returns(false);
             _serviceMockTaller
                 .Setup(x => x.AddMarca(It.IsAny<MarcaTaller>()))
-                .Returns(true);
+                .Returns(1);
 
-            var result = _logic.AddMarca(tallerId,marca);
+            int result = _logic.AddMarca(tallerId,marca);
 
-            Assert.True(result);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 
@@ -122,7 +121,7 @@ namespace administracion.Test.UnitTests.Logic
         {
             Guid tallerId = new Guid();
             _serviceMockTaller
-                .Setup(x => x.IsMarcaExistsOnTaller(It.IsAny<Guid>(), It.IsAny<Marca>()))
+                .Setup(x => x.IsMarcaExistsOnTaller(It.IsAny<Guid>(), It.IsAny<MarcaName>()))
                 .Returns(true);
 
             Assert.Throws<RCVAsociationException>(() => _logic.AddMarca(tallerId,marca));
@@ -135,7 +134,7 @@ namespace administracion.Test.UnitTests.Logic
         {
             Guid tallerId = new Guid();
             _serviceMockTaller
-                .Setup(x => x.IsMarcaExistsOnTaller(It.IsAny<Guid>(), It.IsAny<Marca>()))
+                .Setup(x => x.IsMarcaExistsOnTaller(It.IsAny<Guid>(), It.IsAny<MarcaName>()))
                 .Returns(false);
             _serviceMockTaller
                 .Setup(x => x.AddMarca(It.IsAny<MarcaTaller>()))
@@ -152,11 +151,11 @@ namespace administracion.Test.UnitTests.Logic
                 .Setup(x => x.DeleteMarcasFromTaller(It.IsAny<Guid>()));
             _serviceMockTaller
                 .Setup(x => x.AddMarca(It.IsAny<MarcaTaller>()))
-                .Returns(true);
+                .Returns(1);
 
-            var result = _logic.AddAllMarcas(tallerId);
+            int result = _logic.AddAllMarcas(tallerId);
 
-            Assert.True(result);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 

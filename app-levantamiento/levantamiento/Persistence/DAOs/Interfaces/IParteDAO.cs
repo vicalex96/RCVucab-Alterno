@@ -8,6 +8,7 @@ namespace levantamiento.Persistence.DAOs
     public interface IParteDAO
     {
         public List<ParteDTO> GetAll();
-        public bool RegisterParte(ParteDTO Parte);
+        public ParteDTO GetParteById(Guid parteId);
+        public bool RegisterParte(Parte parte);
     }
 }

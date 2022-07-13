@@ -14,7 +14,7 @@ namespace levantamiento.Persistence.Entities
         [Required]
         public Guid parteId {get; set;}
 
-        public string descripcion {get; set;}
+        public string descripcion {get; set;} = "";
         
         [Required] 
         public TipoRequerimiento tipoRequerimiento {get; set;}
@@ -23,10 +23,10 @@ namespace levantamiento.Persistence.Entities
         public int cantidad {get; set;}
 
         [ForeignKey("solicitudReparacionId")]
-        public virtual SolicitudReparacion solicitudReparacion {get; set;}
+        public virtual SolicitudReparacion? solicitudReparacion {get; set;}
         
         [ForeignKey("parteId")]
-        public Parte parte {get; set;}
+        public Parte? parte {get; set;}
 
         
 
@@ -35,7 +35,7 @@ namespace levantamiento.Persistence.Entities
             try{
                 TipoRequerimiento result = (TipoRequerimiento)Enum.Parse(typeof(TipoRequerimiento), tipo);
                 return true;
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 return false;
             }

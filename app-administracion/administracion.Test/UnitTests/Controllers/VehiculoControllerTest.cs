@@ -89,11 +89,11 @@ namespace RCVUcab.Test.UnitTests.Controllers
         {
             _serviceMockLogic
                 .Setup(x => x.RegisterVehiculo(It.IsAny<VehiculoRegisterDTO>()))
-                .Returns(It.IsAny<bool>());
+                .Returns(It.IsAny<int>());
             var result = _controller
                 .createVehiculo(It.IsAny<VehiculoRegisterDTO>());
 
-            Assert.IsType<ApplicationResponse<bool>>(result);
+            Assert.IsType<ApplicationResponse<int>>(result);
             return Task.CompletedTask;
         }
 
@@ -118,11 +118,11 @@ namespace RCVUcab.Test.UnitTests.Controllers
                     It.IsAny<Guid>(), 
                     It.IsAny<Guid>())
                 )
-                .Returns(It.IsAny<bool>());
+                .Returns(It.IsAny<int>());
 
             var result = _controller.AddAsegurado(It.IsAny<Guid>(), It.IsAny<Guid>());
 
-            Assert.IsType<ApplicationResponse<bool>>(result);
+            Assert.IsType<ApplicationResponse<int>>(result);
             return Task.CompletedTask;
         }
 

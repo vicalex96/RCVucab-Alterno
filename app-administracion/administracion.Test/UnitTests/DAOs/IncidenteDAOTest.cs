@@ -5,9 +5,9 @@ using administracion.Persistence.Database;
 using administracion.BussinesLogic.DTOs;
 using administracion.Test.DataSeed;
 using Xunit;
-using System.Collections;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
+using administracion.Persistence.Enums;
 
 namespace administracion.Test.UnitTests.DAOs
 {
@@ -37,27 +37,26 @@ namespace administracion.Test.UnitTests.DAOs
             return Task.CompletedTask;
         }
         
-        [Fact(DisplayName = "DAO: Consulta Incidentes Activos y regresa lista")]
-        public Task ShouldGetActiveIncidentes()
+        [Theory(DisplayName = "DAO: Consulta Incidentes según estado y regresa lista de incientes")]
+        [InlineData(EstadoIncidente.Pendiente)]
+        public Task ShouldGetIncidentesByStateReturnList(EstadoIncidente estado)
         {
-            //Arrage
-            var result = _dao.GetActiveIncidentes();
-            //Act
+            var result = _dao.GetIncidentesByState(estado);
             var isNoEmpty = result.Any();
-            //Assert
             Assert.True(isNoEmpty);
             return Task.CompletedTask;
         }
+
 
         [Fact(DisplayName = "DAO: Registrar un incidente deberia retornar true")]
         public Task ShouldRegisterIncienteReturnTrue()
         {   
             Incidente incidente= new Incidente();
-            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(0);
+            _contextMock.Setup(m => m.DbContext.SaveChanges()).Returns(1);
 
-            var respuesta = _dao.RegisterIncidente(incidente);
+            int  result = _dao.RegisterIncidente(incidente);
 
-            Assert.True(respuesta);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 
@@ -78,10 +77,10 @@ namespace administracion.Test.UnitTests.DAOs
         {
             Incidente incidente = new Incidente();
             _contextMock.Setup(m => m.DbContext.SaveChanges())
-                .Returns(0);
-            bool result = _dao.UpdateIncidente(incidente);
+                .Returns(1);
+            int result = _dao.UpdateIncidente(incidente);
 
-            Assert.True(result);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 

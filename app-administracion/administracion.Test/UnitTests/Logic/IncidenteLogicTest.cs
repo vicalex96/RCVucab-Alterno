@@ -10,6 +10,7 @@ using administracion.Exceptions;
 using administracion.Test.DataSeed;
 using Xunit;
 using System.Collections;
+using administracion.Persistence.Enums;
 
 namespace administracion.Test.UnitTests.Logic
 {
@@ -19,10 +20,8 @@ namespace administracion.Test.UnitTests.Logic
         private readonly Mock<IIncidenteDAO> _serviceMockIncidente;
         private readonly Mock<IProductorRabbit> _serviceMockRabbit;
 
-        private readonly Mock<IAdminDBContext> _contextMock;
         public IncidenteLogicTest()
         {
-            _contextMock = new Mock<IAdminDBContext>();
             _serviceMockIncidente = new Mock<IIncidenteDAO>();
             _serviceMockRabbit = new Mock<IProductorRabbit>();
             _logic = new IncidenteLogic(_serviceMockIncidente.Object, _serviceMockRabbit.Object);
@@ -34,10 +33,10 @@ namespace administracion.Test.UnitTests.Logic
             IncidenteRegisterDTO incidente = new IncidenteRegisterDTO();
             _serviceMockIncidente
                 .Setup(x => x.RegisterIncidente(It.IsAny<Incidente>()))
-                .Returns(true);
-            var result = _logic.RegisterIncidente(incidente);
+                .Returns(1);
+            int result = _logic.RegisterIncidente(incidente);
 
-            Assert.True(result);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 
@@ -62,10 +61,10 @@ namespace administracion.Test.UnitTests.Logic
 
             _serviceMockIncidente
                 .Setup(x => x.UpdateIncidente(It.IsAny<Incidente>()))
-                .Returns(true);
+                .Returns(1);
             
-            var result = _logic.UpdateIncidenteState(It.IsAny<Guid>(),It.IsAny<EstadoIncidente>());
-            Assert.True(result);
+            int result = _logic.UpdateIncidenteState(It.IsAny<Guid>(),It.IsAny<EstadoIncidente>());
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 

@@ -10,6 +10,7 @@ using administracion.Exceptions;
 using administracion.Test.DataSeed;
 using Xunit;
 using System.Collections;
+using administracion.Persistence.Enums;
 
 namespace administracion.Test.UnitTests.Logic
 {
@@ -19,10 +20,8 @@ namespace administracion.Test.UnitTests.Logic
         private readonly Mock<IProveedorDAO> _serviceMockProveedor;
         private readonly Mock<IProductorRabbit> _serviceMockRabbit;
 
-        private readonly Mock<IAdminDBContext> _contextMock;
         public ProveedorLogicTest()
         {
-            _contextMock = new Mock<IAdminDBContext>();
             _serviceMockProveedor = new Mock<IProveedorDAO>();
             _serviceMockRabbit = new Mock<IProductorRabbit>();
             _logic = new ProveedorLogic(_serviceMockProveedor.Object, _serviceMockRabbit.Object);
@@ -49,10 +48,10 @@ namespace administracion.Test.UnitTests.Logic
         {
             _serviceMockProveedor
                 .Setup(x => x.RegisterProveedor(It.IsAny<Proveedor>()))
-                .Returns(It.IsAny<Guid>());
-            var result = _logic.RegisterProveedor(Proveedor);
+                .Returns(1);
+            int result = _logic.RegisterProveedor(Proveedor);
 
-            Assert.True(result);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 
@@ -94,15 +93,15 @@ namespace administracion.Test.UnitTests.Logic
         {
             Guid ProveedorId = new Guid();
             _serviceMockProveedor
-                .Setup(x => x.IsMarcaExistsOnProveedor(It.IsAny<Guid>(), It.IsAny<Marca>()))
+                .Setup(x => x.IsMarcaExistsOnProveedor(It.IsAny<Guid>(), It.IsAny<MarcaName>()))
                 .Returns(false);
             _serviceMockProveedor
                 .Setup(x => x.AddMarca(It.IsAny<MarcaProveedor>()))
-                .Returns(true);
+                .Returns(1);
 
-            var result = _logic.AddMarca(ProveedorId,marca);
+            int result = _logic.AddMarca(ProveedorId,marca);
 
-            Assert.True(result);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 
@@ -122,7 +121,7 @@ namespace administracion.Test.UnitTests.Logic
         {
             Guid ProveedorId = new Guid();
             _serviceMockProveedor
-                .Setup(x => x.IsMarcaExistsOnProveedor(It.IsAny<Guid>(), It.IsAny<Marca>()))
+                .Setup(x => x.IsMarcaExistsOnProveedor(It.IsAny<Guid>(), It.IsAny<MarcaName>()))
                 .Returns(true);
 
             Assert.Throws<RCVAsociationException>(() => _logic.AddMarca(ProveedorId,marca));
@@ -135,7 +134,7 @@ namespace administracion.Test.UnitTests.Logic
         {
             Guid ProveedorId = new Guid();
             _serviceMockProveedor
-                .Setup(x => x.IsMarcaExistsOnProveedor(It.IsAny<Guid>(), It.IsAny<Marca>()))
+                .Setup(x => x.IsMarcaExistsOnProveedor(It.IsAny<Guid>(), It.IsAny<MarcaName>()))
                 .Returns(false);
             _serviceMockProveedor
                 .Setup(x => x.AddMarca(It.IsAny<MarcaProveedor>()))
@@ -152,11 +151,11 @@ namespace administracion.Test.UnitTests.Logic
                 .Setup(x => x.DeleteMarcasFromProveedor(It.IsAny<Guid>()));
             _serviceMockProveedor
                 .Setup(x => x.AddMarca(It.IsAny<MarcaProveedor>()))
-                .Returns(true);
+                .Returns(1);
 
-            var result = _logic.AddAllMarcas(ProveedorId);
+            int result = _logic.AddAllMarcas(ProveedorId);
 
-            Assert.True(result);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 

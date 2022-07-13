@@ -17,10 +17,8 @@ namespace administracion.Test.UnitTests.Logic
         private readonly Mock<IVehiculoDAO> _serviceMockVehiculo;
         private readonly Mock<IAseguradoDAO> _serviceMockAsegurado;
 
-        private readonly Mock<IAdminDBContext> _contextMock;
         public PolizaLogicTest()
         {
-            _contextMock = new Mock<IAdminDBContext>();
             _serviceMockPoliza = new Mock<IPolizaDAO>();
             _serviceMockVehiculo = new Mock<IVehiculoDAO>();
             _serviceMockAsegurado = new Mock<IAseguradoDAO>();
@@ -46,10 +44,10 @@ namespace administracion.Test.UnitTests.Logic
 
             _serviceMockPoliza
                 .Setup(x => x.RegisterPoliza(It.IsAny<Poliza>()))
-                .Returns(true);
+                .Returns(1);
             
-            bool result = _logic.RegisterPoliza(poliza);
-            Assert.True(result);
+            int result = _logic.RegisterPoliza(poliza);
+            Assert.Equal(1,result);
             return Task.CompletedTask;
         }
 
@@ -103,7 +101,7 @@ namespace administracion.Test.UnitTests.Logic
 
             _serviceMockPoliza
                 .Setup(x => x.RegisterPoliza(It.IsAny<Poliza>()))
-                .Returns(true);
+                .Returns(1);
             
             Assert.Throws<RCVDateOrderException>(
                 () => _logic.RegisterPoliza(poliza)

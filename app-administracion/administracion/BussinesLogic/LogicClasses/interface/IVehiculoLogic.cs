@@ -4,8 +4,8 @@ namespace administracion.BussinesLogic.LogicClasses
 {
     public interface IVehiculoLogic
     {
-        public bool RegisterVehiculo(VehiculoRegisterDTO vehiculo);
-        public bool AddAseguradoToVehiculo(Guid vehiculoId, Guid aseguradoId);
+        public int RegisterVehiculo(VehiculoRegisterDTO vehiculo);
+        public int AddAseguradoToVehiculo(Guid vehiculoId, Guid aseguradoId);
 
         
     }
