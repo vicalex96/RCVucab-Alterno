@@ -73,18 +73,17 @@ namespace administracion.Persistence.DAOs
                 throw new RCVException("Error al obtener los vehiculos", ex);
             }
         }
-        
         /// <summary>
-        /// Obtiene una lista de incidentes que estan actualimente activos
+        /// Obtiene una lista de incidentes que se encuentren en el estado solicitado
         /// </summary>
         /// <returns>Lista de incidentes</returns>
-        public List<IncidenteDTO> GetActiveIncidentes()
+        public List<IncidenteDTO> GetIncidentesByState(EstadoIncidente estado)
         {
             try
             {
                 var incidentes =  _context.Incidentes
                 .Include(i => i.poliza)
-                .Where( i => i.estadoIncidente != EstadoIncidente.cerrado)
+                .Where( i => i.estadoIncidente == estado)
                 .Select(i => new IncidenteDTO{
                     Id = i.incidenteId,
                     polizaId = i.polizaId,
@@ -107,6 +106,8 @@ namespace administracion.Persistence.DAOs
             }
         }     
         
+        
+
         /// <summary>
         /// Actualiza el estado del incidente
         /// </summary>

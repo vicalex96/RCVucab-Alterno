@@ -5,7 +5,6 @@ using administracion.Persistence.Database;
 using administracion.BussinesLogic.DTOs;
 using administracion.Test.DataSeed;
 using Xunit;
-using System.Collections;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
 

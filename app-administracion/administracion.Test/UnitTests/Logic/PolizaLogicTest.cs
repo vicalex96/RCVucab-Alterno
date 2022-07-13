@@ -17,10 +17,8 @@ namespace administracion.Test.UnitTests.Logic
         private readonly Mock<IVehiculoDAO> _serviceMockVehiculo;
         private readonly Mock<IAseguradoDAO> _serviceMockAsegurado;
 
-        private readonly Mock<IAdminDBContext> _contextMock;
         public PolizaLogicTest()
         {
-            _contextMock = new Mock<IAdminDBContext>();
             _serviceMockPoliza = new Mock<IPolizaDAO>();
             _serviceMockVehiculo = new Mock<IVehiculoDAO>();
             _serviceMockAsegurado = new Mock<IAseguradoDAO>();

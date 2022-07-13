@@ -1,17 +1,10 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using levantamiento.Persistence.DAOs;
 using levantamiento.Persistence.Database;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using levantamiento.BussinesLogic.Logic;
+using levantamiento.Conections.APIs;
+using levantamiento.Conections.rabbit;
 
 namespace levantamiento
 {
@@ -34,13 +27,25 @@ namespace levantamiento
                 );
                 
             services.AddTransient<ILevantamientoDBContext, LevantamientoDBContext>();
+            services.AddTransient<IConsumerRabbit, ConsumerRabbit>();
+            services.AddTransient<IProductorRabbit, ProductorRabbit>();
+
+
             services.AddTransient<IIncidenteDAO, IncidenteDAO>();
-            services.AddTransient<ISolicitudReparacionDAO, SolcitudReparacionDAO>
-            ();
-            services.AddTransient<IRequerimientoDAO, RequerimientoDAO>
-            ();
-            services.AddTransient<IParteDAO, ParteDAO>
-            ();
+            services.AddTransient<ISolicitudReparacionDAO, SolcitudReparacionDAO>();
+            services.AddTransient<IRequerimientoDAO, RequerimientoDAO>();
+            services.AddTransient<IParteDAO, ParteDAO>();
+            
+
+
+            services.AddTransient<IIncidenteLogic, IncidenteLogic>();
+            services.AddTransient<ISolicitudReparacionLogic, SolicitudReparacionLogic>();
+            services.AddTransient<IRequerimientoLogic, RequerimientoLogic>();
+            services.AddTransient<IParteLogic, ParteLogic>();
+
+            services.AddTransient<IVehiculoAPI, VehiculoAPI>();
+            services.AddTransient<IIncidenteAPI, IncidenteAPI>();
+
 
             services.AddSwaggerGen(c =>
             {

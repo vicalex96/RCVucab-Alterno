@@ -19,18 +19,20 @@ namespace levantamiento.Persistence.DAOs
             _context = context;
         }
 
+        ///<summary>
         ///Muestra todas las partes registradas en el sistema
+        ///</summary>
+        ///<returns>lista de partes</returns>
         public List<ParteDTO> GetAll()
         {
             try
             {
-                var data = _context.Partes
+                return _context.Partes
                 .Select(p => new ParteDTO
                 {
                     Id = p.parteId,
                     nombre = p.nombre
                 }).ToList();
-                return data;
             }
             catch (Exception ex)
             {
@@ -38,24 +40,46 @@ namespace levantamiento.Persistence.DAOs
             }
         }
 
-        ///Registra una nueva parte en el sistema
-        public bool RegisterParte(ParteDTO Parte)
+        ///<summary>
+        ///Obtener la informacion de una parte por su Id
+        ///</summary>
+        //<param name="parteId">identificador de la piesa</param>
+        ///<returns>devuelve la informacion de la piesa o vacio</returns>
+        public ParteDTO GetParteById(Guid parteId)
         {
             try
             {
-                Parte parte = new Parte
+                return _context.Partes
+                .Where(p => p.parteId == parteId)
+                .Select(p => new ParteDTO
                 {
-                    parteId = Parte.Id,
-                    nombre = Parte.nombre
-                };
+                    Id = p.parteId,
+                    nombre = p.nombre
+                }).FirstOrDefault()!;
+            }
+            catch (Exception ex)
+            {
+                throw new RCVException("Error al obtener la lista de partes", ex);
+            }
+        }
+        ///<summary>
+        ///Registra una nueva parte en el sistema
+        ///</summary>
+        ///<param name="parte">parte a registrar</param>
+        ///<returns>true si se registro correctamente</returns>
+        public bool RegisterParte(Parte parte)
+        {
+            try
+            {
                 _context.Partes.Add(parte);
                 _context.DbContext.SaveChanges();
+                return true;
             }
             catch (Exception ex)
             {
                 throw new RCVException("Error al registrar la parte", ex);
             }
-            return true;
+            
         }
     }
 }

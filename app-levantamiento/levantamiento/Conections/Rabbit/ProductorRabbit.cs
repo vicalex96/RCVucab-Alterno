@@ -9,20 +9,15 @@ namespace levantamiento.Conections.rabbit
     {
 
         public Routings _routing;
-        public Exchanges _exchange;
+        private Exchanges _exchange = Exchanges.levantamiento;
         private ConnectionFactory factory = new ConnectionFactory() 
         {
             HostName =  "localhost" 
         };
 
-        public ProductorRabbit (Exchanges exchange, Routings routing)
-        {
-            _exchange = exchange;
+        public bool SendMessage(Routings routing, string instruccion, string contenido)
+                {
             _routing = routing;
-        }
-
-        public bool SendMessage(string instruccion, string contenido)
-        {
             try
             {
                 var comando = GenerateMessage(instruccion,contenido);
@@ -32,17 +27,25 @@ namespace levantamiento.Conections.rabbit
                     {
                         channel.ExchangeDeclare(
                             exchange: _exchange.ToString(),
-                            type:ExchangeType.Direct, 
+                            type: ExchangeType.Direct.ToString(), 
                             durable: true
                             );
 
-                        BasicPublish(channel,comando);
+                        var body = Encoding.UTF8.GetBytes(comando);
 
-                        Console.WriteLine($"[x] Enviando {comando}");
+                        IBasicProperties props = channel.CreateBasicProperties();
+                        props.ContentType = "text/plain";
+                        props.DeliveryMode = 2;
+
+                        channel.BasicPublish(
+                            exchange: _exchange.ToString(), 
+                            routingKey: _routing.ToString(), 
+                            basicProperties: props, 
+                            body:body
+                            );
                     }
-                    Console.WriteLine("mansaje enviado");
                 }
-            }catch(Exception ex)
+            }catch(Exception)
             {
                 Console.WriteLine("ocurrio un error al enviar el mensaje por RabbitMQ");
             }
@@ -54,24 +57,7 @@ namespace levantamiento.Conections.rabbit
         {
             return keyword + ":" + content;
         }
-
-        //metodo para crear el modelo
-        private IModel BasicPublish(IModel channel, string message)
-        {
-            var body = Encoding.UTF8.GetBytes(message);
-
-            IBasicProperties props = channel.CreateBasicProperties();
-            props.ContentType = "text/plain";
-            props.DeliveryMode = 2;
-
-            channel.BasicPublish(
-                exchange: _exchange.ToString(), 
-                routingKey: _routing.ToString(), 
-                basicProperties: props, 
-                body:body
-                );
-            return channel;
-        }
+        
 
         
     }

@@ -1,21 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using levantamiento.BussinesLogic.DTOs;
 using levantamiento.Persistence.DAOs;
+using levantamiento.BussinesLogic.Logic;
 using levantamiento.Exceptions;
 using levantamiento.Responses;
 
-namespace administracion.Controllers
+namespace levantamiento.Controllers
 {
     [ApiController]
     [Route("Parte")]
     public class ParteController: Controller
     {
         private readonly IParteDAO _ParteDAO;
+        private readonly IParteLogic _parteLogic;
         private readonly ILogger<ParteController> _logger;
 
-        public ParteController(ILogger<ParteController> logger, IParteDAO ParteDAO)
+        public ParteController(ILogger<ParteController> logger, IParteDAO ParteDAO,IParteLogic parteLogic)
         {
             _logger = logger;
+            _parteLogic = parteLogic;
             _ParteDAO = ParteDAO;
         }
 
@@ -55,7 +58,7 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<bool>();
             try
             {
-                response.Data = _ParteDAO.RegisterParte(Parte);
+                response.Data = _parteLogic.RegisterParte(Parte);
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "Parte registrada";

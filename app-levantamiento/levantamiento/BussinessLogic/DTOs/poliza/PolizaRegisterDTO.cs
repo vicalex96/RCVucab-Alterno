@@ -12,7 +12,7 @@ namespace levantamiento.BussinesLogic.DTOs
         public Guid Id {get; set;}
         public DateTime fechaRegistro {get; set;}
         public DateTime fechaVencimiento {get; set;}
-        public string tipoPoliza {get; set;}
+        public string tipoPoliza {get; set;} = "";
         
         public Guid vehiculoId {get; set;}
     }

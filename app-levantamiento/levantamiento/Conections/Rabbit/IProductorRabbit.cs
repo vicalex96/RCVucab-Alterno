@@ -3,7 +3,7 @@ namespace levantamiento.Conections.rabbit
     
     public interface IProductorRabbit
     {
-        public bool SendMessage(string instruccion, string contenido);
+        public bool SendMessage(Routings routing, string instruccion, string contenido);
     }
     public enum Routings 
     //Es quien va a recibir el mensaje

@@ -5,6 +5,10 @@ namespace levantamiento.Persistence.Database
 {
     public class LevantamientoDBContext: DbContext, ILevantamientoDBContext
     {
+        public DbSet<Incidente> Incidentes { get; set; }= null!;
+        public DbSet<SolicitudReparacion> SolicitudesReparacion { get; set; }= null!;
+        public DbSet<Requerimiento> Requerimientos { get; set; } = null!;
+        public DbSet<Parte> Partes { get; set; } = null!;
         public LevantamientoDBContext(){}
 
         public LevantamientoDBContext(DbContextOptions<LevantamientoDBContext> options) : base(options)
@@ -16,11 +20,6 @@ namespace levantamiento.Persistence.Database
             get { return this; }
         }
 
-        public DbSet<Incidente> Incidentes { get; set; }
-        public DbSet<SolicitudReparacion> SolicitudesReparacion { get; set; }
-        public DbSet<Requerimiento> Requerimientos { get; set; }
-        public DbSet<Parte> Partes { get; set; }
-        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -19,10 +19,8 @@ namespace administracion.Test.UnitTests.Logic
         private readonly Mock<IProveedorDAO> _serviceMockProveedor;
         private readonly Mock<IProductorRabbit> _serviceMockRabbit;
 
-        private readonly Mock<IAdminDBContext> _contextMock;
         public ProveedorLogicTest()
         {
-            _contextMock = new Mock<IAdminDBContext>();
             _serviceMockProveedor = new Mock<IProveedorDAO>();
             _serviceMockRabbit = new Mock<IProductorRabbit>();
             _logic = new ProveedorLogic(_serviceMockProveedor.Object, _serviceMockRabbit.Object);

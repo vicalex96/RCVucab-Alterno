@@ -9,6 +9,6 @@ namespace levantamiento.BussinesLogic.DTOs
 {
     public class MarcaDTO
     {
-        public string nombreMarca {get; set;}
+        public string nombreMarca {get; set;} = "";
     }
 }

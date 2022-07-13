@@ -14,10 +14,8 @@ namespace administracion.Test.UnitTests.Logic
     {
         private readonly AseguradoLogic _logic;
         private readonly Mock<IAseguradoDAO> _serviceMockAsegurado;
-        private readonly Mock<IAdminDBContext> _contextMock;
         public AseguradoLogicTest()
         {
-            _contextMock = new Mock<IAdminDBContext>();
             _serviceMockAsegurado = new Mock<IAseguradoDAO>();
             _logic = new AseguradoLogic(_serviceMockAsegurado.Object);
         }

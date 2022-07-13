@@ -12,8 +12,7 @@ namespace administracion.Persistence.DAOs
     {
         
         public IncidenteDTO GetIncidenteById(Guid incidenteID);
-
-        public List<IncidenteDTO> GetActiveIncidentes();
+        public List<IncidenteDTO> GetIncidentesByState(EstadoIncidente estado);
         public bool RegisterIncidente (Incidente incidente);
         public bool UpdateIncidente(Incidente incidente);
     }

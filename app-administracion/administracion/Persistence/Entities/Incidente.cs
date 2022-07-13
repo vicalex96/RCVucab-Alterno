@@ -23,9 +23,7 @@ namespace administracion.Persistence.Entities
 public enum EstadoIncidente
 {
     Pendiente,
-    Analizando,
-    ConSolictud,
-    EnReparacion,
-    cerrado
+    Procesando,
+    Cerrado
 
 }

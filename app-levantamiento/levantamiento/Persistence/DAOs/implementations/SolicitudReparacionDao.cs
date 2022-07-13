@@ -15,30 +15,30 @@ namespace levantamiento.Persistence.DAOs
     {
         public readonly ILevantamientoDBContext _context;
 
+
         public SolcitudReparacionDAO(ILevantamientoDBContext context)
         {
             _context = context;
         }
         
         //muestra todas las solicitudes en el sistema
-        public List<SolicitudesResparacionDTO> GetAll()
+        public List<SolicitudesReparacionDTO> GetAll()
         {
             try
             {
-                var data = _context.SolicitudesReparacion
+                return _context.SolicitudesReparacion
                 .Include(s => s.requerimientos)
-                .Select(s => new SolicitudesResparacionDTO
+                .Select(s => new SolicitudesReparacionDTO
                 {
                     Id = s.SolicitudReparacionId,
                     incidenteId = s.incidenteId,
                     incidente = new IncidenteDTO
                     {
                         Id = s.incidenteId,
-                        polizaId = s.incidente.polizaId,
+                        polizaId = s.incidente!.polizaId,
                     },
                     vehiculoId = s.vehiculoId,
                 }).ToList();
-                return data;
             }
             catch (Exception ex)
             {
@@ -47,25 +47,24 @@ namespace levantamiento.Persistence.DAOs
         }
 
         //Muestra todas las solicitudes que les falte asignar el taller
-        public List<SolicitudesResparacionDTO> GetSolicitudWithoutTaller()
+        public List<SolicitudesReparacionDTO> GetSolicitudWithoutTaller()
         {
             try
             {
-                var data = _context.SolicitudesReparacion
+                return _context.SolicitudesReparacion
                 .Include(s => s.requerimientos)
                 .Where(s => s.tallerId == Guid.Empty)
-                .Select(s => new SolicitudesResparacionDTO
+                .Select(s => new SolicitudesReparacionDTO
                 {
                     Id = s.SolicitudReparacionId,
                     incidenteId = s.incidenteId,
                     incidente = new IncidenteDTO
                     {
                         Id = s.incidenteId,
-                        polizaId = s.incidente.polizaId,
+                        polizaId = s.incidente!.polizaId,
                     },
                     vehiculoId = s.vehiculoId,
                 }).ToList();
-                return data;
             }
             catch (Exception ex)
             {
@@ -74,14 +73,14 @@ namespace levantamiento.Persistence.DAOs
         }
         
         /// Busca una solicitud por su id 
-        public SolicitudesResparacionDTO GetSolicitudById(Guid solicitudId)
+        public SolicitudesReparacionDTO GetSolicitudById(Guid solicitudId)
         {
             try
             {
-                var data = _context.SolicitudesReparacion
+                return _context.SolicitudesReparacion
                 .Include(s => s.requerimientos)
                 .Where(s => s.SolicitudReparacionId == solicitudId)
-                .Select(s => new SolicitudesResparacionDTO
+                .Select(s => new SolicitudesReparacionDTO
                 {
                     Id = s.SolicitudReparacionId,
                     incidenteId = s.incidenteId,
@@ -98,11 +97,10 @@ namespace levantamiento.Persistence.DAOs
                         cantidad = r.cantidad,
                         parte = new ParteDTO{
                             Id = r.parteId,
-                            nombre = r.parte.nombre,
+                            nombre = r.parte!.nombre,
                         }
                     }).ToList()
-                }).FirstOrDefault();
-                return data;
+                }).FirstOrDefault()!;
             }
             catch (Exception ex)
             {
@@ -111,14 +109,14 @@ namespace levantamiento.Persistence.DAOs
         }
 
         /// Busca las solicitudes segun el id del incidente
-        public List<SolicitudesResparacionDTO> GetSolicitudByIncidenteId(Guid incidenteId)
+        public List<SolicitudesReparacionDTO> GetSolicitudByIncidenteId(Guid incidenteId)
         {
             try
             {
-                var data = _context.SolicitudesReparacion
+                return _context.SolicitudesReparacion
                 .Include(s => s.requerimientos)
                 .Where(s => s.incidenteId == incidenteId)
-                .Select(s => new SolicitudesResparacionDTO
+                .Select(s => new SolicitudesReparacionDTO
                 {
                     Id = s.SolicitudReparacionId,
                     incidenteId = s.incidenteId,
@@ -135,11 +133,10 @@ namespace levantamiento.Persistence.DAOs
                         cantidad = r.cantidad,
                         parte = new ParteDTO{
                             Id = r.parteId,
-                            nombre = r.parte.nombre,
+                            nombre = r.parte!.nombre,
                         }
                     }).ToList()
                 }).ToList();
-                return data;
             }
             catch (Exception ex)
             {
@@ -149,18 +146,11 @@ namespace levantamiento.Persistence.DAOs
 
 
         /// Registra una solicitud con los datos basicos, aun no incluye taller ni los requerimientos
-        public bool RegisterSolicitud(SolicitudesRespacionRegisterDTO solicitudDTO)
+        public bool RegisterSolicitud(SolicitudReparacion solicitud)
         {
             try
             {
-                SolicitudReparacion solicitud = new SolicitudReparacion
-                {
-                    SolicitudReparacionId = solicitudDTO.Id,
-                    incidenteId = solicitudDTO.incidenteId,
-                    vehiculoId = solicitudDTO.vehiculoId,
-                    fechaSolicitud = DateTime.Today,
-                };
-                var data = _context.SolicitudesReparacion.Add(solicitud);
+                _context.SolicitudesReparacion.Add(solicitud);
                 _context.DbContext.SaveChanges();
                 return true;
             }
@@ -170,65 +160,5 @@ namespace levantamiento.Persistence.DAOs
             }
         }
 
-        public bool AddTaller(Guid solicitudId, Guid tallerId)
-        {
-            try
-            {
-                var requerimeintos = _context.Requerimientos
-                .Where(r => r.solicitudReparacionId == solicitudId)
-                .ToList();
-                if(requerimeintos.Count() == 0)
-                {
-                    throw new RCVException("No se puede asignar un taller a una solicitud sin requerimientos");
-                }
-
-                var solicitud = _context.SolicitudesReparacion
-                .Where(s => s.SolicitudReparacionId == solicitudId)
-                .FirstOrDefault();
-                if(solicitud.tallerId == Guid.Empty)
-                {
-                    solicitud.tallerId = tallerId;
-                    _context.DbContext.SaveChanges();
-                    return true;
-                }
-                else
-                {
-                    throw new RCVException("Error: la solicitud ya tien un taller asignado");
-                }
-            }
-            catch (RCVException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw new RCVException("Error: ocurrio un problema al intentar registrar el taller", ex);
-            }
-        }
-    
-        public bool SendNotificationsToQueue()
-        {
-            try
-            {
-                var data = _context.SolicitudesReparacion
-                .Where(s => s.tallerId != Guid.Empty)
-                .ToList();
-                ProductorRabbit productor = new ProductorRabbit(
-                        Exchanges.levantamiento,
-                        Routings.taller
-                    );
-                foreach (var solicitud in data)
-                {
-                    
-                    productor.SendMessage("registrar_solicitud", solicitud.SolicitudReparacionId.ToString());
-                }
-                productor.SendMessage("registrar_solicitud", "0c5c3262-d5ef-46c7-bc0e-97530821c0cc");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new RCVException("Error al enviar las notificaciones a la cola", ex);
-            }
-        }
     }
 }

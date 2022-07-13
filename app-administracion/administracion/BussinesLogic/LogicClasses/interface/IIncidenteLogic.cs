@@ -8,5 +8,7 @@ namespace administracion.BussinesLogic.LogicClasses
         public bool RegisterIncidente(IncidenteRegisterDTO asegurado);
         public bool UpdateIncidenteState(Guid incidenteId, EstadoIncidente estado);
 
+        public int RefreshIncidenteLogic();
+
     }
 }

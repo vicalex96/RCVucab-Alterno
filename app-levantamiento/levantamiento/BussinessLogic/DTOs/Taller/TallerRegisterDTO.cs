@@ -9,6 +9,6 @@ namespace levantamiento.BussinesLogic.DTOs
     public class TallerRegisterDTO
     {
         public Guid Id { get; set; }
-        public string nombreLocal {get; set;} 
+        public string nombreLocal {get; set;} = "";
     }
 }

@@ -16,10 +16,8 @@ namespace administracion.Test.UnitTests.Logic
         private readonly Mock<IVehiculoDAO> _serviceMockVehiculo;
         private readonly Mock<IAseguradoDAO> _serviceMockAsegurado;
 
-        private readonly Mock<IAdminDBContext> _contextMock;
         public VehiculoLogicTest()
         {
-            _contextMock = new Mock<IAdminDBContext>();
             _serviceMockVehiculo = new Mock<IVehiculoDAO>();
             _serviceMockAsegurado = new Mock<IAseguradoDAO>();
             _logic = new VehiculoLogic(_serviceMockVehiculo.Object, _serviceMockAsegurado.Object);

@@ -52,13 +52,13 @@ namespace administracion.Controllers
         /// Obtiene una lista de incidentes registrados en el sistema
         /// </summary>
         /// <returns>Lista de incidentes</returns>
-        [HttpGet("consultar_lista_activos")]
-        public ApplicationResponse<List<IncidenteDTO>> ConsultarIncidentesActivos()
+        [HttpGet("consultar/estado/{estado}")]
+        public ApplicationResponse<List<IncidenteDTO>> ConsultarIncidentesPorEstado([Required][FromRoute] EstadoIncidente estado)
         {
             var response = new ApplicationResponse<List<IncidenteDTO>>();
             try
             {
-                response.Data = _incidenteDao.GetActiveIncidentes();
+                response.Data = _incidenteDao.GetIncidentesByState(estado);
             }
             catch (RCVException ex)
             {

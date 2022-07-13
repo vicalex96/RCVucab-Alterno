@@ -19,42 +19,42 @@ namespace levantamiento.Persistence.DAOs
             _context = context;
         }
 
+        ///<summary>
         ///actualiza la lista de incidentes desde el sistema de administracion
-        public bool UpdateList(ICollection<IncidenteQueueDTO> dataList)
+        ///</summary>
+        ///<param name="incidente">incidente a registrar</param>
+        ///<returns>true si se registro correctamente, false si no</returns>
+        public bool RegisterIncidente(Incidente incidente)
         {
             try
             {
-                foreach (IncidenteQueueDTO elemento in dataList)
-                {
-                    Incidente incidente = new Incidente
-                    {
-                        incidenteId = elemento.Id
-                    };
-                    _context.Incidentes.Add(incidente);
-                    _context.DbContext.SaveChanges();
-                }
+                _context.Incidentes.Add(incidente);
+                _context.DbContext.SaveChanges();
+                return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new RCVException("Error al actualizar el listado de incidentes", ex);
+                return false;
             }
-            return true;
         }
 
+        ///<summary>
         ///Muestra todos los incidentes
+        ///</summary>
+        ///<returns>lista de incidentes</returns>
         public ICollection<IncidenteToShowDTO> GetAll()
         {
             try
             {
-                var data = _context.Incidentes
+                return _context.Incidentes
                 .Include(s => s.solicitudes)
                 .Select(i => new IncidenteToShowDTO
                 {
                     Id = i.incidenteId,
-                    solicitudesRespacion = _context.SolicitudesReparacion
+                    solicitudesRepacion = _context.SolicitudesReparacion
                     .Include(r => r.requerimientos)
                     .Where(r => r.incidenteId == i.incidenteId)
-                    .Select(s => new SolicitudesResparacionDTO
+                    .Select(s => new SolicitudesReparacionDTO
                     {
                         Id = s.SolicitudReparacionId,
                         incidenteId = s.incidenteId,
@@ -62,7 +62,6 @@ namespace levantamiento.Persistence.DAOs
                         tallerId = s.tallerId,
                     }).ToList()
                 }).ToList();
-                return data;
             }
             catch (Exception ex)
             {
@@ -70,12 +69,15 @@ namespace levantamiento.Persistence.DAOs
             }
         }
 
+        ///<summary>
         ///Muestra los incidentes que no tengan solicitudes asociadas
+        ///</summary>
+        ///<returns>lista de incidentes</returns>
         public ICollection<IncidenteToShowDTO> GetAllWithoutSolicitud()
         {
             try
             {
-                var data = from nc in _context.Incidentes
+                return (from nc in _context.Incidentes
                     join s in _context.SolicitudesReparacion on nc.incidenteId equals s.incidenteId into relacion
                     from s in relacion.DefaultIfEmpty()
                     where s == null
@@ -83,8 +85,7 @@ namespace levantamiento.Persistence.DAOs
                     {
                         Id = nc.incidenteId
 
-                    };
-                return data.ToList();
+                    }).ToList();
             }
             catch (Exception ex)
             {
@@ -92,12 +93,16 @@ namespace levantamiento.Persistence.DAOs
             }
         }
 
+        ///<summary>
         ///Realiza una busqueda por id del incidente y devuelve el incidente
-        public ICollection<IncidenteDTO> GetIncidenteById(Guid incidenteId)
+        ///</summary>
+        ///<param name="incidenteId">id del incidente</param>
+        ///<returns>incidente</returns>
+        public IncidenteDTO GetIncidenteById(Guid incidenteId)
         {
             try
             {
-                var data = _context.Incidentes
+                return _context.Incidentes
                 .Include(s => s.solicitudes)
                 .Where(i => i.incidenteId == incidenteId)
                 .Select(i => new IncidenteDTO
@@ -105,40 +110,17 @@ namespace levantamiento.Persistence.DAOs
                     Id = i.incidenteId,
                     solicitudes = _context.SolicitudesReparacion
                     .Include(r => r.requerimientos)
-                    .Select(s => new SolicitudesResparacionDTO
+                    .Select(s => new SolicitudesReparacionDTO
                     {
                         Id = s.SolicitudReparacionId,
                         vehiculoId = s.vehiculoId,
                         tallerId = s.tallerId,
                     }).ToList()
-                }).ToList();
-                return data;
+                }).FirstOrDefault()!;
             }
             catch (Exception ex)
             {
                 throw new RCVException("Error al obtener los incidentes", ex);
-            }
-        }
-
-        ///Realiza una busqueda detallada de los datos del incidente
-        //incluye data de la base de datos de administracion
-        public async Task<IncidenteDTO> GetDetailedIncidente (Guid IncidenteId)
-        {
-            try
-            {
-                IncidenteAPI incidenteAPI = new IncidenteAPI();
-                IncidenteDTO incidente = await incidenteAPI.GetIncidenteFromAdmin(IncidenteId);
-                incidente.solicitudes = _context.SolicitudesReparacion.Where(x => x.incidenteId == IncidenteId).Select(s => new SolicitudesResparacionDTO{
-                    Id = s.SolicitudReparacionId,
-                    incidenteId = s.incidenteId,
-                    vehiculoId = s.vehiculoId,
-                    tallerId = s.tallerId
-                }).ToList();
-                return incidente;
-            }
-            catch(RCVException ex)
-            {
-                throw new RCVException(ex.Mensaje, ex);
             }
         }
     }

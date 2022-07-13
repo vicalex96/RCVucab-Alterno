@@ -54,6 +54,18 @@ namespace administracion.Migrations
                             aseguradoId = new Guid("0c5c3262-d5ef-46c7-0001-000000000002"),
                             apellido = "Banderas Lopez",
                             nombre = "Manuel Diego"
+                        },
+                        new
+                        {
+                            aseguradoId = new Guid("0c5c3262-d5ef-46c7-0001-000000000003"),
+                            apellido = "Gimenez",
+                            nombre = "Daniel"
+                        },
+                        new
+                        {
+                            aseguradoId = new Guid("0c5c3262-d5ef-46c7-0001-000000000004"),
+                            apellido = "Salaguchi",
+                            nombre = "Maria Jose"
                         });
                 });
 
@@ -84,10 +96,24 @@ namespace administracion.Migrations
                     b.HasData(
                         new
                         {
-                            incidenteId = new Guid("10000000-d5ef-46c7-0004-000000000001"),
+                            incidenteId = new Guid("0c5c3262-d5ef-46c7-0004-000000000001"),
                             estadoIncidente = 0,
-                            fechaRegistrado = new DateTime(2010, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            fechaRegistrado = new DateTime(2010, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             polizaId = new Guid("0c5c3262-d5ef-46c7-0003-000000000001")
+                        },
+                        new
+                        {
+                            incidenteId = new Guid("0c5c3262-d5ef-46c7-0004-000000000002"),
+                            estadoIncidente = 0,
+                            fechaRegistrado = new DateTime(2018, 8, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            polizaId = new Guid("0c5c3262-d5ef-46c7-0003-000000000002")
+                        },
+                        new
+                        {
+                            incidenteId = new Guid("0c5c3262-d5ef-46c7-0004-000000000003"),
+                            estadoIncidente = 0,
+                            fechaRegistrado = new DateTime(2021, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            polizaId = new Guid("0c5c3262-d5ef-46c7-0003-000000000003")
                         });
                 });
 
@@ -111,6 +137,42 @@ namespace administracion.Migrations
                     b.HasIndex("proveedorId");
 
                     b.ToTable("MarcasProveedor");
+
+                    b.HasData(
+                        new
+                        {
+                            marcaId = new Guid("00000001-d5ef-46c7-0006-000000000001"),
+                            manejaTodas = false,
+                            marca = 8,
+                            proveedorId = new Guid("0c5c3262-d5ef-46c7-0006-000000000001")
+                        },
+                        new
+                        {
+                            marcaId = new Guid("00000002-d5ef-46c7-0006-000000000001"),
+                            manejaTodas = false,
+                            marca = 5,
+                            proveedorId = new Guid("0c5c3262-d5ef-46c7-0006-000000000001")
+                        },
+                        new
+                        {
+                            marcaId = new Guid("00000003-d5ef-46c7-0006-000000000001"),
+                            manejaTodas = false,
+                            marca = 7,
+                            proveedorId = new Guid("0c5c3262-d5ef-46c7-0006-000000000001")
+                        },
+                        new
+                        {
+                            marcaId = new Guid("00000004-d5ef-46c7-0006-000000000001"),
+                            manejaTodas = false,
+                            marca = 0,
+                            proveedorId = new Guid("0c5c3262-d5ef-46c7-0006-000000000001")
+                        },
+                        new
+                        {
+                            marcaId = new Guid("00000001-d5ef-46c7-0006-000000000002"),
+                            manejaTodas = true,
+                            proveedorId = new Guid("0c5c3262-d5ef-46c7-0006-000000000002")
+                        });
                 });
 
             modelBuilder.Entity("administracion.Persistence.Entities.MarcaTaller", b =>
@@ -133,6 +195,35 @@ namespace administracion.Migrations
                     b.HasIndex("tallerId");
 
                     b.ToTable("MarcasTaller");
+
+                    b.HasData(
+                        new
+                        {
+                            marcaId = new Guid("00000001-d5ef-46c7-0005-000000000001"),
+                            manejaTodas = false,
+                            marca = 8,
+                            tallerId = new Guid("0c5c3262-d5ef-46c7-0005-000000000001")
+                        },
+                        new
+                        {
+                            marcaId = new Guid("00000002-d5ef-46c7-0005-000000000001"),
+                            manejaTodas = false,
+                            marca = 4,
+                            tallerId = new Guid("0c5c3262-d5ef-46c7-0005-000000000001")
+                        },
+                        new
+                        {
+                            marcaId = new Guid("00000003-d5ef-46c7-0005-000000000001"),
+                            manejaTodas = false,
+                            marca = 7,
+                            tallerId = new Guid("0c5c3262-d5ef-46c7-0005-000000000001")
+                        },
+                        new
+                        {
+                            marcaId = new Guid("00000001-d5ef-46c7-0005-000000000002"),
+                            manejaTodas = true,
+                            tallerId = new Guid("0c5c3262-d5ef-46c7-0005-000000000002")
+                        });
                 });
 
             modelBuilder.Entity("administracion.Persistence.Entities.Poliza", b =>
@@ -163,10 +254,26 @@ namespace administracion.Migrations
                         new
                         {
                             polizaId = new Guid("0c5c3262-d5ef-46c7-0003-000000000001"),
+                            fechaRegistro = new DateTime(2009, 6, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            fechaVencimiento = new DateTime(2014, 6, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            tipoPoliza = 0,
+                            vehiculoId = new Guid("0c5c3262-d5ef-46c7-0002-000000000001")
+                        },
+                        new
+                        {
+                            polizaId = new Guid("0c5c3262-d5ef-46c7-0003-000000000002"),
+                            fechaRegistro = new DateTime(2016, 6, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            fechaVencimiento = new DateTime(2020, 6, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            tipoPoliza = 1,
+                            vehiculoId = new Guid("0c5c3262-d5ef-46c7-0002-000000000002")
+                        },
+                        new
+                        {
+                            polizaId = new Guid("0c5c3262-d5ef-46c7-0003-000000000003"),
                             fechaRegistro = new DateTime(2020, 6, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             fechaVencimiento = new DateTime(2025, 6, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             tipoPoliza = 0,
-                            vehiculoId = new Guid("0c5c3262-d5ef-46c7-0002-000000000001")
+                            vehiculoId = new Guid("0c5c3262-d5ef-46c7-0002-000000000003")
                         });
                 });
 
@@ -183,6 +290,18 @@ namespace administracion.Migrations
                     b.HasKey("proveedorId");
 
                     b.ToTable("Proveedores");
+
+                    b.HasData(
+                        new
+                        {
+                            proveedorId = new Guid("0c5c3262-d5ef-46c7-0006-000000000001"),
+                            nombreLocal = "Todo en partes 3000"
+                        },
+                        new
+                        {
+                            proveedorId = new Guid("0c5c3262-d5ef-46c7-0006-000000000002"),
+                            nombreLocal = "Tu Carro, tu repuesto"
+                        });
                 });
 
             modelBuilder.Entity("administracion.Persistence.Entities.Taller", b =>
@@ -198,6 +317,18 @@ namespace administracion.Migrations
                     b.HasKey("tallerId");
 
                     b.ToTable("Talleres");
+
+                    b.HasData(
+                        new
+                        {
+                            tallerId = new Guid("0c5c3262-d5ef-46c7-0005-000000000001"),
+                            nombreLocal = "Gas Monkey"
+                        },
+                        new
+                        {
+                            tallerId = new Guid("0c5c3262-d5ef-46c7-0005-000000000002"),
+                            nombreLocal = "Taller de Luis"
+                        });
                 });
 
             modelBuilder.Entity("administracion.Persistence.Entities.Vehiculo", b =>
@@ -235,10 +366,10 @@ namespace administracion.Migrations
                         new
                         {
                             vehiculoId = new Guid("0c5c3262-d5ef-46c7-0002-000000000001"),
-                            anioModelo = 2004,
+                            anioModelo = 2007,
                             aseguradoId = new Guid("0c5c3262-d5ef-46c7-0001-000000000001"),
                             color = 1,
-                            fechaCompra = new DateTime(2018, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            fechaCompra = new DateTime(2007, 6, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             marca = 0,
                             placa = "AB320AM"
                         },
@@ -248,9 +379,29 @@ namespace administracion.Migrations
                             anioModelo = 2006,
                             aseguradoId = new Guid("0c5c3262-d5ef-46c7-0001-000000000002"),
                             color = 6,
-                            fechaCompra = new DateTime(2010, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            fechaCompra = new DateTime(2014, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             marca = 7,
                             placa = "AB322AM"
+                        },
+                        new
+                        {
+                            vehiculoId = new Guid("0c5c3262-d5ef-46c7-0002-000000000003"),
+                            anioModelo = 2016,
+                            aseguradoId = new Guid("0c5c3262-d5ef-46c7-0001-000000000003"),
+                            color = 5,
+                            fechaCompra = new DateTime(2017, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            marca = 8,
+                            placa = "BB322AC"
+                        },
+                        new
+                        {
+                            vehiculoId = new Guid("0c5c3262-d5ef-46c7-0002-000000000004"),
+                            anioModelo = 2020,
+                            aseguradoId = new Guid("0c5c3262-d5ef-46c7-0001-000000000003"),
+                            color = 9,
+                            fechaCompra = new DateTime(2020, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            marca = 4,
+                            placa = "BB329AC"
                         });
                 });
 

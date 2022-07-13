@@ -7,7 +7,7 @@ namespace levantamiento.Persistence.Entities
         [Key]
         public Guid parteId {get; set;}
         [Required]
-        public string nombre {get; set;}
+        public string nombre {get; set;} = "";
     }
 }
 

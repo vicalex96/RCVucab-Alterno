@@ -19,10 +19,8 @@ namespace administracion.Test.UnitTests.Logic
         private readonly Mock<IIncidenteDAO> _serviceMockIncidente;
         private readonly Mock<IProductorRabbit> _serviceMockRabbit;
 
-        private readonly Mock<IAdminDBContext> _contextMock;
         public IncidenteLogicTest()
         {
-            _contextMock = new Mock<IAdminDBContext>();
             _serviceMockIncidente = new Mock<IIncidenteDAO>();
             _serviceMockRabbit = new Mock<IProductorRabbit>();
             _logic = new IncidenteLogic(_serviceMockIncidente.Object, _serviceMockRabbit.Object);

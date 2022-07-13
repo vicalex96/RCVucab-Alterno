@@ -5,17 +5,19 @@ using levantamiento.Responses;
 using System.ComponentModel.DataAnnotations;
 using levantamiento.Conections.APIs;
 
-namespace administracion.Controllers
+namespace levantamiento.Controllers
 {
     [ApiController]
     [Route("Vehiculo")]
     public class VehiculoController: Controller
     {
         private readonly ILogger<VehiculoController> _logger;
+        private readonly IVehiculoAPI _vehiculoAPI;
 
-        public VehiculoController(ILogger<VehiculoController> logger)
+        public VehiculoController(ILogger<VehiculoController> logger, IVehiculoAPI vehiculoAPI)
         {
             _logger = logger;
+            _vehiculoAPI = vehiculoAPI;
         }
         [HttpGet("buscar_por/{VehiculoId}")]
         public async Task<ApplicationResponse<VehiculoDTO>> GetVehiculoById(Guid VehiculoId)
@@ -23,8 +25,7 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<VehiculoDTO>();
             try
             {
-                VehiculoAPI vehiculoAPI = new VehiculoAPI();
-                response.Data = await vehiculoAPI.GetVehiculoFromAdmin(VehiculoId);
+                response.Data = await _vehiculoAPI.GetVehiculoFromAdmin(VehiculoId);
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "Vehiculo encontrado";
@@ -34,7 +35,7 @@ namespace administracion.Controllers
                 response.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 response.Success = false;
                 response.Message = ex.Message;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }
@@ -45,8 +46,7 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<bool>();
             try
             {
-                VehiculoAPI vehiculoAPI = new VehiculoAPI();
-                response.Data = await vehiculoAPI.RegisterVehiculo(vehiculo);
+                response.Data = await _vehiculoAPI.RegisterVehiculo(vehiculo);
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "Vehiculo registrado";
@@ -56,7 +56,7 @@ namespace administracion.Controllers
                 response.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion.ToString();
+                response.Exception = ex.Excepcion!.ToString();
             };
             return response;
         }

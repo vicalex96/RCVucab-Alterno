@@ -5,7 +5,6 @@ using administracion.Persistence.Database;
 using administracion.BussinesLogic.DTOs;
 using administracion.Test.DataSeed;
 using Xunit;
-using System.Collections;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
 
@@ -37,17 +36,16 @@ namespace administracion.Test.UnitTests.DAOs
             return Task.CompletedTask;
         }
         
-        [Fact(DisplayName = "DAO: Consulta Incidentes Activos y regresa lista")]
-        public Task ShouldGetActiveIncidentes()
+        [Theory(DisplayName = "DAO: Consulta Incidentes según estado y regresa lista de incientes")]
+        [InlineData(EstadoIncidente.Pendiente)]
+        public Task ShouldGetIncidentesByStateReturnList(EstadoIncidente estado)
         {
-            //Arrage
-            var result = _dao.GetActiveIncidentes();
-            //Act
+            var result = _dao.GetIncidentesByState(estado);
             var isNoEmpty = result.Any();
-            //Assert
             Assert.True(isNoEmpty);
             return Task.CompletedTask;
         }
+
 
         [Fact(DisplayName = "DAO: Registrar un incidente deberia retornar true")]
         public Task ShouldRegisterIncienteReturnTrue()

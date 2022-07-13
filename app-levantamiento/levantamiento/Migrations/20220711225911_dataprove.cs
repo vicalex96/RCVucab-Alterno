@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace levantamiento.Migrations
 {
-    public partial class data : Migration
+    public partial class dataprove : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -87,9 +87,9 @@ namespace levantamiento.Migrations
                 columns: new[] { "incidenteId", "polizaId" },
                 values: new object[,]
                 {
-                    { new Guid("0c5c3262-d5ef-46c7-bc01-97530821c04b"), new Guid("0c5c3262-d5ef-46c7-bc0e-97530821c04b") },
-                    { new Guid("0c5c3262-d5ef-46c7-bc01-97530821c05b"), new Guid("0c5c3262-d5ef-46c7-bc0e-97530821c04c") },
-                    { new Guid("0c5c3262-d5ef-46c7-bc01-97530821c06b"), new Guid("0c5c3262-d5ef-46c7-bc0e-97530821c04d") }
+                    { new Guid("0c5c3262-d5ef-46c7-0004-000000000001"), new Guid("0c5c3262-d5ef-46c7-0003-000000000001") },
+                    { new Guid("0c5c3262-d5ef-46c7-0004-000000000002"), new Guid("0c5c3262-d5ef-46c7-0003-000000000002") },
+                    { new Guid("0c5c3262-d5ef-46c7-0004-000000000003"), new Guid("0c5c3262-d5ef-46c7-0003-000000000003") }
                 });
 
             migrationBuilder.InsertData(
@@ -108,7 +108,7 @@ namespace levantamiento.Migrations
             migrationBuilder.InsertData(
                 table: "SolicitudesReparacion",
                 columns: new[] { "SolicitudReparacionId", "fechaSolicitud", "incidenteId", "tallerId", "vehiculoId" },
-                values: new object[] { new Guid("0c5c3262-d5ef-46c7-bc0e-97530821c0cc"), new DateTime(2022, 6, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("0c5c3262-d5ef-46c7-bc01-97530821c06b"), new Guid("10003262-d5ef-46c7-bc0e-97530823c05b"), new Guid("0c5c3262-d5ef-46c7-bc0e-97530821c04b") });
+                values: new object[] { new Guid("0c5c3262-d5ef-46c7-bc0e-97530821c0cc"), new DateTime(2010, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("0c5c3262-d5ef-46c7-0004-000000000001"), new Guid("0c5c3262-d5ef-46c7-0005-000000000002"), new Guid("0c5c3262-d5ef-46c7-0002-000000000001") });
 
             migrationBuilder.InsertData(
                 table: "Requerimientos",

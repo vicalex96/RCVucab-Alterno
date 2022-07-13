@@ -3,20 +3,23 @@ using levantamiento.BussinesLogic.DTOs;
 using levantamiento.Persistence.DAOs;
 using levantamiento.Exceptions;
 using levantamiento.Responses;
+using levantamiento.BussinesLogic.Logic;
 
-namespace administracion.Controllers
+namespace levantamiento.Controllers
 {
     [ApiController]
     [Route("Requerimiento")]
     public class RequerimientoController: Controller
     {
         private readonly IRequerimientoDAO _requerimientoDAO;
+        private readonly IRequerimientoLogic _requerimientoLogic;
         private readonly ILogger<RequerimientoController> _logger;
 
-        public RequerimientoController(ILogger<RequerimientoController> logger, IRequerimientoDAO requerimientoDAO)
+        public RequerimientoController(ILogger<RequerimientoController> logger, IRequerimientoDAO requerimientoDAO, IRequerimientoLogic requerimientoLogic)
         {
             _logger = logger;
-            _requerimientoDAO = requerimientoDAO;
+            _requerimientoLogic = requerimientoLogic;
+            _requerimientoDAO = requerimientoDAO;         
         }
 
         ///<summary>
@@ -51,12 +54,12 @@ namespace administracion.Controllers
         ///<param name="RequerimientoDTO">requerimiento que se va a registrar</param>
         ///<returns>Respuesta bool true or false indicando el exito de la operacion</returns>
         [HttpPost("registrar")]
-        public ApplicationResponse<bool> RegisterRequerimiento ([FromBody] RequerimientoRegisterDTO Requerimiento)
+        public ApplicationResponse<bool> RegisterRequerimiento ([FromBody] RequerimientoRegisterDTO requerimiento)
         {
             var response = new ApplicationResponse<bool>();
             try
             {
-                response.Data = _requerimientoDAO.RegisterRequerimiento(Requerimiento);
+                response.Data = _requerimientoLogic.RegisterRequerimiento(requerimiento);
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "Requerimiento registrado";

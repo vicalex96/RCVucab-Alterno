@@ -83,25 +83,25 @@ namespace RCVUcab.Test.UnitTests.Controllers
             return Task.CompletedTask;
         }
 
-        [Fact(DisplayName = "Controller: Obtener un Incidentes activos")]
-        public Task GetActiveIncidentes()
+        [Fact(DisplayName = "Controller: Obtener una listad de Incidentes según su estado retorna una lista")]
+        public Task ShouldGetIncidentesByStateReturnList()
         {
-            _serviceMock.Setup( x => x.GetActiveIncidentes())
+            _serviceMock.Setup( x => x.GetIncidentesByState(It.IsAny<EstadoIncidente>()))
             .Returns(new List<IncidenteDTO>());
-            var result = _controller.ConsultarIncidentesActivos();
+            var result = _controller.ConsultarIncidentesPorEstado(It.IsAny<EstadoIncidente>());
             
             Assert.IsType<ApplicationResponse<List<IncidenteDTO>>>(result);
             return Task.CompletedTask;
         }
 
-        [Fact(DisplayName = "Controller: Obtener un Incidentes activos provoca una excepcion")]
+        [Fact(DisplayName = "Controller: Obtener una lista Incidentes por su estado provoca una excepcion")]
         public Task GetActiveIncidentesException()
         {
             _serviceMock
-                .Setup(x => x.GetActiveIncidentes())
+                .Setup(x => x.GetIncidentesByState(It.IsAny<EstadoIncidente>()))
                 .Throws(new RCVException("",new Exception()));
 
-            var ex = _controller.ConsultarIncidentesActivos();
+            var ex = _controller.ConsultarIncidentesPorEstado(It.IsAny<EstadoIncidente>());
 
             Assert.False(ex.Success);
 

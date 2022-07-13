@@ -10,7 +10,7 @@ namespace levantamiento.BussinesLogic.DTOs
     public class TallerDTO
     {
         public Guid Id { get; set; }
-        public string nombreLocal {get; set;}
+        public string nombreLocal {get; set;} = "";
         public ICollection<MarcaDTO>? marcas {get; set;} 
     }
 }

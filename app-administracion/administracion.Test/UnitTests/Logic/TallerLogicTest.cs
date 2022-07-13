@@ -19,10 +19,8 @@ namespace administracion.Test.UnitTests.Logic
         private readonly Mock<ITallerDAO> _serviceMockTaller;
         private readonly Mock<IProductorRabbit> _serviceMockRabbit;
 
-        private readonly Mock<IAdminDBContext> _contextMock;
         public TallerLogicTest()
         {
-            _contextMock = new Mock<IAdminDBContext>();
             _serviceMockTaller = new Mock<ITallerDAO>();
             _serviceMockRabbit = new Mock<IProductorRabbit>();
             _logic = new TallerLogic(_serviceMockTaller.Object, _serviceMockRabbit.Object);

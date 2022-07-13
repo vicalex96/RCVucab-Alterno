@@ -18,16 +18,16 @@ namespace levantamiento.Persistence.Database
         public void getIncidenteData()
         {
             this.incidenteInit.Add(new Incidente(){
-                incidenteId=Guid.Parse("0c5c3262-d5ef-46c7-bc01-97530821c04b"),
-                polizaId=Guid.Parse("0c5c3262-d5ef-46c7-bc0e-97530821c04b"),
+                incidenteId=Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000001"),
+                polizaId=Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000001"),
             });
             this.incidenteInit.Add(new Incidente(){
-                incidenteId=Guid.Parse("0c5c3262-d5ef-46c7-bc01-97530821c05b"),
-                polizaId = Guid.Parse("0c5c3262-d5ef-46c7-bc0e-97530821c04c"),
+                incidenteId=Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000002"),
+                polizaId=Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000002"),
             });
             this.incidenteInit.Add(new Incidente(){
-                incidenteId=Guid.Parse("0c5c3262-d5ef-46c7-bc01-97530821c06b"),
-                polizaId = Guid.Parse("0c5c3262-d5ef-46c7-bc0e-97530821c04d"),
+                incidenteId=Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000003"),
+                polizaId=Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000003"),
             });
         }
     
@@ -36,10 +36,10 @@ namespace levantamiento.Persistence.Database
             this.solicitudReparacionInit.Add(new SolicitudReparacion()
             {
                 SolicitudReparacionId = Guid.Parse("0c5c3262-d5ef-46c7-bc0e-97530821c0cc"),
-                incidenteId = Guid.Parse("0c5c3262-d5ef-46c7-bc01-97530821c06b"),
-                vehiculoId = Guid.Parse("0c5c3262-d5ef-46c7-bc0e-97530821c04b"),
-                tallerId = Guid.Parse("10003262-d5ef-46c7-bc0e-97530823c05b"),
-                fechaSolicitud = DateTime.ParseExact("15-06-2022", "dd-MM-yyyy",null),
+                incidenteId = Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000001"),
+                vehiculoId = Guid.Parse("0c5c3262-d5ef-46c7-0002-000000000001"),
+                tallerId = Guid.Parse("0c5c3262-d5ef-46c7-0005-000000000002"),
+                fechaSolicitud = DateTime.ParseExact("01-07-2010", "dd-MM-yyyy",null),
             });
         }
         public void getPartesData()

@@ -1,6 +1,6 @@
 namespace levantamiento.BussinesLogic.DTOs
 {
-    public class SolicitudesRespacionRegisterDTO
+    public class SolicitudRepacionRegisterDTO
     {
         public Guid Id {get; set;}
         public Guid incidenteId {get; set;}

@@ -40,7 +40,10 @@ namespace administracion.BussinesLogic.LogicClasses
                     _productorRabbit.SendMessage(
                         Routings.perito,
                         "registrar_incidente",
-                        incidente.Id.ToString()
+                        "Id-"+
+                        incidente.Id.ToString()+
+                        ":polizaId-"+
+                        incidente.polizaId.ToString()
                     );
                 }
                 return response;
@@ -81,6 +84,37 @@ namespace administracion.BussinesLogic.LogicClasses
             catch (Exception ex)
             {
                 throw new RCVException("No se pudo actualizar el incidente", ex);
+            }
+        }
+
+        /// <summary>
+        //Refresa la cola con los incidentes pendientes de ser atendidos
+        /// </summary>
+        /// <returns>cantidad de incidentes pendientes enviados a la cola</returns>
+        public int RefreshIncidenteLogic()
+        {
+            try
+            {
+                int counter = 0;
+                List<IncidenteDTO> incidentes = _incidenteDAO.GetIncidentesByState(EstadoIncidente.Pendiente);
+
+                foreach (IncidenteDTO incidente in incidentes)
+                {
+                    bool response = _productorRabbit.SendMessage(
+                        Routings.perito,
+                        "registrar_incidente",
+                        "Id-"+
+                        incidente.Id.ToString()+
+                        ":polizaId-"+
+                        incidente.polizaId.ToString()
+                    );
+                    counter = (response == true)? counter++ : counter;
+                }
+                return counter;
+            }
+            catch (Exception ex)
+            {
+                throw new RCVException("Error al refrescar la cola de incidentes", ex);
             }
         }
 
