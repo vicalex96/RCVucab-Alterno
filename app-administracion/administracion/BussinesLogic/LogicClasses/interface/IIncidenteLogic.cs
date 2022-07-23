@@ -11,5 +11,7 @@ namespace administracion.BussinesLogic.LogicClasses
 
         public int RefreshIncidenteLogic();
 
+        public int RefreshIncidenteLogic();
+
     }
 }

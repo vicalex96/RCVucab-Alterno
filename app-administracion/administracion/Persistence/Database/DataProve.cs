@@ -46,11 +46,14 @@ namespace administracion.Persistence.Database
             }); 
             this.aseguradoInit.Add(new Asegurado(){
                 Id=Guid.Parse("0c5c3262-d5ef-46c7-0001-000000000003"),
+
                 nombre = "Daniel",
                 apellido = "Gimenez"
             }); 
             this.aseguradoInit.Add(new Asegurado(){
+
                 Id=Guid.Parse("0c5c3262-d5ef-46c7-0001-000000000004"),
+
                 nombre = "Maria Jose",
                 apellido = "Salaguchi"
             }); 
@@ -65,7 +68,10 @@ namespace administracion.Persistence.Database
                 fechaCompra = DateTime.ParseExact("20-06-2007", "dd-MM-yyyy",null),
                 color = Color.Verde,
                 placa = "AB320AM",
+
                 marca = MarcaName.Toyota,
+
+
             });
             vehiculoInit.Add(new Vehiculo(){
                 Id=Guid.Parse("0c5c3262-d5ef-46c7-0002-000000000002"),
@@ -74,6 +80,7 @@ namespace administracion.Persistence.Database
                 fechaCompra = DateTime.ParseExact("15-06-2014", "dd-MM-yyyy",null),
                 color = Color.Naranja,
                 placa = "AB322AM",
+
                 marca = MarcaName.Hyundai
             });
             vehiculoInit.Add(new Vehiculo(){
@@ -94,6 +101,7 @@ namespace administracion.Persistence.Database
                 placa = "BB329AC",
                 marca = MarcaName.BMW
             });
+
         }
         public void GetPolizaData()
         {
@@ -102,7 +110,9 @@ namespace administracion.Persistence.Database
             
             polizaInit.Add(new Poliza(){
 
+
                 Id = Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000001"),
+
                 fechaRegistro =  DateTime.ParseExact("10-06-2009", "dd-MM-yyyy",null),
                 fechaVencimiento = DateTime.ParseExact("10-06-2014", "dd-MM-yyyy",null),
                 tipoPoliza = TipoPoliza.CoberturaCompleta,
@@ -110,7 +120,9 @@ namespace administracion.Persistence.Database
             });
             polizaInit.Add(new Poliza(){
 
+
                 Id = Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000002"),
+
                 fechaRegistro =  DateTime.ParseExact("10-06-2016", "dd-MM-yyyy",null),
                 fechaVencimiento = DateTime.ParseExact("10-06-2020", "dd-MM-yyyy",null),
                 tipoPoliza = TipoPoliza.DaniosATerceros,
@@ -119,6 +131,7 @@ namespace administracion.Persistence.Database
             polizaInit.Add(new Poliza(){
 
                 Id = Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000003"),
+
                 fechaRegistro =  DateTime.ParseExact("10-06-2020", "dd-MM-yyyy",null),
                 fechaVencimiento = DateTime.ParseExact("10-06-2025", "dd-MM-yyyy",null),
                 tipoPoliza = TipoPoliza.CoberturaCompleta,
@@ -131,21 +144,27 @@ namespace administracion.Persistence.Database
             this.incidenteInit = new List<Incidente>();
             incidenteInit.Add(new Incidente()
             {
+
                 Id=Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000001"),
+
                 estadoIncidente = EstadoIncidente.Pendiente,
                 polizaId=Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000001"),
                 fechaRegistrado = DateTime.ParseExact("30-06-2010", "dd-MM-yyyy",null),
             });
             incidenteInit.Add(new Incidente()
             {
+
                 Id=Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000002"),
+
                 estadoIncidente = EstadoIncidente.Pendiente,
                 polizaId=Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000002"),
                 fechaRegistrado = DateTime.ParseExact("13-08-2018", "dd-MM-yyyy",null),
             });
             incidenteInit.Add(new Incidente()
             {
+
                 Id=Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000003"),
+
                 estadoIncidente = EstadoIncidente.Pendiente,
                 polizaId=Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000003"),
                 fechaRegistrado = DateTime.ParseExact("07-12-2021", "dd-MM-yyyy",null),
@@ -156,11 +175,13 @@ namespace administracion.Persistence.Database
         {
             this.tallerInit = new List<Taller>();
             tallerInit.Add(new Taller{
+
                 Id = Guid.Parse("0c5c3262-d5ef-46c7-0005-000000000001"),
                 nombreLocal = "Gas Monkey",
             });
             tallerInit.Add(new Taller{
                 Id = Guid.Parse("0c5c3262-d5ef-46c7-0005-000000000002"),
+
                 nombreLocal = "Taller de Luis",
             });
         }
@@ -169,6 +190,7 @@ namespace administracion.Persistence.Database
         {
             this.marcasTallerInit = new List<MarcaTaller>();
             marcasTallerInit.Add(new MarcaTaller{
+
                 Id = Guid.Parse("00000001-d5ef-46c7-0005-000000000001"),
                 tallerId =  Guid.Parse("0c5c3262-d5ef-46c7-0005-000000000001"),   
                 manejaTodas = false,
@@ -188,6 +210,7 @@ namespace administracion.Persistence.Database
             });
             marcasTallerInit.Add(new MarcaTaller{
                 Id = Guid.Parse("00000001-d5ef-46c7-0005-000000000002"),
+
                 tallerId =  Guid.Parse("0c5c3262-d5ef-46c7-0005-000000000002"),   
                 manejaTodas = true,
                 marca = null,

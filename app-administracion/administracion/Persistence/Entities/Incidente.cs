@@ -19,5 +19,3 @@ namespace administracion.Persistence.Entities
         public DateTime? fechaFinalizado {get; set;}
     }
 }
-
-

@@ -35,7 +35,7 @@ namespace administracion.BussinesLogic.LogicClasses
                 }; 
                 
                 int response =_incidenteDAO.RegisterIncidente(incidenteEntity);
-
+                
                 _productorRabbit.SendMessage(
                     Routings.perito,
                     "registrar_incidente",
@@ -45,6 +45,7 @@ namespace administracion.BussinesLogic.LogicClasses
                     incidente.polizaId.ToString()
                 );
                 
+
                 return response;
             }
             catch (Exception e)
