@@ -3,6 +3,7 @@ using administracion.BussinesLogic.DTOs;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
 using administracion.Persistence.Enums;
+using administracion.BussinesLogic.Mappers;
 
 namespace administracion.BussinesLogic.LogicClasses
 {
@@ -35,15 +36,9 @@ namespace administracion.BussinesLogic.LogicClasses
                 if(vehiculo.placa.Count() >7)
                     throw new ArgumentException();
 
-                var vehiculoEntity = new Vehiculo();
-                vehiculoEntity.Id = vehiculo.Id;
-                vehiculoEntity.anioModelo = vehiculo.anioModelo;
-                vehiculoEntity.fechaCompra = vehiculo.fechaCompra;
-                vehiculoEntity.color = _color;
-                vehiculoEntity.placa = vehiculo.placa;
-                vehiculoEntity.marca = _marca;
-
-                return _vehiculoDao.RegisterVehiculo(vehiculoEntity);
+                return _vehiculoDao.RegisterVehiculo(
+                            VehiculoMapper.MapToEntity(vehiculo)
+                        );
             }
             catch(ArgumentException ex)
             {

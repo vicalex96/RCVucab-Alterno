@@ -11,5 +11,9 @@ namespace administracion.Persistence.Entities
         [Required][MaxLength(100)]
         public string apellido {get; set;} ="";
         public virtual ICollection<Vehiculo>? vehiculos {get; set;}
+
+        public Asegurado(){
+            Id = Guid.NewGuid();
+        }
     }
 }

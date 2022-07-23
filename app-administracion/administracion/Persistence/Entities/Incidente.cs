@@ -17,7 +17,10 @@ namespace administracion.Persistence.Entities
         [Required]
         public DateTime fechaRegistrado {get; set;}
         public DateTime? fechaFinalizado {get; set;}
+
+        public Incidente ()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }
-
-

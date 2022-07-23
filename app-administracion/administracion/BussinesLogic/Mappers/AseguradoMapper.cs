@@ -14,8 +14,16 @@ namespace administracion.BussinesLogic.Mappers
                 apellido = dto.apellido,
             };
         }
+        public static Asegurado MapToEntity( AseguradoRegisterDTO dto)
+        {
+            Asegurado asegurado = new Asegurado();
+            asegurado.nombre = dto.nombre;
+            asegurado.apellido = dto.apellido;
+            return asegurado;
+            
+        }
 
-        public static AseguradoDTO MapToRequestDTO (Asegurado entity)
+        public static AseguradoDTO MapToDTO (Asegurado entity)
         {
             return new AseguradoDTO
             {
@@ -25,14 +33,6 @@ namespace administracion.BussinesLogic.Mappers
             };
         }
 
-        public static Asegurado MapToEntity( AseguradoRegisterDTO dto)
-        {
-            return new Asegurado 
-            {
-                Id = dto.Id,
-                nombre = dto.nombre,
-                apellido = dto.apellido,
-            };
-        }
+
     }
 }

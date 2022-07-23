@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using administracion.Persistence.Database;
@@ -11,9 +12,10 @@ using administracion.Persistence.Database;
 namespace administracion.Migrations
 {
     [DbContext(typeof(AdminDBContext))]
-    partial class AdminDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220711225036_dataprove2")]
+    partial class dataprove2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,7 +121,7 @@ namespace administracion.Migrations
 
             modelBuilder.Entity("administracion.Persistence.Entities.MarcaProveedor", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("marcaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -132,53 +134,44 @@ namespace administracion.Migrations
                     b.Property<Guid>("proveedorId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("tallerId")
-                        .HasColumnType("uuid");
+                    b.HasKey("marcaId");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("tallerId");
+                    b.HasIndex("proveedorId");
 
                     b.ToTable("MarcasProveedor");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("00000001-d5ef-46c7-0006-000000000001"),
-
+                            marcaId = new Guid("00000001-d5ef-46c7-0006-000000000001"),
                             manejaTodas = false,
                             marca = 8,
                             proveedorId = new Guid("0c5c3262-d5ef-46c7-0006-000000000001")
                         },
                         new
                         {
-
-                            Id = new Guid("00000002-d5ef-46c7-0006-000000000001"),
-
+                            marcaId = new Guid("00000002-d5ef-46c7-0006-000000000001"),
                             manejaTodas = false,
                             marca = 5,
                             proveedorId = new Guid("0c5c3262-d5ef-46c7-0006-000000000001")
                         },
                         new
                         {
-                            Id = new Guid("00000003-d5ef-46c7-0006-000000000001"),
-
+                            marcaId = new Guid("00000003-d5ef-46c7-0006-000000000001"),
                             manejaTodas = false,
                             marca = 7,
                             proveedorId = new Guid("0c5c3262-d5ef-46c7-0006-000000000001")
                         },
                         new
                         {
-                            Id = new Guid("00000004-d5ef-46c7-0006-000000000001"),
-
+                            marcaId = new Guid("00000004-d5ef-46c7-0006-000000000001"),
                             manejaTodas = false,
                             marca = 0,
                             proveedorId = new Guid("0c5c3262-d5ef-46c7-0006-000000000001")
                         },
                         new
                         {
-                            Id = new Guid("00000001-d5ef-46c7-0006-000000000002"),
-
+                            marcaId = new Guid("00000001-d5ef-46c7-0006-000000000002"),
                             manejaTodas = true,
                             proveedorId = new Guid("0c5c3262-d5ef-46c7-0006-000000000002")
                         });
@@ -186,7 +179,7 @@ namespace administracion.Migrations
 
             modelBuilder.Entity("administracion.Persistence.Entities.MarcaTaller", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("marcaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -199,7 +192,7 @@ namespace administracion.Migrations
                     b.Property<Guid>("tallerId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("Id");
+                    b.HasKey("marcaId");
 
                     b.HasIndex("tallerId");
 
@@ -208,34 +201,28 @@ namespace administracion.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("00000001-d5ef-46c7-0005-000000000001"),
-
+                            marcaId = new Guid("00000001-d5ef-46c7-0005-000000000001"),
                             manejaTodas = false,
                             marca = 8,
                             tallerId = new Guid("0c5c3262-d5ef-46c7-0005-000000000001")
                         },
                         new
                         {
-                            Id = new Guid("00000002-d5ef-46c7-0005-000000000001"),
-
+                            marcaId = new Guid("00000002-d5ef-46c7-0005-000000000001"),
                             manejaTodas = false,
                             marca = 4,
                             tallerId = new Guid("0c5c3262-d5ef-46c7-0005-000000000001")
                         },
                         new
                         {
-
-                            Id = new Guid("00000003-d5ef-46c7-0005-000000000001"),
-
+                            marcaId = new Guid("00000003-d5ef-46c7-0005-000000000001"),
                             manejaTodas = false,
                             marca = 7,
                             tallerId = new Guid("0c5c3262-d5ef-46c7-0005-000000000001")
                         },
                         new
                         {
-
-                            Id = new Guid("00000001-d5ef-46c7-0005-000000000002"),
-
+                            marcaId = new Guid("00000001-d5ef-46c7-0005-000000000002"),
                             manejaTodas = true,
                             tallerId = new Guid("0c5c3262-d5ef-46c7-0005-000000000002")
                         });
@@ -435,7 +422,9 @@ namespace administracion.Migrations
                 {
                     b.HasOne("administracion.Persistence.Entities.Proveedor", "proveedor")
                         .WithMany("marcas")
-                        .HasForeignKey("tallerId");
+                        .HasForeignKey("proveedorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("proveedor");
                 });

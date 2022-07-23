@@ -13,7 +13,6 @@ namespace administracion.BussinesLogic.DTOs
     /// </summary>
     public class PolizaRegisterDTO
     {
-        public Guid Id {get; set;}
         public DateTime fechaRegistro {get; set;}
         public DateTime fechaVencimiento {get; set;}
         public string tipoPoliza {get; set;} = "";

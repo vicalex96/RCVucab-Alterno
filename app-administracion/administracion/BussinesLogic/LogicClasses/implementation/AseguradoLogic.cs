@@ -2,6 +2,7 @@ using administracion.Persistence.DAOs;
 using administracion.BussinesLogic.DTOs;
 using administracion.Persistence.Entities;
 using administracion.Exceptions;
+using administracion.BussinesLogic.Mappers;
 
 namespace administracion.BussinesLogic.LogicClasses
 {
@@ -15,6 +16,20 @@ namespace administracion.BussinesLogic.LogicClasses
         }
 
         /// <summary>
+        /// verifica que si el nombre o apellido estan vacios
+        /// </summary>
+        /// <param name="name">campo nombre a revisar</param>
+        /// <returns>booleano true si es invalido, false si es valido</returns>
+        private bool IsNotValidName( string name)
+        {
+            if(name.ToLower() == "string" || name.Count() == 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        /// <summary>
         /// registra un asegurado en el sistema cumpliendo con la logica de negocio
         /// </summary>
         /// <param name="asegurado">DTO de registro con la data de asegurado</param>
@@ -24,21 +39,18 @@ namespace administracion.BussinesLogic.LogicClasses
             try
             {
                 //El nombre y el apellido no pueden estar vacios
-                if(asegurado.nombre.ToLower() == "string" || 
-                    asegurado.nombre.Count() == 0 || 
-                    asegurado.apellido.ToLower() == "string" || 
-                    asegurado.apellido.Count() == 0 )
+                if(IsNotValidName(asegurado.nombre) || IsNotValidName(asegurado.apellido) )
                 {
-                    throw new RCVInvalidFieldException("El nombre y/o el apellido estan vacios");
+                    throw new RCVInvalidFieldException("El campo nombre no es valido, debe ser diferente de vacio y no por defecto");
                 }
-
-                Asegurado aseguradoEntity = new Asegurado{
-                    Id = asegurado.Id, 
-                    nombre = asegurado.nombre, 
-                    apellido = asegurado.apellido
-                };
-
-                return _aseguradoDAO.RegisterAsegurado(aseguradoEntity);
+                if(IsNotValidName(asegurado.apellido))
+                {
+                    throw new RCVInvalidFieldException("El campo apellido no es valido, debe ser diferente de vacio y no por defecto");
+                }
+            
+                return _aseguradoDAO.RegisterAsegurado(
+                            AseguradoMapper.MapToEntity(asegurado)
+                        );
             }
             catch(RCVInvalidFieldException ex)
             {

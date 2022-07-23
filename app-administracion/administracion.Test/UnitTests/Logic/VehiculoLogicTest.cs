@@ -30,7 +30,6 @@ namespace administracion.Test.UnitTests.Logic
                 yield return new object[] {
                     new VehiculoRegisterDTO()
                     {
-                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
                         anioModelo = 2003,
                         fechaCompra = new DateTime(2022, 6, 22, 19, 25, 41, 41, DateTimeKind.Local),
                         color = "Verde",
@@ -62,7 +61,6 @@ namespace administracion.Test.UnitTests.Logic
                 yield return new object[] {
                     new VehiculoRegisterDTO()
                     {
-                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
                         anioModelo = 2003,
                         fechaCompra = new DateTime(2022, 6, 22, 19, 25, 41, 41, DateTimeKind.Local),
                         color = "esto no es un color",
@@ -73,7 +71,6 @@ namespace administracion.Test.UnitTests.Logic
                 yield return new object[] {
                     new VehiculoRegisterDTO()
                     {
-                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
                         anioModelo = 2003,
                         fechaCompra = new DateTime(2022, 6, 22, 19, 25, 41, 41, DateTimeKind.Local),
                         color = "Verde",
@@ -84,7 +81,6 @@ namespace administracion.Test.UnitTests.Logic
                 yield return new object[] {
                     new VehiculoRegisterDTO()
                     {
-                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
                         anioModelo = 2003,
                         fechaCompra = new DateTime(2022, 6, 22, 19, 25, 41, 41, DateTimeKind.Local),
                         color = "Verde",

@@ -34,7 +34,6 @@ namespace administracion.Test.UnitTests.Logic
                 yield return new object[] {
                     new TallerRegisterDTO()
                     {
-                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
                         nombreLocal = "Taller 1"
                     }
                 };
@@ -62,14 +61,13 @@ namespace administracion.Test.UnitTests.Logic
                 yield return new object[] {
                     new TallerRegisterDTO()
                     {
-                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
+
                         nombreLocal = "string"
                     }
                 };
                 yield return new object[] {
                     new TallerRegisterDTO()
                     {
-                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
                         nombreLocal = ""
                     }
                 };

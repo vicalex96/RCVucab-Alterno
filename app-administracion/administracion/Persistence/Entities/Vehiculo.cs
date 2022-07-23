@@ -26,6 +26,11 @@ namespace administracion.Persistence.Entities
         [ForeignKey("aseguradoId")]
         public Asegurado? asegurado { get; set; } = null;
         public ICollection<Poliza>? polizas {get; set;} = null;
+
+        public Vehiculo ()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 
 

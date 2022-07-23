@@ -11,7 +11,6 @@ namespace administracion.BussinesLogic.DTOs
     /// </summary>
     public class IncidenteRegisterDTO
     {
-        public Guid Id {get; set;} 
         public Guid polizaId {get; set;}
     }
 

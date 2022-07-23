@@ -12,7 +12,6 @@ namespace administracion.BussinesLogic.DTOs
     /// </summary>
     public class AseguradoRegisterDTO
     {
-        public Guid Id { get; set; }
         public string nombre { get; set; } = "";
         public string apellido {get; set;} = "";
     }

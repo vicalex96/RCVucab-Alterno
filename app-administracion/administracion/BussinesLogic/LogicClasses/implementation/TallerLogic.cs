@@ -4,6 +4,7 @@ using administracion.Persistence.Entities;
 using administracion.Conections.rabbit;
 using administracion.Exceptions;
 using administracion.Persistence.Enums;
+using administracion.BussinesLogic.Mappers;
 
 namespace administracion.BussinesLogic.LogicClasses
 {
@@ -22,31 +23,29 @@ namespace administracion.BussinesLogic.LogicClasses
         /// </summary>
         /// <param name="taller">DTO de registro con la data de taller</param>
         /// <returns>boleano true si todo salio bien</returns>
-        public int RegisterTaller (TallerRegisterDTO Taller)
+        public int RegisterTaller (TallerRegisterDTO taller)
         {
             try
             {
                 //El nombre del local del Taller no puede estar vacio
-                if(Taller.nombreLocal.ToLower() == "string" || 
-                    Taller.nombreLocal.Count() == 0)
+                if(taller.nombreLocal.ToLower() == "string" || 
+                    taller.nombreLocal.Count() == 0)
                 {
                     throw new RCVInvalidFieldException("Error: el nombre del local no puede estar vacio o por defecto");
                 }
-                Taller tallerEntity = new Taller
-                {
-                    Id = Taller.Id,
-                    nombreLocal = Taller.nombreLocal,
-                };
 
                 //registra el Taller en el sistema
-                int result = _tallerDAO.RegisterTaller(tallerEntity);
+                int result = _tallerDAO.RegisterTaller(
+                                TallerMapper.MapToEntity(taller)
+                            );
 
-                //envia la informacion a la cola de mensajes
+                /*//envia la informacion a la cola de mensajes
                 _productorRabbit.SendMessage(
                     Routings.taller,
                     "registrar_taller",
                     Taller.Id.ToString()
                 );
+                */
 
                 return result;
             }

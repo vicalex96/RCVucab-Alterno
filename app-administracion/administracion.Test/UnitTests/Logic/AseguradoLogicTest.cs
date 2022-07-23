@@ -27,7 +27,6 @@ namespace administracion.Test.UnitTests.Logic
                 yield return new object[] {
                     new AseguradoRegisterDTO()
                     {
-                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
                         nombre = "Pepito",
                         apellido = "Perez",
                     }
@@ -55,7 +54,6 @@ namespace administracion.Test.UnitTests.Logic
                 yield return new object[] {
                     new AseguradoRegisterDTO()
                     {
-                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
                         nombre = "Pepito",
                         apellido = "",
                     }
@@ -63,7 +61,6 @@ namespace administracion.Test.UnitTests.Logic
                 yield return new object[] {
                     new AseguradoRegisterDTO()
                     {
-                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
                         nombre = "",
                         apellido = "Perez",
                     }
@@ -71,7 +68,6 @@ namespace administracion.Test.UnitTests.Logic
                 yield return new object[] {
                     new AseguradoRegisterDTO()
                     {
-                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
                         nombre = "string",
                         apellido = "Perez",
                     }
@@ -79,7 +75,6 @@ namespace administracion.Test.UnitTests.Logic
                 yield return new object[] {
                     new AseguradoRegisterDTO()
                     {
-                        Id = Guid.Parse("38f401c9-12aa-46bf-82a2-05ff65bb2600"),
                         nombre = "pepito",
                         apellido = "string",
                     }

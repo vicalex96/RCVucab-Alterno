@@ -11,7 +11,6 @@ namespace administracion.BussinesLogic.DTOs
     /// </summary>
     public class ProveedorRegisterDTO
     {
-        public Guid Id { get; set; }
         public string nombreLocal {get; set;} ="";
     }
 }

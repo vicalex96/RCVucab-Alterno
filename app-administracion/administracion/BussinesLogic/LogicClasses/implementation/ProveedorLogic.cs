@@ -4,6 +4,7 @@ using administracion.Persistence.Entities;
 using administracion.Conections.rabbit;
 using administracion.Exceptions;
 using administracion.Persistence.Enums;
+using administracion.BussinesLogic.Mappers;
 
 namespace administracion.BussinesLogic.LogicClasses
 {
@@ -33,21 +34,18 @@ namespace administracion.BussinesLogic.LogicClasses
                 {
                     throw new RCVInvalidFieldException("Error: el nombre del local no puede estar vacio o por defecto");
                 }
-                Proveedor proveedorEntity = new Proveedor
-                {
-                    Id = proveedor.Id,
-                    nombreLocal = proveedor.nombreLocal,
-                };
 
                 //registra el proveedor en el sistema
-                int result= _proveedorDAO.RegisterProveedor(proveedorEntity);
+                int result= _proveedorDAO.RegisterProveedor(
+                                ProveedorMapper.MapToEntity(proveedor)
+                            );
 
-                //envia la informacion a la cola de mensajes
+                /*//envia la informacion a la cola de mensajes
                 _productorRabbit.SendMessage(
                     Routings.proveedor,
                     "registrar_proveedor",
                     proveedor.Id.ToString()
-                );
+                );*/
 
                 return result;
             }

@@ -3,6 +3,7 @@ using administracion.Persistence.DAOs;
 using administracion.Exceptions;
 using administracion.Persistence.Entities;
 using administracion.Persistence.Enums;
+using administracion.BussinesLogic.Mappers;
 
 namespace administracion.BussinesLogic.LogicClasses
 {
@@ -46,15 +47,9 @@ namespace administracion.BussinesLogic.LogicClasses
                     throw new RCVDateOrderException("La fecha de vencimiento debe ser mayor a la fecha de registro");
                 }
 
-                Poliza polizaEntity = new Poliza();
-
-                polizaEntity.Id = poliza.Id;
-                polizaEntity.fechaRegistro = poliza.fechaRegistro;
-                polizaEntity.fechaVencimiento = poliza.fechaVencimiento;
-                polizaEntity.tipoPoliza = (TipoPoliza)Enum.Parse(typeof(TipoPoliza), poliza.tipoPoliza);
-                polizaEntity.vehiculoId = poliza.vehiculoId;
-
-                return _polizaDAO.RegisterPoliza(polizaEntity);
+                return _polizaDAO.RegisterPoliza(
+                            PolizaMapper.MapToEntity(poliza)
+                        );
             }   
             catch(RCVNullException ex)
             {

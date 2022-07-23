@@ -4,6 +4,7 @@ using administracion.Persistence.Entities;
 using administracion.Exceptions;
 using administracion.Conections.rabbit;
 using administracion.Persistence.Enums;
+using administracion.BussinesLogic.Mappers;
 
 namespace administracion.BussinesLogic.LogicClasses
 {
@@ -27,24 +28,21 @@ namespace administracion.BussinesLogic.LogicClasses
         {
             try
             {
-                Incidente incidenteEntity = new Incidente{
-                    Id = incidente.Id,
-                    polizaId = incidente.polizaId,
-                    estadoIncidente = EstadoIncidente.Pendiente,
-                    fechaRegistrado = DateTime.Today,
-                }; 
                 
-                int response =_incidenteDAO.RegisterIncidente(incidenteEntity);
-
-                _productorRabbit.SendMessage(
+                int response =_incidenteDAO.RegisterIncidente(
+                    IncidenteMapper.MapToEntity(incidente)
+                    );
+                
+                /* _productorRabbit.SendMessage(
                     Routings.perito,
                     "registrar_incidente",
                     "Id-"+
                     incidente.Id.ToString()+
                     ":polizaId-"+
                     incidente.polizaId.ToString()
-                );
+                );*/
                 
+
                 return response;
             }
             catch (Exception e)
@@ -63,12 +61,11 @@ namespace administracion.BussinesLogic.LogicClasses
                 if(incidente == null)
                     throw new RCVNullException("No existe ningun incidente con el id suministrado");
 
-                Incidente incidenteEntity = new Incidente();
-                incidenteEntity.Id = incidente.Id;
-                incidenteEntity.polizaId = incidente.polizaId;
-                incidenteEntity.estadoIncidente = estado;
-                
-                return _incidenteDAO.UpdateIncidente(incidenteEntity);
+                incidente.estadoIncidente = estado.ToString();
+
+                return _incidenteDAO.UpdateIncidente(
+                        IncidenteMapper.MapToEntity(incidente)
+                        );
 
             }
             catch (RCVNullException ex)

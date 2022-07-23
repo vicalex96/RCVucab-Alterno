@@ -11,8 +11,7 @@ namespace administracion.BussinesLogic.DTOs
     /// DTO crear un nuevo registro de vehiculo en el sistema
     /// </summary>
     public class VehiculoRegisterDTO
-    {
-        public Guid Id { get; set; }
+    { 
         public int anioModelo { get; set; }
         public DateTime fechaCompra { get; set; }
         public string color { get; set; } = "";

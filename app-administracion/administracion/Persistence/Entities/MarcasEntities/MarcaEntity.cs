@@ -6,14 +6,16 @@ namespace  administracion.Persistence.Entities
 {
     public class MarcaEntity
     {
-        public MarcaEntity ()
-        {
-            Id = Guid.NewGuid();
-        }
+
         [Key]
         public Guid Id {get; set;}
         public bool manejaTodas {get; set;}= false;
         public MarcaName? marca {get; set;} = null;
+
+        public MarcaEntity ()
+        {
+            Id = Guid.NewGuid();
+        }
 
         public static bool IsMarca (string marca)
         {
