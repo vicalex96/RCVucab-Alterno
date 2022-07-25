@@ -1,5 +1,5 @@
 using administracion.BussinesLogic.DTOs;
-using administracion.Persistence.Entities;
+using  administracion.DataAccess.Entities;
 
 namespace administracion.BussinesLogic.Mappers
 {

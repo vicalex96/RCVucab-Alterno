@@ -1,4 +1,4 @@
-using levantamiento.Persistence.Entities;
+using levantamiento.DataAccess.Entities;
 using levantamiento.BussinesLogic.DTOs;
 using levantamiento.Responses;
 

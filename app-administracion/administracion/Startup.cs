@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using administracion.Persistence.DAOs;
-using administracion.Persistence.Database;
-using administracion.BussinesLogic.LogicClasses;
+using administracion.DataAccess.DAOs;
+using administracion.DataAccess.Database;
 using administracion.Conections.rabbit;
 
 namespace administracion
@@ -35,13 +34,6 @@ namespace administracion
             services.AddTransient<IProveedorDAO, ProveedorDAO>();
             services.AddTransient<ITallerDAO, TallerDAO>();
             services.AddTransient<IVehiculoDAO, VehiculoDAO>();
-
-            services.AddTransient<IAseguradoLogic, AseguradoLogic>();
-            services.AddTransient<IIncidenteLogic,IncidenteLogic>();
-            services.AddTransient<IPolizaLogic, PolizaLogic>();
-            services.AddTransient<IProveedorLogic, ProveedorLogic>();
-            services.AddTransient<ITallerLogic, TallerLogic>();
-            services.AddTransient<IVehiculoLogic, VehiculoLogic>();
 
             services.AddSwaggerGen(c =>
             {

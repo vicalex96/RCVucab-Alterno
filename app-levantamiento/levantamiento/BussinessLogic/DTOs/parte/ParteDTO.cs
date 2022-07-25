@@ -1,5 +1,5 @@
 using levantamiento.Exceptions;
-using levantamiento.Persistence.Entities;
+using levantamiento.DataAccess.Entities;
 
 namespace levantamiento.BussinesLogic.DTOs
 {

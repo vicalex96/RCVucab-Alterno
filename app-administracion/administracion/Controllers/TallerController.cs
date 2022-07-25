@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using administracion.BussinesLogic.DTOs;
-using administracion.Persistence.DAOs;
+using  administracion.DataAccess.DAOs;
 using administracion.Exceptions;
 using administracion.Responses;
 using System.ComponentModel.DataAnnotations;
-using administracion.Conections.rabbit;
-using administracion.BussinesLogic.LogicClasses;
+using administracion.BussinesLogic.Commands;
 
 namespace administracion.Controllers
 {
@@ -17,15 +16,12 @@ namespace administracion.Controllers
     public class TallerController: Controller
     {
         private readonly ITallerDAO _TallerDao;
-        private readonly ITallerLogic _tallerLogic;
 
         private readonly ILogger<TallerController> _logger;
 
-        public TallerController(ILogger<TallerController> logger, ITallerDAO TallerDao, ITallerLogic tallerLogic)
+        public TallerController(ILogger<TallerController> logger)
         {
-            _TallerDao = TallerDao;
             _logger = logger;
-            _tallerLogic = tallerLogic;
         }
 
         /// <summary>
@@ -38,13 +34,17 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<List<TallerDTO>>();
             try
             {
-                response.Data = _TallerDao.GetTalleres();
+                GetTalleresCommand command = TallerCommandFactory.createGetTalleresCommand();
+                
+                command.Execute();
+                response.Data = command.GetResult();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
-                response.Message = "Listado de talleres cargado";
+                response.Message = " talleres encontrados";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -63,13 +63,17 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<TallerDTO>();
             try
             {
-                response.Data = _TallerDao.GetTallerByGuid(tallerId);
+                GetTallerByGuidCommand command = TallerCommandFactory.createGetTallerByGuidCommand(tallerId);
+
+                command.Execute();
+                response.Data = command.GetResult();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
-                response.Message = "taller encontrado";
+                response.Message = " taller encontrado";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -88,13 +92,17 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<int>();
             try
             {
-                response.Data = _tallerLogic.RegisterTaller(taller);
+                RegisterTallerCommand command = TallerCommandFactory.createRegisterTallerCommand(taller);
+
+                command.Execute();
+                response.Data = command.GetResult();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
-                response.Message = "Taller registrado";
+                response.Message = " taller registrado";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -113,10 +121,13 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<int>();
             try
             {
-                response.Data = _tallerLogic.AddMarca(tallerId, marca);
+                AddMarcaTallerLogicCommand command = TallerCommandFactory.createAddMarcaTallerLogicCommand(tallerId, marca);
+
+                command.Execute();
+                response.Data = command.GetResult();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
-                response.Message = "Especializacion agregada";
+                response.Message = " marca agregada";
             }
             catch (RCVException ex)
             {
@@ -139,10 +150,13 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<int>();
             try
             {
-                response.Data = _tallerLogic.AddAllMarcas(tallerId);
+                AddAllMarcasTallerLogicCommand command = TallerCommandFactory.createAddAllMarcasTallerLogicCommand(tallerId);
+
+                command.Execute();
+                response.Data = command.GetResult();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
-                response.Message = "Especializaciones agregadas";
+                response.Message = " marcas agregadas";
             }
             catch (RCVException ex)
             {

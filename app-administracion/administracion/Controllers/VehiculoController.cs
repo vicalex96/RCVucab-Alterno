@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using administracion.BussinesLogic.DTOs;
-using administracion.Persistence.DAOs;
+using  administracion.DataAccess.DAOs;
 using administracion.Exceptions;
 using administracion.Responses;
-using administracion.BussinesLogic.LogicClasses;
+using administracion.BussinesLogic.Commands;
 using System.ComponentModel.DataAnnotations;
 
 namespace administracion.Controllers
@@ -15,14 +15,10 @@ namespace administracion.Controllers
     [Route("vehiculo")]
     public class VehiculoController: Controller
     {
-        private readonly IVehiculoDAO _vehiculoDao;
-        private readonly IVehiculoLogic _vehiculoLogic;
         private readonly ILogger<VehiculoController> _logger;
 
-        public VehiculoController(ILogger<VehiculoController> logger, IVehiculoDAO vehiculoDao, IVehiculoLogic vehiculoLogic)
+        public VehiculoController(ILogger<VehiculoController> logger)
         {
-            _vehiculoDao = vehiculoDao;
-            _vehiculoLogic = vehiculoLogic;
             _logger = logger;
         }
 
@@ -36,10 +32,18 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<List<VehiculoDTO>>();
             try
             {
-                response.Data = _vehiculoDao.GetAllVehiculos();
+                GetAllVehiculosCommand command = VehiculoCommandFactory
+                    .createGetAllVehiculosCommand();
+
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = " Vehiculos encontrados";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -58,13 +62,16 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<VehiculoDTO>();
             try
             {
-                response.Data = _vehiculoDao.GetVehiculoByGuid(vehiculoId);
+                GetVehiculosByAseguradoIdCommand command = VehiculoCommandFactory
+                    .createGetVehiculosByAseguradoIdCommand(vehiculoId);
+
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "Vehiculo registrado";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -83,16 +90,20 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<int>();
             try
             {
-                response.Data = _vehiculoLogic.RegisterVehiculo(Vehiculo);
+                RegisterVehiculoCommand command = VehiculoCommandFactory
+                    .createRegisterVehiculoCommand(Vehiculo);
+
+                command.Execute();
+                response.Data = command.GetResult();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
-                response.Message = "Vehiculo registrado correctamente";
                 response.Success = true;
+                response.Message = "Vehiculo registrado";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 response.Exception = ex.Excepcion!.ToString();
             }
             return response;
@@ -110,13 +121,18 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<int>();
             try
             {
-                response.Data = _vehiculoLogic.AddAseguradoToVehiculo(vehiculoId, aseguradoId );
+                AddAseguradoToVehiculoCommand command = VehiculoCommandFactory
+                    .createAddAseguradoToVehiculoCommand(vehiculoId, aseguradoId);
+
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
-                response.Message = "vehiculo asociado a asegurado correctamente";
+                response.Message = "Vehiculo asociado con Asegurado correctamente";
             }
             catch (RCVException ex)
             {
-                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();

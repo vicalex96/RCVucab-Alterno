@@ -1,8 +1,9 @@
 using levantamiento.BussinesLogic.DTOs;
 using levantamiento.Conections.rabbit;
-using levantamiento.Persistence.DAOs;
+using levantamiento.DataAccess.DAOs;
 using levantamiento.Exceptions;
-using levantamiento.Persistence.Entities;
+using levantamiento.DataAccess.Entities;
+using levantamiento.BussinesLogic.Mappers;
 
 namespace levantamiento.BussinesLogic.Logic
 {
@@ -44,7 +45,7 @@ namespace levantamiento.BussinesLogic.Logic
                     throw new RCVInvalidFieldException("El nombre de la parte no puede ser vacio");
                 }
                 _parteDAO.RegisterParte(
-                    ParteDTOToEntity.ConvertParteDTOToEntity(parteDTO)
+                    ParteMapper.MapToEntity(parteDTO)
                 );
                 return true;
             }
@@ -54,7 +55,7 @@ namespace levantamiento.BussinesLogic.Logic
             }
             catch (Exception ex)
             {
-                throw new RCVException("no se logró registrar la piesa", ex);
+                throw new RCVException("no se logró registrar la pieza", ex);
             }
         }
 

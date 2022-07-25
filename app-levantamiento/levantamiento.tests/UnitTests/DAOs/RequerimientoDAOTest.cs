@@ -1,15 +1,15 @@
 
 using Microsoft.Extensions.Logging;
 using Moq;
-using levantamiento.Persistence.DAOs;
-using levantamiento.Persistence.Database;
+using levantamiento.DataAccess.DAOs;
+using levantamiento.DataAccess.Database;
 using levantamiento.Test.DataSeed;
 using Xunit;
 using levantamiento.Exceptions;
-using levantamiento.Persistence.Entities;
+using levantamiento.DataAccess.Entities;
 using levantamiento.BussinesLogic.DTOs;
 using System.Collections;
-
+using levantamiento.DataAccess.Enums;
 
 namespace administracion.Test.UnitTests.DAOs
 {
@@ -60,7 +60,7 @@ namespace administracion.Test.UnitTests.DAOs
                         requerimientoId = Guid.Parse("0c5c3262-d5ef-46c7-0002-000000000001"),
                         solicitudReparacionId = Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000000"),
                         parteId = Guid.Parse("0c5c3262-d5ef-46c7-0002-000000000001"),
-                        descripcion = "Piesa en mal estado con posibilidades de ser reparada",
+                        descripcion = "pieza en mal estado con posibilidades de ser reparada",
                         tipoRequerimiento = TipoRequerimiento.Reparacion,
                         cantidad = 2
 

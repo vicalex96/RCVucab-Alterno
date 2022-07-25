@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using levantamiento.BussinesLogic.DTOs;
-using levantamiento.Persistence.DAOs;
+using levantamiento.DataAccess.DAOs;
 using levantamiento.Exceptions;
 using levantamiento.Responses;
 using levantamiento.BussinesLogic.Logic;

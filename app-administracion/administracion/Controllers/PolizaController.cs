@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using administracion.BussinesLogic.DTOs;
-using administracion.Persistence.DAOs;
+using  administracion.DataAccess.DAOs;
 using administracion.Exceptions;
 using administracion.Responses;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using administracion.BussinesLogic.LogicClasses;
+using administracion.BussinesLogic.Commands;
 
 namespace administracion.Controllers
 {
@@ -18,13 +18,10 @@ namespace administracion.Controllers
     public class PolizaController: Controller
     {
         private readonly IPolizaDAO _polizaDao;
-        private readonly IPolizaLogic _polizaLogic;
         private readonly ILogger<PolizaController> _logger;
 
-        public PolizaController(ILogger<PolizaController> logger, IPolizaDAO polizaDao, IPolizaLogic polizaLogic)
+        public PolizaController(ILogger<PolizaController> logger)
         {
-            _polizaDao = polizaDao;
-            _polizaLogic = polizaLogic;
             _logger = logger;
         }
 
@@ -39,12 +36,48 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<int>();
             try
             {
-                response.Data  = _polizaLogic.RegisterPoliza(poliza);
+                RegisterPolizaCommand command = PolizaCommandFactory
+                    .createRegisterPolizaCommand(poliza);
+
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "Poliza registrada";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
+                response.Success = false;
+                response.Message = ex.Mensaje;
+                response.Exception = ex.Excepcion!.ToString();
+            };
+            return response;
+        }
+
+        /// <summary>
+        /// Busca la poliza vigente en el sistema según el Id del vehiculo
+        /// </summary>
+        /// <param name="vehiculoId">Id del vehiculo</param>
+        /// <returns>Poliza</returns>
+        [HttpGet("consultar/{polizaId}")]
+        public ApplicationResponse<PolizaDTO> consultarPolizaById([Required][FromRoute] Guid polizaId)
+        {
+            var response = new ApplicationResponse<PolizaDTO>();
+            try
+            {
+                GetPolizaByIdCommand command = PolizaCommandFactory
+                    .createGetPolizaByIdCommand(polizaId);
+
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Poliza encontrada";
+            }
+            catch (RCVException ex)
+            {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -63,11 +96,18 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<PolizaDTO>();
             try
             {
-                response.Data = _polizaDao.GetPolizaByVehiculoGuid(vehiculoID);
+                GetPolizaByVehiculoIdCommand command = PolizaCommandFactory
+                    .createGetPolizaByVehiculoIdCommand(vehiculoID);
+                
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
+                response.Message = "Poliza encontrada";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();

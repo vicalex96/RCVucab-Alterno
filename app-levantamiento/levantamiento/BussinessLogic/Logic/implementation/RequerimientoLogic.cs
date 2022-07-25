@@ -1,6 +1,7 @@
 using levantamiento.BussinesLogic.DTOs;
+using levantamiento.BussinesLogic.Mappers;
 using levantamiento.Conections.rabbit;
-using levantamiento.Persistence.DAOs;
+using levantamiento.DataAccess.DAOs;
 using levantamiento.Exceptions;
 
 namespace levantamiento.BussinesLogic.Logic
@@ -29,14 +30,14 @@ namespace levantamiento.BussinesLogic.Logic
 
                 //Evita seguir con el proceso si no existe la parte indicada
                 if(_parteDAO.GetParteById(requerimiento.parteId) == null)
-                    throw new RCVNullException("Error: no se puede registrar el requerimiento, el pisea indicada no existe");
+                    throw new RCVNullException("Error: no se puede registrar el requerimiento, el pieza indicada no existe");
                 
-                //Si no se indico la cantidad de piesas requeridas o afectas tampoco prosigue
+                //Si no se indico la cantidad de piezas requeridas o afectas tampoco prosigue
                 if(requerimiento.cantidad <= 0)
-                    throw new RCVInvalidFieldException("debe de indicar la cantidad de piesas requeridas");
+                    throw new RCVInvalidFieldException("debe de indicar la cantidad de piezas requeridas");
 
                 _requerimientoDAO.RegisterRequerimiento(
-                    RequerimientoDTOToEntity.ConvertDTOToEntity(requerimiento)
+                    RequerimientoMapper.MapToEntity(requerimiento)
                 );
                 return true;
             }

@@ -1,6 +1,6 @@
 using administracion.BussinesLogic.DTOs;
-using administracion.Persistence.Entities;
-using administracion.Persistence.Enums;
+using  administracion.DataAccess.Entities;
+using  administracion.DataAccess.Enums;
 
 namespace administracion.BussinesLogic.Mappers
 {

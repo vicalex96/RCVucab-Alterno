@@ -1,9 +1,10 @@
 using Moq;
-using administracion.Persistence.DAOs;
-using administracion.Persistence.Database;
+using  administracion.DataAccess.DAOs;
+using  administracion.DataAccess.Database;
 using administracion.BussinesLogic.DTOs;
-using administracion.Persistence.Entities;
-using administracion.BussinesLogic.LogicClasses;
+/*
+using  administracion.DataAccess.Entities;
+using administracion.DataAccess.DAOs.Logic;
 using administracion.Exceptions;
 using Xunit;
 using System.Collections;
@@ -95,3 +96,4 @@ namespace administracion.Test.UnitTests.Logic
         
     }
 }
+*/

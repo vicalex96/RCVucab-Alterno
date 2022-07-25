@@ -1,8 +1,9 @@
 using levantamiento.BussinesLogic.DTOs;
 using levantamiento.Conections.rabbit;
 using levantamiento.Conections.APIs;
-using levantamiento.Persistence.DAOs;
+using levantamiento.DataAccess.DAOs;
 using levantamiento.Exceptions;
+using levantamiento.BussinesLogic.Mappers;
 
 namespace levantamiento.BussinesLogic.Logic
 {
@@ -52,11 +53,11 @@ namespace levantamiento.BussinesLogic.Logic
                     incidente.polizaId = polizaId;
                     
                     // intenta registrar el incidente en el sistema 
-                    bool result = _incidenteDAO.RegisterIncidente(
-                        IncidenteDTOToEntity.ConvertDTOToEntity(incidente)
+                    Guid result = _incidenteDAO.RegisterIncidente(
+                        IncidenteMapper.MapToEntity(incidente)
                     );
                         
-                    if(result)
+                    if(result != Guid.Parse("00000000-0000-0000-0000-000000000000"))
                         total_register++;
                 }
                 return total_register;

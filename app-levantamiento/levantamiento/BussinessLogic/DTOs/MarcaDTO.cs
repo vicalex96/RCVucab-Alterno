@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using levantamiento.Persistence.Entities;
+using levantamiento.DataAccess.Entities;
 using System.Text.Json.Serialization;
 
 namespace levantamiento.BussinesLogic.DTOs

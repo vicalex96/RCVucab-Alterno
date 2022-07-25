@@ -6,13 +6,13 @@ using Moq;
 using administracion.BussinesLogic.DTOs;
 using administracion.Controllers;
 using administracion.Exceptions;
-using administracion.Persistence.DAOs;
+using  administracion.DataAccess.DAOs;
 using administracion.Responses;
 using Xunit;
-using administracion.BussinesLogic.LogicClasses;
-using administracion.Persistence.Enums;
+using administracion.DataAccess.DAOs.Logic;
+using  administracion.DataAccess.Enums;
 
-namespace RCVUcab.Test.UnitTests.Controllers
+namespace administracion.Test.UnitTests.Controllers
 {
     public class IncidenteControllerTest
     {
@@ -26,8 +26,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
             _loggerMock = new Mock<ILogger<IncidenteController>>();
             _serviceMock = new Mock<IIncidenteDAO>();
             _serviceMockLogic = new Mock<IIncidenteLogic>();
-            _controller = new IncidenteController(_loggerMock.Object,
-                _serviceMock.Object,_serviceMockLogic.Object);
+            _controller = new IncidenteController(_loggerMock.Object);
             
             _controller.ControllerContext = new ControllerContext();
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();

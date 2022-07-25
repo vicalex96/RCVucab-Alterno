@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using levantamiento.Persistence.DAOs;
-using levantamiento.Persistence.Database;
+using levantamiento.DataAccess.DAOs;
+using levantamiento.DataAccess.Database;
 using levantamiento.BussinesLogic.Logic;
 using levantamiento.Conections.APIs;
 using levantamiento.Conections.rabbit;

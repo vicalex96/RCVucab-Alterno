@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Logging;
 using Moq;
-using administracion.Persistence.DAOs;
-using administracion.Persistence.Database;
+using  administracion.DataAccess.DAOs;
+using  administracion.DataAccess.Database;
 using administracion.Test.DataSeed;
 using Xunit;
 using administracion.Exceptions;
-using administracion.Persistence.Entities;
+using  administracion.DataAccess.Entities;
 
 namespace administracion.Test.UnitTests.DAOs
 {
@@ -20,12 +20,12 @@ namespace administracion.Test.UnitTests.DAOs
             _contextMock = new Mock<IAdminDBContext>();
             _mockLogger = new Mock<ILogger<AseguradoDAO>>();
 
-            _dao = new AseguradoDAO(_contextMock.Object);
+            _dao = new AseguradoDAO();
             _contextMock.SetupDbContextDataIncidenteProcess();
         }
 
-        [Fact(DisplayName = "DAO: Consulta Asegurados Retorna verdadero")]
-        public Task GetAseguradosReturnTrue()
+        [Fact]
+        public Task GetAsegurados_ReturnNotEmptyList()
         {
             var result = _dao.GetAsegurados();
             var isNoEmpty = result.Any();
@@ -35,7 +35,7 @@ namespace administracion.Test.UnitTests.DAOs
 
         [Theory(DisplayName = "DAO: Consultar asegurados por Guid y retornar asegurado")]
         [InlineData("00000001-12aa-46bf-82a2-05ff65bb2c86")]
-        public Task GetAsegurado_PorID_ReturnTrue(Guid aseguradoId)
+        public Task GetAseguradoByGuid_ReturnTrue(Guid aseguradoId)
         {
             var aseguradoDTO = _dao.GetAseguradoByGuid(aseguradoId);
             Assert.Equal(aseguradoId, aseguradoDTO.Id);

@@ -6,12 +6,12 @@ using Moq;
 using levantamiento.BussinesLogic.DTOs;
 using levantamiento.Controllers;
 using levantamiento.Exceptions;
-using levantamiento.Persistence.DAOs;
+using levantamiento.DataAccess.DAOs;
 using levantamiento.Responses;
 using Xunit;
 using levantamiento.BussinesLogic.Logic;
 
-namespace RCVUcab.Test.UnitTests.Controllers
+namespace administracion.Test.UnitTests.Controllers
 {
     public class RequerimientoControllerTest
     {

@@ -1,14 +1,14 @@
 using Microsoft.Extensions.Logging;
 using Moq;
-using administracion.Persistence.DAOs;
-using administracion.Persistence.Database;
+using  administracion.DataAccess.DAOs;
+using  administracion.DataAccess.Database;
 using administracion.BussinesLogic.DTOs;
-using administracion.Persistence.Entities;
+using  administracion.DataAccess.Entities;
 using administracion.Exceptions;
 using administracion.Test.DataSeed;
 using Xunit;
 using System.Collections;
-using administracion.Persistence.Enums;
+using  administracion.DataAccess.Enums;
 
 namespace administracion.Test.UnitTests.DAOs
 {
@@ -24,7 +24,7 @@ namespace administracion.Test.UnitTests.DAOs
             
             _mockLogger = new Mock<ILogger<VehiculoDAO>>();
 
-            _dao = new VehiculoDAO(_contextMock.Object);
+            _dao = new VehiculoDAO();
             _contextMock.SetupDbContextDataIncidenteProcess();
         }
 

@@ -1,8 +1,9 @@
 using levantamiento.BussinesLogic.DTOs;
 using levantamiento.Conections.rabbit;
-using levantamiento.Persistence.DAOs;
+using levantamiento.DataAccess.DAOs;
 using levantamiento.Exceptions;
 using levantamiento.Conections.APIs;
+using levantamiento.BussinesLogic.Mappers;
 
 namespace levantamiento.BussinesLogic.Logic
 {
@@ -38,7 +39,7 @@ namespace levantamiento.BussinesLogic.Logic
                 
                 //registra la solicitud
                 _SolicitudReparacionDAO.RegisterSolicitud(      
-                    SolicitudDTOToEntity.ConvertDTOToEntity(solicitud)
+                    SolicitudReparacionMapper.MapToEntity(solicitud)
                 );
                 return true;
             }

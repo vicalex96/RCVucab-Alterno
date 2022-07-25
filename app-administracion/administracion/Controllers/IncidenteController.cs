@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using administracion.BussinesLogic.DTOs;
-using administracion.Persistence.DAOs;
+using  administracion.DataAccess.DAOs;
 using administracion.Exceptions;
 using administracion.Responses;
 using System.ComponentModel.DataAnnotations;
-using administracion.BussinesLogic.LogicClasses;
-using administracion.Persistence.Enums;
+using  administracion.DataAccess.Enums;
+using administracion.BussinesLogic.Commands;
 
 namespace administracion.Controllers
 {
@@ -16,15 +16,10 @@ namespace administracion.Controllers
     [Route("Incidente")]
     public class IncidenteController: Controller
     {
-        private readonly IIncidenteDAO _incidenteDao;
-
-        private readonly IIncidenteLogic _incidenteLogic;
         private readonly ILogger<IncidenteController> _logger;
 
-        public IncidenteController(ILogger<IncidenteController> logger, IIncidenteDAO incidenteDao, IIncidenteLogic incidenteLogic)
+        public IncidenteController(ILogger<IncidenteController> logger)
         {
-            _incidenteDao = incidenteDao;
-            _incidenteLogic = incidenteLogic;
             _logger = logger;
         }
 
@@ -38,10 +33,17 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<IncidenteDTO>();
             try
             {
-                response.Data = _incidenteDao.GetIncidenteById(incidenteID);
+                GetIncidenteByIdCommand command = IncidenteCommandFactory
+                    .createGetIncidenteByIdCommand(incidenteID);
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Incidente encontrado";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -59,10 +61,18 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<List<IncidenteDTO>>();
             try
             {
-                response.Data = _incidenteDao.GetIncidentesByState(estado);
+                GetIncidentesByStateCommand command = IncidenteCommandFactory
+                    .createGetIncidentesByStateCommand(estado);
+
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Incidente encontrado";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -81,13 +91,19 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<int>();
             try
             {
-                response.Data = _incidenteLogic.RegisterIncidente(incidente);
+                RegisterIncidenteCommand command = IncidenteCommandFactory
+                    .createRegisterIncidenteCommand(incidente);
+                
+                command.Execute();
+                response.Data = command.GetResult();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "Incidente registrado";
+
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -107,11 +123,19 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<int>();
             try
             {
-                response.Data = _incidenteLogic.UpdateIncidenteState(incidenteID, estado);
+                UpdateIncidenteLogicCommand command = IncidenteCommandFactory
+                    .createUpdateIncidenteLogicCommand(incidenteID, estado);
+
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Incidente actualizado";
 
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();

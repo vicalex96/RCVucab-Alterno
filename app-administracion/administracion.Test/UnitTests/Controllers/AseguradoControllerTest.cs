@@ -6,12 +6,12 @@ using Moq;
 using administracion.BussinesLogic.DTOs;
 using administracion.Controllers;
 using administracion.Exceptions;
-using administracion.Persistence.DAOs;
+using  administracion.DataAccess.DAOs;
 using administracion.Responses;
 using Xunit;
-using administracion.BussinesLogic.LogicClasses;
+using administracion.DataAccess.DAOs.Logic;
 
-namespace RCVUcab.Test.UnitTests.Controllers
+namespace administracion.Test.UnitTests.Controllers
 {
     public class AseguradoControllerTest
     {
@@ -25,7 +25,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
             _loggerMock = new Mock<ILogger<AseguradoController>>();
             _serviceMock = new Mock<IAseguradoDAO>();
             _serviceMockLogic = new Mock<IAseguradoLogic>();
-            _controller = new AseguradoController(_loggerMock.Object, _serviceMock.Object,_serviceMockLogic.Object);
+            _controller = new AseguradoController(_loggerMock.Object);
             _controller.ControllerContext = new ControllerContext();
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
             _controller.ControllerContext.ActionDescriptor = new ControllerActionDescriptor();

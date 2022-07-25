@@ -1,12 +1,12 @@
 
 using Microsoft.Extensions.Logging;
 using Moq;
-using levantamiento.Persistence.DAOs;
-using levantamiento.Persistence.Database;
+using levantamiento.DataAccess.DAOs;
+using levantamiento.DataAccess.Database;
 using levantamiento.Test.DataSeed;
 using Xunit;
 using levantamiento.Exceptions;
-using levantamiento.Persistence.Entities;
+using levantamiento.DataAccess.Entities;
 using levantamiento.BussinesLogic.DTOs;
 using System.Collections;
 

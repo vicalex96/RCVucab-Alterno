@@ -1,8 +1,8 @@
 using MockQueryable.Moq;
 using Moq;
-using administracion.Persistence.Database;
-using administracion.Persistence.Entities;
-using administracion.Persistence.Enums;
+using  administracion.DataAccess.Database;
+using  administracion.DataAccess.Entities;
+using  administracion.DataAccess.Enums;
 
 
 namespace administracion.Test.DataSeed

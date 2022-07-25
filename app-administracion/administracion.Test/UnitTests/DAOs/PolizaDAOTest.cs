@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Logging;
 using Moq;
-using administracion.Persistence.DAOs;
-using administracion.Persistence.Database;
+using  administracion.DataAccess.DAOs;
+using  administracion.DataAccess.Database;
 using administracion.BussinesLogic.DTOs;
 using administracion.Test.DataSeed;
 using Xunit;
-using administracion.Persistence.Entities;
+using  administracion.DataAccess.Entities;
 using administracion.Exceptions;
 
 namespace administracion.Test.UnitTests.DAOs
@@ -22,7 +22,7 @@ namespace administracion.Test.UnitTests.DAOs
             
             _mockLogger = new Mock<ILogger<PolizaDAO>>();
 
-            _dao = new PolizaDAO(_contextMock.Object);
+            _dao = new PolizaDAO();
             _contextMock.SetupDbContextDataIncidenteProcess();
         }
 
@@ -31,17 +31,17 @@ namespace administracion.Test.UnitTests.DAOs
         public Task ShouldGetActivePolizaWithItsIdReturnPoliza(Guid polizaId)
         {
 
-            PolizaDTO PolizaDTO = _dao.GetPolizaByGuid(polizaId);
+            PolizaDTO PolizaDTO = _dao.GetPolizaById(polizaId);
             Assert.NotNull(PolizaDTO);
             return Task.CompletedTask;
         }
 
         [Theory(DisplayName = "DAO: Intenta consultar la póliza segn su ID regresa Null")]
         [InlineData("00f401c9-12aa-46bf-82a3-05bb34bb2c03")]
-        public Task ShouldGetActivePolizaWithItsIdReturnNull(Guid polizaId)
+        public Task GetActivePolizaWithItsIdReturnNull(Guid polizaId)
         {
 
-            PolizaDTO PolizaDTO = _dao.GetPolizaByVehiculoGuid(polizaId);
+            PolizaDTO PolizaDTO = _dao.GetPolizaById(polizaId);
             Assert.Null(PolizaDTO);
             return Task.CompletedTask;
         }
@@ -51,7 +51,7 @@ namespace administracion.Test.UnitTests.DAOs
         public Task ShouldGetActivePolizaFromVehiculoReturnPoliza(Guid vehiculoId)
         {
 
-            PolizaDTO PolizaDTO = _dao.GetPolizaByVehiculoGuid(vehiculoId);
+            PolizaDTO PolizaDTO = _dao.GetPolizaByVehiculoId(vehiculoId);
             Assert.NotNull(PolizaDTO);
             return Task.CompletedTask;
         }
@@ -61,7 +61,7 @@ namespace administracion.Test.UnitTests.DAOs
         public Task ShouldGetActivePolizaFromVehiculoReturnNull(Guid polizaId)
         {
 
-            PolizaDTO PolizaDTO = _dao.GetPolizaByVehiculoGuid(polizaId);
+            PolizaDTO PolizaDTO = _dao.GetPolizaByVehiculoId(polizaId);
             Assert.Null(PolizaDTO);
             return Task.CompletedTask;
         }

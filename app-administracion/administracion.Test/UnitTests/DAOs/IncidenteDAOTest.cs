@@ -1,13 +1,13 @@
 using Microsoft.Extensions.Logging;
 using Moq;
-using administracion.Persistence.DAOs;
-using administracion.Persistence.Database;
+using  administracion.DataAccess.DAOs;
+using  administracion.DataAccess.Database;
 using administracion.BussinesLogic.DTOs;
 using administracion.Test.DataSeed;
 using Xunit;
-using administracion.Persistence.Entities;
+using  administracion.DataAccess.Entities;
 using administracion.Exceptions;
-using administracion.Persistence.Enums;
+using  administracion.DataAccess.Enums;
 
 namespace administracion.Test.UnitTests.DAOs
 {
@@ -23,7 +23,7 @@ namespace administracion.Test.UnitTests.DAOs
             _contextMock = new Mock<IAdminDBContext>();
             _mockLogger = new Mock<ILogger<IncidenteDAO>>();
 
-            _dao = new IncidenteDAO(_contextMock.Object);
+            _dao = new IncidenteDAO();
             _contextMock.SetupDbContextDataIncidenteProcess();
         }
 

@@ -1,16 +1,17 @@
+/*
 using Microsoft.Extensions.Logging;
 using Moq;
-using administracion.Persistence.DAOs;
-using administracion.Persistence.Database;
+using  administracion.DataAccess.DAOs;
+using  administracion.DataAccess.Database;
 using administracion.BussinesLogic.DTOs;
-using administracion.Persistence.Entities;
-using administracion.BussinesLogic.LogicClasses;
+using  administracion.DataAccess.Entities;
+using administracion.DataAccess.DAOs.Logic;
 using administracion.Conections.rabbit;
 using administracion.Exceptions;
 using administracion.Test.DataSeed;
 using Xunit;
 using System.Collections;
-using administracion.Persistence.Enums;
+using  administracion.DataAccess.Enums;
 
 namespace administracion.Test.UnitTests.Logic
 {
@@ -106,3 +107,4 @@ namespace administracion.Test.UnitTests.Logic
 
     }
 }
+*/

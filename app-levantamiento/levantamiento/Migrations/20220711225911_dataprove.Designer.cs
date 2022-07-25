@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using levantamiento.Persistence.Database;
+using levantamiento.DataAccess.Database;
 
 #nullable disable
 
@@ -24,7 +24,7 @@ namespace levantamiento.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("levantamiento.Persistence.Entities.Incidente", b =>
+            modelBuilder.Entity("levantamiento.DataAccess.Entities.Incidente", b =>
                 {
                     b.Property<Guid>("incidenteId")
                         .ValueGeneratedOnAdd()
@@ -55,7 +55,7 @@ namespace levantamiento.Migrations
                         });
                 });
 
-            modelBuilder.Entity("levantamiento.Persistence.Entities.Parte", b =>
+            modelBuilder.Entity("levantamiento.DataAccess.Entities.Parte", b =>
                 {
                     b.Property<Guid>("parteId")
                         .ValueGeneratedOnAdd()
@@ -102,7 +102,7 @@ namespace levantamiento.Migrations
                         });
                 });
 
-            modelBuilder.Entity("levantamiento.Persistence.Entities.Requerimiento", b =>
+            modelBuilder.Entity("levantamiento.DataAccess.Entities.Requerimiento", b =>
                 {
                     b.Property<Guid>("requerimientoId")
                         .ValueGeneratedOnAdd()
@@ -153,7 +153,7 @@ namespace levantamiento.Migrations
                         });
                 });
 
-            modelBuilder.Entity("levantamiento.Persistence.Entities.SolicitudReparacion", b =>
+            modelBuilder.Entity("levantamiento.DataAccess.Entities.SolicitudReparacion", b =>
                 {
                     b.Property<Guid>("SolicitudReparacionId")
                         .ValueGeneratedOnAdd()
@@ -188,15 +188,15 @@ namespace levantamiento.Migrations
                         });
                 });
 
-            modelBuilder.Entity("levantamiento.Persistence.Entities.Requerimiento", b =>
+            modelBuilder.Entity("levantamiento.DataAccess.Entities.Requerimiento", b =>
                 {
-                    b.HasOne("levantamiento.Persistence.Entities.Parte", "parte")
+                    b.HasOne("levantamiento.DataAccess.Entities.Parte", "parte")
                         .WithMany()
                         .HasForeignKey("parteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("levantamiento.Persistence.Entities.SolicitudReparacion", "solicitudReparacion")
+                    b.HasOne("levantamiento.DataAccess.Entities.SolicitudReparacion", "solicitudReparacion")
                         .WithMany("requerimientos")
                         .HasForeignKey("solicitudReparacionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -207,9 +207,9 @@ namespace levantamiento.Migrations
                     b.Navigation("solicitudReparacion");
                 });
 
-            modelBuilder.Entity("levantamiento.Persistence.Entities.SolicitudReparacion", b =>
+            modelBuilder.Entity("levantamiento.DataAccess.Entities.SolicitudReparacion", b =>
                 {
-                    b.HasOne("levantamiento.Persistence.Entities.Incidente", "incidente")
+                    b.HasOne("levantamiento.DataAccess.Entities.Incidente", "incidente")
                         .WithMany("solicitudes")
                         .HasForeignKey("incidenteId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -218,12 +218,12 @@ namespace levantamiento.Migrations
                     b.Navigation("incidente");
                 });
 
-            modelBuilder.Entity("levantamiento.Persistence.Entities.Incidente", b =>
+            modelBuilder.Entity("levantamiento.DataAccess.Entities.Incidente", b =>
                 {
                     b.Navigation("solicitudes");
                 });
 
-            modelBuilder.Entity("levantamiento.Persistence.Entities.SolicitudReparacion", b =>
+            modelBuilder.Entity("levantamiento.DataAccess.Entities.SolicitudReparacion", b =>
                 {
                     b.Navigation("requerimientos");
                 });

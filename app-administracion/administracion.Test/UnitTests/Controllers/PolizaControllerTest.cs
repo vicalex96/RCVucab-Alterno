@@ -6,15 +6,15 @@ using Moq;
 using administracion.BussinesLogic.DTOs;
 using administracion.Controllers;
 using administracion.Exceptions;
-using administracion.Persistence.DAOs;
+using  administracion.DataAccess.DAOs;
 using administracion.Responses;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
-using administracion.BussinesLogic.LogicClasses;
+using administracion.DataAccess.DAOs.Logic;
 
-namespace RCVUcab.Test.UnitTests.Controllers
+namespace administracion.Test.UnitTests.Controllers
 {
     public class PolizaControllerTest
     {
@@ -28,7 +28,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
             _loggerMock = new Mock<ILogger<PolizaController>>();
             _serviceMock = new Mock<IPolizaDAO>();
             _serviceMockPolizaLogic = new Mock<IPolizaLogic>();
-            _controller = new PolizaController(_loggerMock.Object, _serviceMock.Object, _serviceMockPolizaLogic.Object);
+            _controller = new PolizaController(_loggerMock.Object);
             
             _controller.ControllerContext = new ControllerContext();
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();
@@ -63,7 +63,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         [Fact(DisplayName = "Controller: Obtener una Poliza a traves de su vehiculo guid")]
         public Task GetPolizaByVehiculoID()
         {
-            _serviceMock.Setup(x => x.GetPolizaByVehiculoGuid(It.IsAny<Guid>()))
+            _serviceMock.Setup(x => x.GetPolizaByVehiculoId(It.IsAny<Guid>()))
             .Returns(new PolizaDTO());
             var result = _controller.consultarPolizaDeVehiculo(It.IsAny<Guid>());
 
@@ -75,7 +75,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
         public Task GetPolizaByVehiculoIDException()
         {
             _serviceMock
-                .Setup(x => x.GetPolizaByVehiculoGuid(It.IsAny<Guid>()))
+                .Setup(x => x.GetPolizaByVehiculoId(It.IsAny<Guid>()))
                 .Throws(new RCVException("", new Exception()));
 
             var ex = _controller.consultarPolizaDeVehiculo(It.IsAny<Guid>());

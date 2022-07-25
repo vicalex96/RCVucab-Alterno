@@ -6,13 +6,13 @@ using Moq;
 using administracion.BussinesLogic.DTOs;
 using administracion.Controllers;
 using administracion.Exceptions;
-using administracion.Persistence.DAOs;
+using  administracion.DataAccess.DAOs;
 using administracion.Responses;
 using administracion.Conections.rabbit;
 using Xunit;
-using administracion.BussinesLogic.LogicClasses;
+using administracion.DataAccess.DAOs.Logic;
 
-namespace RCVUcab.Test.UnitTests.Controllers
+namespace administracion.Test.UnitTests.Controllers
 {
     public class TallerControllerTest
     {
@@ -26,7 +26,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
             _loggerMock = new Mock<ILogger<TallerController>>();
             _serviceMock = new Mock<ITallerDAO>();
             _serviceMockLogic = new Mock<ITallerLogic>();
-            _controller = new TallerController(_loggerMock.Object, _serviceMock.Object,_serviceMockLogic.Object);
+            _controller = new TallerController(_loggerMock.Object);
 
             _controller.ControllerContext = new ControllerContext();
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();

@@ -1,7 +1,7 @@
 using levantamiento.BussinesLogic.DTOs;
 using levantamiento.Conections.rabbit;
 using levantamiento.Exceptions;
-using levantamiento.Persistence.Entities;
+using levantamiento.DataAccess.Entities;
 
 namespace levantamiento.BussinesLogic.Logic
 {

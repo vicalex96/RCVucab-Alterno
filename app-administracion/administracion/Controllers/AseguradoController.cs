@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using administracion.BussinesLogic.DTOs;
-using administracion.Persistence.DAOs;
+using  administracion.DataAccess.DAOs;
 using administracion.Exceptions;
 using administracion.Responses;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using administracion.BussinesLogic.LogicClasses;
+using administracion.BussinesLogic.Commands;
 
 namespace administracion.Controllers
 {
@@ -17,14 +17,10 @@ namespace administracion.Controllers
     [Route("asegurado")]
     public class AseguradoController: Controller
     {
-        private readonly IAseguradoDAO _aseguradoDAO;
-        private readonly IAseguradoLogic _aseguradoLogic;
         private readonly ILogger<AseguradoController> _logger;
 
-        public AseguradoController(ILogger<AseguradoController> logger, IAseguradoDAO aseguradoDAO, IAseguradoLogic aseguradoLogic)
+        public AseguradoController(ILogger<AseguradoController> logger)
         {
-            _aseguradoDAO = aseguradoDAO;
-            _aseguradoLogic = aseguradoLogic;
             _logger = logger;
         }
 
@@ -39,11 +35,17 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<List<AseguradoDTO>>();
             try
             {
-
-                response.Data = _aseguradoDAO.GetAsegurados();
+                GetAseguradosCommand command = AseguradoCommandFactory
+                    .createGetAseguradosCommand();
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Lista encontrada";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -62,10 +64,17 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<AseguradoDTO>();
             try
             {
-                response.Data = _aseguradoDAO.GetAseguradoByGuid(aseguradoId);
+                GetAseguradoByIdCommand command = AseguradoCommandFactory
+                    .createGetAseguradoByIdCommand(aseguradoId);
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Asegurado encontrado";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -85,13 +94,20 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<List<AseguradoDTO>>();
             try
             {
-                response.Data = _aseguradoDAO.GetAseguradosPorNombreCompleto(nombre,apellido);
+                GetAseguradoByFullNameCommand command = AseguradoCommandFactory
+                    .createGetAseguradoByFullNameCommand(nombre, apellido);
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
+                response.Success = true;
+                response.Message = "Asegurados encontrados";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
-                response.Exception = ex.Excepcion!.Message.ToString();
+                response.Exception = ex.Excepcion!.ToString();
                 response.StatusCode = System.Net.HttpStatusCode.NotFound;
             }
             return response;
@@ -108,14 +124,17 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<int>();
             try
             {
-                response.Data = _aseguradoLogic.RegisterAsegurado(asegurado);
+                RegisterAseguradoCommand command = AseguradoCommandFactory
+                    .createRegisterAseguradoCommand(asegurado);
+                command.Execute();
+                response.Data = command.GetResult();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
                 response.Message = "Asegurado registrado";
             }
             catch (RCVException ex)
             {
-                response.StatusCode = System.Net.HttpStatusCode.BadGateway;
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();

@@ -3,7 +3,7 @@ using proveedor.Persistence.Entities;
 using proveedor.BussinesLogic.DTOs;
 using System.Collections.Generic;
 
-namespace administracion.Persistence.DAOs
+namespace  administracion.DataAccess.DAOs
 {
     public interface ISolicitudDAO
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using administracion.Persistence.Entities;
+using  administracion.DataAccess.Entities;
 
 namespace administracion.BussinesLogic.DTOs
 {

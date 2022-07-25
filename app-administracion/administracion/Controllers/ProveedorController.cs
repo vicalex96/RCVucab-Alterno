@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using administracion.BussinesLogic.DTOs;
-using administracion.Persistence.DAOs;
+using  administracion.DataAccess.DAOs;
 using administracion.Exceptions;
 using administracion.Responses;
 using System.ComponentModel.DataAnnotations;
-using administracion.Conections.rabbit;
-using administracion.BussinesLogic.LogicClasses;
+using administracion.BussinesLogic.Commands;
 
 namespace administracion.Controllers
 {
@@ -17,14 +16,11 @@ namespace administracion.Controllers
     public class ProveedorController: Controller
     {
         private readonly IProveedorDAO _proveedorDao;
-        private readonly IProveedorLogic _proveedorLogic;
         private readonly ILogger<ProveedorController> _logger;
 
-        public ProveedorController(ILogger<ProveedorController> logger, IProveedorDAO proveedorDao, IProveedorLogic proveedorLogic)
+        public ProveedorController(ILogger<ProveedorController> logger)
         {
-            _proveedorDao = proveedorDao;
             _logger = logger;
-            _proveedorLogic = proveedorLogic;
         }
         /// <summary>
         /// Mostrar un listado de proveedores que existen en el sistema
@@ -36,11 +32,17 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<List<ProveedorDTO>>();
             try
             {
-                response.Data = _proveedorDao.GetProveedores();
+                GetProveedoresCommand command = ProveedorCommandFactory.createGetProveedoresCommand();
+
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
+                response.Message = "Listado de proveedores cargado";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -59,11 +61,17 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<ProveedorDTO>();
             try
             {
-                response.Data = _proveedorDao.GetProveedorByGuid(proveedorId);
+                GetProveedoresByGuidCommand command = ProveedorCommandFactory.createGetProveedoresByGuidCommand(proveedorId);
+
+                command.Execute();
+                response.Data = command.GetResult();
+                response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
+                response.Message = " Proveedor encontrado";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -82,13 +90,17 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<int>();
             try
             {
-                response.Data = _proveedorLogic.RegisterProveedor(proveedor);
+                RegisterProveedorCommand command = ProveedorCommandFactory.createRegisterProveedorCommand(proveedor);
+
+                command.Execute();
+                response.Data = command.GetResult();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
-                response.Message = "Proveedor registrado";
+                response.Message = " Proveedor registrado";
             }
             catch (RCVException ex)
             {
+                response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
                 response.Success = false;
                 response.Message = ex.Mensaje;
                 response.Exception = ex.Excepcion!.ToString();
@@ -107,10 +119,13 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<int>();
             try
             {
-                response.Data = _proveedorLogic.AddMarca(proveedorId, marca);
+                AddMarcaProveedorLogicCommand command = ProveedorCommandFactory.createAddMarcaProveedorLogicCommand(proveedorId, marca);
+
+                command.Execute();
+                response.Data = command.GetResult();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
-                response.Message = "Especializacion agregada";
+                response.Message = " Marca agregada";
             }
             catch (RCVException ex)
             {
@@ -133,10 +148,13 @@ namespace administracion.Controllers
             var response = new ApplicationResponse<int>();
             try
             {
-                response.Data = _proveedorLogic.AddAllMarcas(proveedorId);
+                AddAllMarcasProveedorLogicCommand command = ProveedorCommandFactory.createAddAllMarcasProveedorLogicCommand(proveedorId);
+
+                command.Execute();
+                response.Data = command.GetResult();
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Success = true;
-                response.Message = "Especializaciones agregadas";
+                response.Message = " marcas agregadas";
             }
             catch (RCVException ex)
             {

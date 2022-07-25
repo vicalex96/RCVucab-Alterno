@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using administracion.BussinesLogic.DTOs;
-using administracion.BussinesLogic.LogicClasses;
+using administracion.DataAccess.DAOs.Logic;
 using administracion.Controllers;
 using administracion.Exceptions;
-using administracion.Persistence.DAOs;
+using  administracion.DataAccess.DAOs;
 using administracion.Responses;
 using Xunit;
 
-namespace RCVUcab.Test.UnitTests.Controllers
+namespace administracion.Test.UnitTests.Controllers
 {
     public class VehiculoControllerTest
     {
@@ -27,7 +27,7 @@ namespace RCVUcab.Test.UnitTests.Controllers
             _serviceMockVehiculo = new Mock<IVehiculoDAO>();
             _serviceMockLogic = new Mock<IVehiculoLogic>();
             
-            _controller = new VehiculoController(_loggerMock.Object, _serviceMockVehiculo.Object, _serviceMockLogic.Object);
+            _controller = new VehiculoController(_loggerMock.Object);
 
             _controller.ControllerContext = new ControllerContext();
             _controller.ControllerContext.HttpContext = new DefaultHttpContext();

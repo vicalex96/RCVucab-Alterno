@@ -1,7 +1,8 @@
 using MockQueryable.Moq;
 using Moq;
-using levantamiento.Persistence.Database;
-using levantamiento.Persistence.Entities;
+using levantamiento.DataAccess.Database;
+using levantamiento.DataAccess.Entities;
+using levantamiento.DataAccess.Enums;
 
 namespace levantamiento.Test.DataSeed
 {
@@ -11,32 +12,32 @@ namespace levantamiento.Test.DataSeed
         {
             var Partes = new List<Parte>{
                 new Parte{
-                parteId = Guid.Parse( "0c5c3262-d5ef-46c7-0002-000000000001"),
+                Id = Guid.Parse( "0c5c3262-d5ef-46c7-0002-000000000001"),
                 nombre = "capó", 
                 },
                 new Parte{
-                parteId = Guid.Parse( "0c5c3262-d5ef-46c7-0002-000000000002"),
+                Id = Guid.Parse( "0c5c3262-d5ef-46c7-0002-000000000002"),
                 nombre = "Puerta delantera izquierda", 
                 },
                 new Parte{
-                parteId = Guid.Parse( "0c5c3262-d5ef-46c7-0002-000000000003"),
+                Id = Guid.Parse( "0c5c3262-d5ef-46c7-0002-000000000003"),
                 nombre = "retrovisor derecho", 
                 },
             };
 
             var Incidentes = new List<Incidente>{
                 new Incidente(){
-                incidenteId=Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000001"),
+                Id=Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000001"),
                 polizaId=Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000001"),
                 solicitudes = new List<SolicitudReparacion>(),
                 },
                 new Incidente(){
-                incidenteId=Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000002"),
+                Id=Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000002"),
                 polizaId=Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000002"),
                 solicitudes = new List<SolicitudReparacion>(),
                 },
                 new Incidente(){
-                incidenteId=Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000003"),
+                Id=Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000003"),
                 polizaId=Guid.Parse("0c5c3262-d5ef-46c7-0003-000000000003"),
                 solicitudes = new List<SolicitudReparacion>(),
                 }
@@ -45,7 +46,7 @@ namespace levantamiento.Test.DataSeed
             var SolicitudesReparacion = new List<SolicitudReparacion>{
                 new SolicitudReparacion()
                 {
-                    SolicitudReparacionId = Guid.Parse("0c5c3262-d5ef-46c7-0001-000000000000"),
+                    Id = Guid.Parse("0c5c3262-d5ef-46c7-0001-000000000000"),
                     incidenteId = Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000001"),
                     vehiculoId = Guid.Parse("0c5c3262-d5ef-46c7-0002-000000000001"),
                     tallerId = Guid.Parse("0c5c3262-d5ef-46c7-0005-000000000002"),
@@ -55,7 +56,7 @@ namespace levantamiento.Test.DataSeed
                 },
                 new SolicitudReparacion()
                 {
-                    SolicitudReparacionId = Guid.Parse("0c5c3262-d5ef-46c7-0001-000000000001"),
+                    Id = Guid.Parse("0c5c3262-d5ef-46c7-0001-000000000001"),
                     incidenteId = Guid.Parse("0c5c3262-d5ef-46c7-0004-000000000003"),
                     vehiculoId = Guid.Parse("0c5c3262-d5ef-46c7-0002-000000000005"),
                     tallerId = It.IsAny<Guid>(),
@@ -69,7 +70,7 @@ namespace levantamiento.Test.DataSeed
 
             var Requerimientos = new List<Requerimiento>{
                 new Requerimiento{
-                    requerimientoId = Guid.Parse("0c5c3262-d5ef-46c7-bc0e-000000000001"),
+                    Id = Guid.Parse("0c5c3262-d5ef-46c7-bc0e-000000000001"),
                     solicitudReparacionId = Guid.Parse("0c5c3262-d5ef-46c7-0001-000000000000"),
                     parteId = Guid.Parse( "0c5c3262-d5ef-46c7-0002-000000000001"),
                     descripcion = "puerta detrozada parcialmente",
@@ -79,7 +80,7 @@ namespace levantamiento.Test.DataSeed
                     parte = Partes[0],
                 },
                 new Requerimiento{
-                    requerimientoId = Guid.Parse("0c5c3262-d5ef-2000-bc0e-000000000002"),
+                    Id = Guid.Parse("0c5c3262-d5ef-2000-bc0e-000000000002"),
                     solicitudReparacionId = Guid.Parse("0c5c3262-d5ef-46c7-0001-000000000000"),
                     parteId = Guid.Parse( "0c5c3262-d5ef-46c7-0002-000000000002"),
                     descripcion = "la pieza ",

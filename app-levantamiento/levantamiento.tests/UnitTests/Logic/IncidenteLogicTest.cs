@@ -1,8 +1,8 @@
 using Moq;
-using levantamiento.Persistence.DAOs;
-using levantamiento.Persistence.Database;
+using levantamiento.DataAccess.DAOs;
+using levantamiento.DataAccess.Database;
 using levantamiento.BussinesLogic.DTOs;
-using levantamiento.Persistence.Entities;
+using levantamiento.DataAccess.Entities;
 using levantamiento.BussinesLogic.Logic;
 using levantamiento.Conections.rabbit;
 using levantamiento.Conections.APIs;
